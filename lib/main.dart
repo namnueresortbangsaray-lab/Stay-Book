@@ -1,9 +1,9 @@
-// จุดเริ่มต้นของแอป Stay Book
-// หน้าที่ของไฟล์นี้มีอย่างเดียวคือประกอบธีมเข้ากับหน้าจอหลัก แล้วสั่งให้แอปทำงาน
+// จุดเริ่มต้นของแอป Stay Book ของน้ำเหนือรีสอร์ทบางเสร่
+// หน้าที่ของไฟล์นี้มีอย่างเดียวคือประกอบธีมเข้ากับหน้าจอแรก แล้วสั่งให้แอปทำงาน
 import 'package:flutter/material.dart';
 
 import 'config.dart';
-import 'screens/home_shell.dart';
+import 'screens/splash_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -16,10 +16,11 @@ class StayBookApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Stay Book - ${ResortConfig.name}',
+      title: ResortConfig.name,
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
-      home: const HomeShell(),
+      // เริ่มที่หน้าโลโก้ก่อน เพื่อเตรียมฐานข้อมูลให้เสร็จก่อนเข้าหน้าผังห้อง
+      home: const SplashScreen(),
     );
   }
 }

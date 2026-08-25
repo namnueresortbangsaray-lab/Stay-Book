@@ -3,8 +3,18 @@
 class ResortConfig {
   const ResortConfig._();
 
-  /// ชื่อกิจการที่แสดงบน AppBar ของทุกหน้า
-  static const String name = 'บ้านสวนรีสอร์ท';
+  /// ชื่อเต็มของกิจการ ใช้ในหน้าเปิดแอปและเอกสาร
+  static const String name = 'น้ำเหนือรีสอร์ทบางเสร่';
+
+  /// ชื่อสั้นสำหรับแถบหัวเรื่อง ซึ่งมีความกว้างจำกัด
+  /// แยกจากชื่อเต็มเพราะถ้าใช้ชื่อเต็มบน AppBar จะถูกตัดกลางคำจนอ่านไม่รู้เรื่อง
+  static const String shortName = 'น้ำเหนือรีสอร์ท';
+
+  /// ทำเลที่ตั้ง ใช้เป็นบรรทัดรองคู่กับชื่อ
+  static const String location = 'บางเสร่';
+
+  /// คำโปรยของกิจการ ใช้ในหน้าเปิดแอป
+  static const String tagline = 'ที่พักหลักร้อย สะดวก สะอาด ปลอดภัย ใกล้แหล่งท่องเที่ยว';
 
   /// เวลาที่เริ่มให้เข้าห้องได้ ใช้แสดงเป็นข้อความกำกับวันที่
   static const String checkInTime = '13.00 น.';
@@ -14,4 +24,22 @@ class ResortConfig {
 
   /// ค่าเตียงเสริม คิดครั้งเดียวตลอดการเข้าพัก ไม่คูณจำนวนคืน
   static const double extraBedFee = 200;
+}
+
+/// ที่อยู่ของไฟล์รูปภาพทั้งหมด รวมไว้ที่เดียวกันไม่ให้พิมพ์ path ซ้ำในหลายไฟล์
+/// ถ้าวันหนึ่งเปลี่ยนไฟล์โลโก้ จะได้แก้ที่นี่จุดเดียว
+class AppImages {
+  const AppImages._();
+
+  /// โลโก้สีเขียวพื้นโปร่งใส ใช้บนพื้นหลังสีอ่อน
+  static const String logo = 'assets/images/logo.webp';
+
+  /// โลโก้สีขาวล้วนพื้นโปร่งใส ใช้บนพื้นหลังสีเขียวเข้ม เช่นแถบหัวเรื่อง
+  static const String logoWhite = 'assets/images/logo_white.webp';
+
+  /// โลโก้จัตุรัสพื้นทึบ เป็นเวอร์ชันเดียวที่เห็นคำว่า "บางเสร่" ชัด
+  static const String logoSquare = 'assets/images/logo_square.webp';
+
+  /// ป้ายชื่อแนวนอนพร้อมสโลแกน ใช้ในหน้าเปิดแอป
+  static const String logoBanner = 'assets/images/logo_banner.webp';
 }

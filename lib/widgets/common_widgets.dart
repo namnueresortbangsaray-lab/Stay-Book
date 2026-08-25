@@ -2,6 +2,7 @@
 // รวมไว้ที่เดียวเพื่อให้หน้าตาของหัวข้อ ป้ายสถานะ และการ์ดตัวเลขเหมือนกันทั้งแอป
 import 'package:flutter/material.dart';
 
+import '../config.dart';
 import '../models/stay.dart';
 import '../theme/app_theme.dart';
 
@@ -136,12 +137,19 @@ class StatCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-              color: accent,
+          // ย่อขนาดตัวอักษรอัตโนมัติเมื่อยอดเงินยาวเกินความกว้างการ์ด
+          // ดีกว่าปล่อยให้ข้อความล้นกรอบจนอ่านไม่ครบ
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                color: accent,
+              ),
             ),
           ),
         ],
@@ -171,8 +179,20 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Icon(icon, size: 56, color: AppColors.vacantBorder),
-            const SizedBox(height: 12),
+            // วางไอคอนไว้ในวงกลมสีเขียวอ่อน ให้จอเปล่าดูเป็นส่วนหนึ่งของงานออกแบบ
+            // ไม่ใช่ดูเหมือนหน้าจอที่โหลดไม่ขึ้น
+            Container(
+              width: 96,
+              height: 96,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColors.vacantBg,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.vacantBorder, width: 0.5),
+              ),
+              child: Icon(icon, size: 44, color: AppColors.primary),
+            ),
+            const SizedBox(height: 16),
             Text(
               title,
               textAlign: TextAlign.center,
@@ -235,4 +255,102 @@ void showAppSnackBar(BuildContext context, String message, {bool isError = false
         duration: const Duration(seconds: 3),
       ),
     );
+}
+
+/// ตราสัญลักษณ์ของรีสอร์ท
+///
+/// มีโลโก้สองเวอร์ชันเพราะไฟล์ต้นฉบับต่างกันคนละแบบ เวอร์ชันสีเขียวมองไม่เห็น
+/// เมื่อวางบนพื้นเขียว ส่วนเวอร์ชันสีขาวก็หายไปกับพื้นขาว วิดเจ็ตนี้จึงเลือกไฟล์ให้ตาม
+/// พื้นหลังที่จะไปวาง ผู้เรียกแค่บอกว่ากำลังวางบนพื้นสว่างหรือพื้นเขียวเข้ม
+class BrandMark extends StatelessWidget {
+  const BrandMark({
+    super.key,
+    this.size = 40,
+    this.onLightBackground = true,
+    this.framed = true,
+    this.showWordmark = false,
+  });
+
+  /// สัดส่วนความสูงของไฟล์โลโก้ที่เป็นภาพบ้าน ต้นไม้ และดวงอาทิตย์
+  /// ส่วนที่เหลือด้านล่างเป็นชื่อรีสอร์ทซึ่งเล็กเกินกว่าจะอ่านออกในขนาดไม่กี่สิบพิกเซล
+  static const double _artworkHeightRatio = 0.68;
+
+  final double size;
+
+  /// true = วางบนพื้นสีอ่อน จะใช้โลโก้สีเขียว
+  /// false = วางบนพื้นเขียวเข้ม จะใช้โลโก้สีขาว
+  final bool onLightBackground;
+
+  /// ใส่กรอบมุมมนรอบโลโก้หรือไม่
+  final bool framed;
+
+  /// แสดงชื่อรีสอร์ทที่อยู่ในไฟล์โลโก้ด้วยหรือไม่
+  ///
+  /// ค่าเริ่มต้นคือไม่แสดง เพราะทุกที่ที่ใช้ตรานี้มีชื่อรีสอร์ทเป็นตัวหนังสือกำกับอยู่แล้ว
+  /// ถ้าโชว์ชื่อในโลโก้ด้วยจะกลายเป็นชื่อซ้ำสองชุด และตัวหนังสือในภาพก็เล็กจนอ่านไม่ออก
+  final bool showWordmark;
+
+  /// เลือกไฟล์โลโก้ให้เหมาะกับพื้นหลังและกับการแสดงชื่อ
+  ///
+  /// บนพื้นอ่อนที่ไม่ต้องโชว์ชื่อ ใช้ไฟล์พื้นโปร่งใสจะดีกว่า เพราะสีกรอบที่เลือกไว้
+  /// จะทะลุมาเป็นพื้นของโลโก้พอดี ไม่เกิดสี่เหลี่ยมสีขาวซ้อนอยู่บนกรอบสีเขียวอ่อน
+  /// ส่วนกรณีที่ต้องโชว์ชื่อ ต้องใช้ไฟล์จัตุรัสเพราะเป็นไฟล์เดียวที่คำว่า "บางเสร่" เป็นสีเข้ม
+  String get _assetPath {
+    if (!onLightBackground) return AppImages.logoWhite;
+    return showWordmark ? AppImages.logoSquare : AppImages.logo;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double inner = framed ? size * 0.84 : size;
+
+    // เมื่อไม่แสดงชื่อในโลโก้ ต้องทำให้ภาพสูงเกินกรอบก่อน แล้วค่อยครอบตัดส่วนล่างทิ้ง
+    // ผลลัพธ์คือได้ภาพบ้านเต็มกรอบสี่เหลี่ยมจัตุรัสพอดี ไม่มีที่ว่างเหลือด้านล่าง
+    final Widget picture = SizedBox(
+      width: inner,
+      height: showWordmark ? inner : inner / _artworkHeightRatio,
+      child: Image.asset(
+        _assetPath,
+        fit: BoxFit.contain,
+        // กันแอปพังทั้งจอถ้าไฟล์ภาพหาย ให้แสดงไอคอนบ้านแทนแล้วทำงานต่อได้
+        errorBuilder: (BuildContext context, Object error, StackTrace? stack) => Icon(
+          Icons.home_rounded,
+          size: inner * 0.8,
+          color: onLightBackground ? AppColors.primary : Colors.white,
+        ),
+      ),
+    );
+
+    final Widget logo = showWordmark
+        ? picture
+        : ClipRect(
+            child: Align(
+              alignment: Alignment.topCenter,
+              heightFactor: _artworkHeightRatio,
+              child: picture,
+            ),
+          );
+
+    if (!framed) return logo;
+
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        // บนพื้นเขียวใช้สีขาวโปร่งแสง เพื่อให้กรอบดูกลืนไปกับพื้นไล่เฉดข้างหลัง
+        // ถ้าใช้ขาวทึบจะกลายเป็นแผ่นป้ายสว่างจ้าที่แย่งความสนใจจากข้อมูลจริง
+        color: onLightBackground ? AppColors.vacantBg : Colors.white24,
+        borderRadius: BorderRadius.circular(size * 0.28),
+        border: Border.all(
+          color: onLightBackground ? AppColors.vacantBorder : Colors.white38,
+          width: 0.5,
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(size * 0.22),
+        child: logo,
+      ),
+    );
+  }
 }

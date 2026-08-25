@@ -618,6 +618,41 @@ class _PriceSummary extends StatelessWidget {
     return AppCard(
       child: Column(
         children: <Widget>[
+          // หัวกล่องแบบใบเสนอราคา เพราะพนักงานมักหันจอให้ลูกค้าดูยอดตรงนี้
+          // การมีชื่อกับตราของรีสอร์ทกำกับ ทำให้ดูเป็นเอกสารของกิจการ ไม่ใช่แค่ตัวเลขลอย ๆ
+          Row(
+            children: <Widget>[
+              const BrandMark(size: 34),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      ResortConfig.shortName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                    Text(
+                      'ห้อง ${room!.name} · ${room!.type}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 12, color: AppColors.muted),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Divider(height: 1),
+          ),
           _PriceRow(
             label: 'ค่าห้อง',
             detail: '${formatBaht(data.roomRate)} × ${data.nights} คืน',

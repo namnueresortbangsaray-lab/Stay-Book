@@ -40,7 +40,24 @@ class AppColors {
 
   /// เส้นขอบและเส้นคั่นทั่วไป
   static const Color line = Color(0xFFC9E7CF);
+
+  // สองสีด้านล่างดูดมาจากภาพโลโก้โดยตรง เพื่อให้สีในแอปกับสีบนป้ายของรีสอร์ท
+  // เป็นชุดเดียวกัน ใช้เป็นสีเสริมเท่านั้น ไม่ใช้แทนสีหลัก
+
+  /// เขียวใบไม้อ่อนจากตัวบ้านในโลโก้ ใช้ไล่เฉดบนแถบหัวเรื่อง
+  static const Color leaf = Color(0xFF95D3A0);
+
+  /// เหลืองดวงอาทิตย์จากโลโก้ ใช้เน้นจุดเล็ก ๆ ที่ต้องการให้สะดุดตา
+  static const Color sun = Color(0xFFF5E27A);
 }
+
+/// ไล่เฉดสีเขียวของแบรนด์ ใช้กับแถบหัวเรื่องและการ์ดหัวหน้าผังห้อง
+/// แยกออกมาเป็นค่าคงที่เพื่อให้ทุกที่ที่ใช้พื้นเขียวไล่เฉดได้ทิศทางและสีเดียวกัน
+const LinearGradient kBrandGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: <Color>[AppColors.primary, AppColors.primaryDark],
+);
 
 /// ค่ามุมโค้งมาตรฐานของแอป การ์ดทุกใบใช้ค่าจากตรงนี้เพื่อให้หน้าตาสม่ำเสมอ
 class AppRadius {

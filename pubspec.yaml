@@ -1,12 +1,13 @@
 name: stay_book
-description: "Stay Book — สมุดบันทึกผู้เข้าพักสำหรับรีสอร์ทขนาดเล็ก ทำงานบนเครื่องเดียว ไม่ต้องใช้อินเทอร์เน็ต"
+description: "Stay Book — สมุดบันทึกผู้เข้าพักของน้ำเหนือรีสอร์ทบางเสร่ ทำงานบนเครื่องเดียว ไม่ต้องใช้อินเทอร์เน็ต"
 # ไม่เผยแพร่ขึ้น pub.dev เพราะเป็นแอปใช้งานภายใน ไม่ใช่ไลบรารี
 publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  # เปิดช่วงเวอร์ชันให้กว้างพอสมควร จะได้เปิดโปรเจกต์บนเครื่องอื่นที่ Flutter ไม่ใหม่เท่ากันได้
+  # ต้องใช้ Dart 3.9 ขึ้นไป (Flutter 3.35+) เพราะโค้ดใช้พารามิเตอร์ initialValue
+  # ของ DropdownButtonFormField ซึ่งเพิ่มเข้ามาในรุ่นนั้น
   sdk: '>=3.9.0 <4.0.0'
 
 dependencies:
@@ -29,3 +30,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # โลโก้ของรีสอร์ท เก็บเป็นไฟล์ .webp เพราะขนาดเล็กกว่า .png ที่คุณภาพเท่ากัน
+  # และ Flutter รองรับ webp บน Android ได้โดยตรงอยู่แล้ว
+  assets:
+    - assets/images/logo.webp         # โลโก้สีเขียว พื้นโปร่งใส ใช้บนพื้นอ่อน
+    - assets/images/logo_white.webp   # โลโก้สีขาวล้วน พื้นโปร่งใส ใช้บนพื้นเขียวเข้ม
+    - assets/images/logo_square.webp  # โลโก้จัตุรัสพื้นทึบ อ่านคำว่าบางเสร่ได้ชัด
+    - assets/images/logo_banner.webp  # ป้ายชื่อแนวนอนพร้อมสโลแกน ใช้ในหน้าเปิดแอป

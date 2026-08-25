@@ -45,13 +45,32 @@ class _HomeShellState extends State<HomeShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // ใส่พื้นไล่เฉดผ่าน flexibleSpace แทนการตั้ง backgroundColor สีเดียว
+        // เพราะ AppBar รับได้แค่สีทึบ ถ้าอยากได้พื้นไล่เฉดต้องวาดเป็นวิดเจ็ตซ้อนไว้ข้างหลัง
+        flexibleSpace: const DecoratedBox(
+          decoration: BoxDecoration(gradient: kBrandGradient),
+        ),
+        titleSpacing: 12,
+        leadingWidth: 60,
+        leading: const Padding(
+          padding: EdgeInsets.only(left: 12),
+          child: Center(
+            child: BrandMark(size: 38, onLightBackground: false),
+          ),
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(ResortConfig.name),
             Text(
-              _titles[_currentIndex],
+              ResortConfig.shortName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              '${ResortConfig.location} · ${_titles[_currentIndex]}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,

@@ -162,7 +162,10 @@ class _RoomMapBody extends StatelessWidget {
   }
 }
 
-/// แถบสรุปจำนวนห้องว่างและไม่ว่างที่อยู่บนสุดของหน้า
+/// การ์ดหัวหน้าผังห้อง รวมตราสัญลักษณ์ วันที่วันนี้ และสรุปจำนวนห้องไว้ใบเดียว
+///
+/// ใช้พื้นเขียวไล่เฉดให้ต่างจากการ์ดขาวใบอื่นในหน้า เพราะเป็นข้อมูลสรุปภาพรวม
+/// ไม่ใช่รายการที่กดเข้าไปดูรายละเอียดได้ ความต่างของพื้นช่วยบอกบทบาทนี้โดยไม่ต้องเขียนอธิบาย
 class _SummaryBar extends StatelessWidget {
   const _SummaryBar({
     required this.vacant,
@@ -176,16 +179,75 @@ class _SummaryBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
-      child: Row(
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: kBrandGradient,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _Legend(color: AppColors.primary, label: 'ว่าง', count: vacant),
-          const SizedBox(width: 18),
-          _Legend(color: AppColors.occupied, label: 'ไม่ว่าง', count: occupied),
-          const Spacer(),
-          Text(
-            'รวม $total ห้อง',
-            style: const TextStyle(fontSize: 13, color: AppColors.muted),
+          Row(
+            children: <Widget>[
+              const BrandMark(size: 44, onLightBackground: false),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      ResortConfig.shortName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      formatThaiDateFull(DateTime.now()),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 12, color: Colors.white70),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: <Widget>[
+              _CountPill(
+                color: AppColors.primaryDark,
+                label: 'ว่าง',
+                count: vacant,
+              ),
+              const SizedBox(width: 10),
+              _CountPill(
+                color: AppColors.occupied,
+                label: 'ไม่ว่าง',
+                count: occupied,
+              ),
+              // ใช้ Expanded แทน Spacer เพื่อให้ข้อความหดตัวได้เมื่อจอแคบหรือผู้ใช้
+              // ตั้งขนาดตัวอักษรของเครื่องไว้ใหญ่ ดีกว่าปล่อยให้ล้นขอบการ์ด
+              Expanded(
+                child: Text(
+                  'รวม $total ห้อง',
+                  textAlign: TextAlign.end,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white70,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -193,8 +255,13 @@ class _SummaryBar extends StatelessWidget {
   }
 }
 
-class _Legend extends StatelessWidget {
-  const _Legend({required this.color, required this.label, required this.count});
+/// ป้ายตัวเลขทรงแคปซูลบนพื้นเขียว ใช้บอกจำนวนห้องว่างและไม่ว่าง
+class _CountPill extends StatelessWidget {
+  const _CountPill({
+    required this.color,
+    required this.label,
+    required this.count,
+  });
 
   final Color color;
   final String label;
@@ -202,23 +269,31 @@ class _Legend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: 6),
-        Text(
-          '$label $count',
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: AppColors.ink,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            width: 9,
+            height: 9,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
-        ),
-      ],
+          const SizedBox(width: 7),
+          Text(
+            '$label $count',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+              color: color,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -230,11 +305,20 @@ class _OccupiedSheet extends StatelessWidget {
   final StayWithRoom data;
 
   Future<void> _checkOut(BuildContext context) async {
-    // เก็บ Navigator ไว้ก่อนเรียกงานที่ต้องรอ เพราะหลัง await แผ่นนี้อาจถูกปิดไปแล้ว
-    // การไปหยิบ context ตอนนั้นจะไม่ปลอดภัย
+    // เก็บ Navigator กับ ScaffoldMessenger ไว้ก่อนเรียกงานที่ต้องรอ
+    // เพราะหลัง await แผ่นนี้กำลังจะถูกปิด การไปหยิบจาก context ตอนนั้นไม่ปลอดภัย
     final NavigatorState navigator = Navigator.of(context);
+    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+
     await DatabaseHelper.instance.checkOut(data.stay.id!);
     navigator.pop();
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text('เช็คเอาท์ห้อง ${data.roomName} เรียบร้อย ห้องกลับมาว่างแล้ว'),
+        ),
+      );
   }
 
   @override

@@ -87,22 +87,34 @@ class StayCard extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: <Widget>[
-              const Icon(Icons.people_outline, size: 15, color: AppColors.muted),
-              const SizedBox(width: 6),
-              Text(
-                '${stay.guests} ท่าน',
-                style: const TextStyle(fontSize: 13, color: AppColors.ink),
-              ),
-              if (stay.hasExtraBed) ...<Widget>[
-                const SizedBox(width: 12),
-                const Icon(Icons.bed_outlined, size: 15, color: AppColors.muted),
-                const SizedBox(width: 4),
-                const Text(
-                  'เตียงเสริม',
-                  style: TextStyle(fontSize: 13, color: AppColors.ink),
+              // ห่อข้อมูลฝั่งซ้ายด้วย Expanded ให้ยอมหดตัวก่อน เพราะยอดเงินฝั่งขวา
+              // เป็นข้อมูลที่ห้ามถูกตัดทิ้ง ต้องอ่านได้เต็มจำนวนเสมอ
+              Expanded(
+                child: Row(
+                  children: <Widget>[
+                    const Icon(Icons.people_outline, size: 15, color: AppColors.muted),
+                    const SizedBox(width: 6),
+                    Text(
+                      '${stay.guests} ท่าน',
+                      style: const TextStyle(fontSize: 13, color: AppColors.ink),
+                    ),
+                    if (stay.hasExtraBed) ...<Widget>[
+                      const SizedBox(width: 12),
+                      const Icon(Icons.bed_outlined, size: 15, color: AppColors.muted),
+                      const SizedBox(width: 4),
+                      const Flexible(
+                        child: Text(
+                          'เตียงเสริม',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 13, color: AppColors.ink),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
-              ],
-              const Spacer(),
+              ),
+              const SizedBox(width: 8),
               Text(
                 formatBaht(stay.totalAmount),
                 style: const TextStyle(
