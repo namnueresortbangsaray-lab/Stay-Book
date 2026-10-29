@@ -1,0 +1,9 @@
+services:
+  php:
+    restart: unless-stopped
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      PHP_OPCACHE_VALIDATE_TIMESTAMPS: "0"
+  nginx:
+    restart: unless-stopped

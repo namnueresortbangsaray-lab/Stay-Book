@@ -1,190 +1,60 @@
-# Stay Book — ระบบบริหารห้องพักน้ำเหนือรีสอร์ท
+# Stay Book · น้ำเหนือรีสอร์ทบางเสร่
 
-Stay Book เป็นแอป Flutter ภาษาไทยสำหรับงานหน้าเคาน์เตอร์ของรีสอร์ต เกสต์เฮาส์ และโฮมสเตย์ขนาดเล็ก ใช้จัดการห้อง Booking ลูกค้า เช็กอิน ต่อเวลา เช็กเอาต์ รายได้ และ Feedback โดยเก็บข้อมูลใน SQLite บนอุปกรณ์ ไม่ต้องใช้อินเทอร์เน็ต
+Production-ready web edition of the resort’s Thai guest logbook. It covers the room board, bookings, check-in/out, guest history, pricing, inspections, feedback, analytics, CSV export, attachments, staff sessions, roles, and audit history. SQLite is the default; the same application and repository layer supports PostgreSQL/Supabase.
 
-แอปออกแบบให้ใช้บนอุปกรณ์ประจำเคาน์เตอร์หนึ่งเครื่อง ไม่มีบัญชีผู้ใช้ ไม่มี Cloud sync และไม่ส่งข้อมูลลูกค้าออกจากเครื่อง
+คู่มือสำหรับผู้ใช้งานและผู้ดูแลระบบภาษาไทย: [docs/USAGE_TH.md](docs/USAGE_TH.md)
 
-## ติดตั้งและรัน
+## Quick start
 
-ต้องใช้ Flutter 3.35 ขึ้นไปและ Dart 3.9 ขึ้นไป
-
-```bash
-flutter pub get
-flutter analyze
-flutter test
-flutter run
-```
-
-Dependency หลักมีเพียง `sqflite` และ `path` ไม่มี package สำหรับ state management, validation, วันที่ หรือกราฟ
-
-## หน้าจอและวิธีใช้
-
-### ผังห้อง
-
-แสดงห้องทุกห้องแยกตามโซน ห้องว่างเป็นพื้นฟ้าอ่อน ห้องที่มีผู้พักเป็นพื้นส้มแดง ห้องที่รับสัตว์เลี้ยงมีไอคอน Pet Friendly
-
-- แตะห้องว่างเพื่อเปิด Booking โดยเลือกห้องไว้ให้แล้ว
-- แตะห้องไม่ว่างเพื่อดูข้อมูลผู้พักและเปิด Checklist ก่อนเช็กเอาต์
-- Booking ล่วงหน้ากันช่วงวันที่ไว้ แต่ห้องจะเปลี่ยนเป็นไม่ว่างเมื่อเช็กอินแล้วเท่านั้น
-
-### Booking
-
-สลับได้สองมุมมอง คือ **รายการ** และ **ปฏิทิน** มุมมองรายการค้นหาจากชื่อลูกค้า เบอร์โทร ห้อง โซน หรือหมายเหตุ และกรองตามสถานะทั้งหมด/รอเช็กอิน/กำลังเข้าพัก/เช็กเอาต์แล้วได้
-
-มุมมองปฏิทินแสดง Booking ทั้งเดือนด้วยจุดสีตามสถานะและจำนวนรายการในแต่ละวัน ใช้ลูกศรเปลี่ยนเดือนหรือกด “วันนี้” เพื่อกลับเดือนปัจจุบัน เมื่อแตะวันที่จะแสดงจำนวนห้องที่พักอยู่ จำนวนเช็กอิน/เช็กเอาต์ และรายชื่อลูกค้าของวันนั้น วันที่เช็กเอาต์แสดงเป็นงานคืนห้อง แต่ไม่นับเป็นคืนเข้าพัก
-
-การ์ดแสดงช่วงวัน จำนวนคืน จำนวนคน ราคา ส่วนลด มัดจำ ยอดคงเหลือ การตรวจบัตร สัตว์เลี้ยง และประเภทลูกค้า ปุ่มจะเปลี่ยนตามสถานะ:
-
-- รอเช็กอิน: แก้ไข เช็กอิน ลบ
-- กำลังเข้าพัก: ต่อเวลา เช็กเอาต์
-- เช็กเอาต์แล้ว: เพิ่มหรือแก้ Feedback ดูรายละเอียด ลบ
-
-### Dashboard
-
-เลือกช่วงวันนี้, 7 วันล่าสุด, เดือนนี้ หรือกำหนดเอง ทุกการ์ดและกราฟใช้ช่วงเดียวกัน แสดงจำนวน Booking, เช็กอิน, เช็กเอาต์, แขก, room nights, occupancy, ราคาก่อนส่วนลด, ส่วนลด, รายได้สุทธิ, มัดจำ, Booking สัตว์เลี้ยง และคะแนน Feedback เฉลี่ย
-
-มีกราฟที่สร้างจาก Flutter โดยไม่เพิ่ม package:
-
-1. รายได้สุทธิรายวัน
-2. อัตราการเข้าพักรายวัน
-3. Donut สถานะ Booking
-4. Donut สถานะเงินมัดจำ
-
-ช่วงยาวกว่า 14 วันจะรวมจุดข้อมูลเป็นกลุ่มเพื่อให้กราฟอ่านได้บนโทรศัพท์
-
-### ห้องพัก
-
-เพิ่ม แก้ไข และลบห้อง กำหนดโซน ประเภท ราคา จำนวนคนพื้นฐาน จำนวนคนสูงสุด ค่าคนเพิ่ม และ Pet Friendly การลบห้องจะแจ้งจำนวนประวัติและลบข้อมูลลูกที่เกี่ยวข้องภายใน Transaction ตามนโยบายเดิม
-
-### ลูกค้า
-
-ค้นหาจากชื่อหรือเบอร์โทร กรองลูกค้าประจำ และเรียงตามการเข้าพักล่าสุด จำนวนครั้ง ยอดสะสม หรือชื่อ หน้ารายละเอียดแสดงข้อมูลถาวร ความต้องการ จำนวนครั้งที่พัก จำนวนคืน ยอดสุทธิและส่วนลดสะสม และประวัติ Booking
-
-เมื่อเช็กเอาต์สำเร็จอย่างน้อย 3 ครั้ง ระบบจะแสดงข้อเสนอให้ตั้งเป็นลูกค้าประจำ แต่จะไม่เปลี่ยนให้อัตโนมัติ
-
-## ขั้นตอนการทำงาน
-
-### Booking
-
-1. กรอกชื่อและเบอร์โทร ระบบ normalize เบอร์โดยเก็บเฉพาะตัวเลขและค้นหา Guest Profile เดิม
-2. ถ้าพบลูกค้าเดิม จะแสดงชื่อ ประเภท และสถานะลูกค้าประจำ สามารถใช้ข้อมูลเดิมได้
-3. เลือกวันเข้าและออก ห้องใน Dropdown คือห้องที่ว่างตลอดช่วงนั้น
-4. ระบุคน เตียงเสริม สัตว์เลี้ยง มัดจำ ส่วนลด การตรวจบัตร และหมายเหตุ หากเลือกประเภทสัตว์เป็น “อื่น ๆ” ต้องระบุชนิดสัตว์เพิ่มเติม ระบบจะบันทึกชื่อชนิดนั้นไว้กับ Booking
-5. ระบบตรวจวันทับซ้อนซ้ำอีกครั้งก่อนบันทึก
-6. ถ้าเป็นเบอร์ใหม่ ระบบสร้าง Guest และ Booking ใน Transaction เดียว
-
-โน้ตลูกค้าเป็นข้อมูลถาวร ส่วน `stays.note` เป็นโน้ตเฉพาะ Booking และไม่ถูกคัดลอกไปครั้งถัดไป
-
-### เช็กอิน
-
-Booking ล่วงหน้าไม่จำเป็นต้องตรวจบัตรทันที แต่ก่อนเช็กอินต้องทำเครื่องหมาย “ตรวจสอบบัตรประชาชนแล้ว” แอปเก็บเฉพาะสถานะและไม่เก็บเลขบัตร ระบบตรวจสถานะ Booking, ห้องปัจจุบัน และวันที่ชนก่อนเปลี่ยน Stay กับ Room ใน Transaction เดียว
-
-### ต่อระยะเวลาพัก
-
-กด “ต่อเวลา” เลือกวันออกใหม่ ระบบคำนวณจำนวนคืนและยอดใหม่ ตรวจ Booking ถัดไปโดยไม่นับ Stay ปัจจุบัน ค่าเตียงเสริมยังคิดครั้งเดียว ค่าสัตว์เลี้ยงเพิ่มตามคืน และส่วนลดยังคงเป็นเงินบาทจำนวนคงที่ซึ่งแก้หรือยกเลิกได้
-
-### เช็กเอาต์
-
-ต้องตอบ Checklist ทุกข้อ: คืนกุญแจ, ความสะอาด, อุปกรณ์, ความเสียหาย และมินิบาร์ หากพบความเสียหายต้องมีหมายเหตุ เมื่อยืนยัน ระบบบันทึก Inspection, ปิด Stay และคืนสถานะห้องพร้อมกัน หากคำสั่งใดล้มเหลว Transaction จะ rollback ทั้งหมด
-
-### Feedback
-
-หลังเช็กเอาต์ แอปถามว่าจะเปิดแบบประเมินทันทีหรือภายหลัง ให้คะแนนความสะอาด บริการ สิ่งอำนวยความสะดวก คะแนนรวม ความตั้งใจกลับมาใช้บริการ และความคิดเห็น หนึ่ง Stay มีหนึ่ง Feedback และเปิดแก้ไขรายการเดิมได้
-
-Feedback นี้เป็น Prototype สำหรับพนักงานหรือลูกค้ากรอกบนอุปกรณ์ของรีสอร์ตเครื่องเดียว การทำ QR หรือลิงก์จริงต้องเพิ่ม Backend API, หน้าเว็บสาธารณะ, authentication ที่เหมาะสม และฐานข้อมูลออนไลน์ ซึ่งไม่รวมในโปรเจกต์นี้
-
-## สูตรราคา
-
-```text
-จำนวนคืน = วันเช็กเอาต์ - วันเช็กอิน
-คนเพิ่ม = max(0, จำนวนคน - จำนวนคนพื้นฐาน)
-
-ค่าห้อง = ราคาห้อง × จำนวนคืน
-ค่าคนเพิ่ม = ค่าคนเพิ่มต่อคนต่อคืน × คนเพิ่ม × จำนวนคืน
-ค่าเตียงเสริม = 200 บาทครั้งเดียว
-ค่าสัตว์เลี้ยง = 200 บาทต่อห้องต่อคืน (ไม่คูณจำนวนสัตว์)
-
-ราคาก่อนส่วนลด = ค่าห้อง + ค่าคนเพิ่ม + เตียงเสริม + สัตว์เลี้ยง
-ยอดสุทธิ = ราคาก่อนส่วนลด - ส่วนลดเงินบาท
-ยอดคงเหลือ = ยอดสุทธิ - มัดจำที่ชำระแล้ว
-```
-
-`total_amount` เก็บยอดสุทธิ ส่วนราคาก่อนส่วนลดย้อนกลับได้จาก `total_amount + discount_amount` มัดจำที่ระบุแต่ยังไม่ชำระจะไม่ถูกหักจากยอดคงเหลือ
-
-## สถานะ
-
-`rooms.status`: 0 ว่าง, 1 ไม่ว่าง
-
-`stays.status`: 0 รอเช็กอิน, 1 กำลังเข้าพัก, 2 เช็กเอาต์แล้ว
-
-มัดจำมีสามสถานะ: ไม่มีมัดจำ, ชำระแล้ว และยังไม่ชำระ
-
-## ฐานข้อมูลและ Migration
-
-ฐานข้อมูลปัจจุบันเป็น version 2 และเปิด `PRAGMA foreign_keys = ON`
-
-- `rooms`: ข้อมูลห้องและ `is_pet_friendly`
-- `stays`: Booking, `guest_id`, มัดจำ, การตรวจบัตร, สัตว์เลี้ยง และส่วนลด
-- `guests`: โปรไฟล์ที่ใช้ `normalized_phone` เป็น unique key
-- `checkout_inspections`: Checklist หนึ่งรายการต่อ Stay
-- `feedbacks`: Feedback หนึ่งรายการต่อ Stay
-
-การอัปเกรดจาก version 1 ไม่ลบฐานข้อมูล ระบบใช้ `ALTER TABLE` เพิ่มคอลัมน์พร้อม default ที่ปลอดภัย สร้างตารางใหม่ แล้วนำรายการเดิมที่มีเบอร์โทรใช้งานได้มารวมเป็น Guest Profile ตาม normalized phone และเชื่อม `guest_id` รายการที่ข้อมูลไม่ครบยังเปิดได้โดย `guest_id` เป็น null
-
-ช่วงวันใช้รูปแบบครึ่งเปิด `[check-in, check-out)` ดังนั้นลูกค้าคนใหม่เข้าในวันเดียวกับที่คนเดิมออกได้ แต่คืนที่ทับกันจะถูกปฏิเสธ SQL ทุกคำสั่งอยู่ใน `lib/db/database_helper.dart` และใช้ parameter binding
-
-## โครงสร้างไฟล์
-
-```text
-lib/
-├── main.dart                         จุดเริ่มต้นแอป
-├── config.dart                       ข้อมูลกิจการและค่าบริการ
-├── app_state.dart                    สัญญาณรีเฟรชข้อมูล
-├── db/database_helper.dart           schema, migration และ SQL ทั้งหมด
-├── models/
-│   ├── room.dart                     Room และ RoomWithStay
-│   ├── stay.dart                     Stay, StayWithRoom และ PriceBreakdown
-│   ├── guest.dart                    Guest, GuestSummary และ GuestHistory
-│   ├── checkout_inspection.dart      Inspection และ Feedback
-│   ├── analytics.dart                ข้อมูล Dashboard และกราฟ
-│   └── dashboard_data.dart           สรุป Dashboard รุ่นเดิมที่ยังรองรับ
-├── screens/
-│   ├── splash_screen.dart            เตรียมฐานข้อมูล
-│   ├── home_shell.dart               Navigation หลัก
-│   ├── room_map_screen.dart          ผังห้อง
-│   ├── stay_list_screen.dart         ค้นหาและจัดการ Booking
-│   ├── booking_form_screen.dart      สร้าง/แก้ Booking
-│   ├── stay_actions.dart             ต่อเวลาและ Checklist
-│   ├── dashboard_screen.dart         ตัวกรอง การ์ด และกราฟ
-│   ├── manage_rooms_screen.dart      จัดการห้อง
-│   ├── guest_list_screen.dart        รายชื่อลูกค้า
-│   ├── guest_detail_screen.dart      โปรไฟล์และประวัติ
-│   └── feedback_form_screen.dart     Feedback Prototype
-├── widgets/                          การ์ดและ UI ที่ใช้ซ้ำ
-├── theme/app_theme.dart              ธีมฟ้า-ขาวและ AppColors
-└── utils/formatters.dart             วันที่ เงิน เบอร์โทร และ overlap
-
-test/price_and_format_test.dart        unit tests ของกฎธุรกิจหลัก
-```
-
-## การทดสอบ
+Requirements: Docker Desktop or Docker Engine with Compose.
 
 ```bash
-dart format lib test
-flutter analyze
-flutter test
+cp .env.example .env
+docker compose up -d --build
 ```
 
-Unit tests ครอบคลุมสูตรเดิม, คนเพิ่ม, เตียงเสริม, สัตว์เลี้ยง, ส่วนลด, มัดจำ, จำนวนคืน, รูปแบบเงินและวันที่, normalize เบอร์โทร, date overlap และสูตร occupancy
+Open <http://localhost:8080>. The seeded development account is:
 
-Migration และ Transaction ที่ใช้ `sqflite` ต้องทดสอบเพิ่มบน Android/iOS จริงหรือ integration-test environment เพราะ unit-test VM ไม่มี native SQLite plugin
+- Email: `admin@staybook.local`
+- Password: `ChangeMe123!`
 
-## ข้อจำกัดและสิ่งที่ไม่อยู่ในขอบเขต
+Change both values in `.env` before first production startup. If a user was already seeded, create a replacement with `php bin/console user:create`, verify it, then disable the demo user in the database.
 
-- ข้อมูลอยู่บนเครื่องเดียว ถอนแอปแล้วข้อมูลหายหากไม่มีการสำรอง
-- ไม่มี Cloud sync, Backend, QR Feedback จริง หรือ multi-device
-- ไม่มีบัญชีผู้ใช้และสิทธิ์ ใครเปิดอุปกรณ์ได้ก็ใช้งานข้อมูลได้
-- รายได้อ้างอิง Booking ที่เริ่มในช่วงวันที่เพื่อการบริหาร ไม่ใช่ระบบบัญชีภาษี
-- ไม่มีการชำระเงินออนไลน์
-- ไม่มี Promotion/Campaign, ส่วนลดเปอร์เซ็นต์ หรือส่วนลดอัตโนมัติตามประเภทลูกค้า
-- ไม่เก็บเลขบัตรประชาชน
+## Useful commands
+
+```bash
+make up                 # build and start
+make down               # stop
+make logs               # follow logs
+make migrate            # apply active-driver migrations
+make seed               # idempotent demo seed
+make test               # PHPUnit
+make lint               # PSR-12 + PHPStan
+make backup             # SQLite online backup
+make db-transfer        # SQLite -> configured PostgreSQL
+```
+
+Direct equivalents are available through `docker compose exec php php bin/console ...`.
+
+## Configuration
+
+All configuration comes from `.env`. Important values are `APP_ENV`, `APP_KEY`, `APP_URL`, `APP_PORT`, `DB_DRIVER`, `SQLITE_PATH`, `DB_SEED`, `SESSION_LIFETIME`, and `UPLOAD_MAX_BYTES`. PostgreSQL/Supabase uses the `SUPABASE_DB_*`, `PGSQL_SSLMODE`, and `PGSQL_EMULATE_PREPARES` values. Timestamps are stored in UTC and presented in `Asia/Bangkok`.
+
+## Data and backups
+
+SQLite, uploads, sessions, backups, and logs use separate named Docker volumes. Create an online SQLite backup with `make backup`; the command uses `VACUUM INTO`, writes a timestamped file to the backups volume, and retains `BACKUP_KEEP` copies. Back up the uploads volume alongside the database. To restore, stop the stack, replace the SQLite file in the database volume and restore the matching uploads snapshot, then start the stack.
+
+## Tests and quality
+
+`vendor/bin/phpunit`, `vendor/bin/phpstan analyse`, `vendor/bin/php-cs-fixer fix --dry-run --diff`, `npm run lint`, and `npm run build` are the local checks. CI runs quality checks against SQLite and PostgreSQL 15, then builds the Docker images. `tests/Smoke/smoke-test.sh` exercises the HTTP workflow against a running stack.
+
+## Production
+
+Use `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build`. Set a long random `APP_KEY`, secure credentials, `APP_ENV=production`, `DB_SEED=false`, HTTPS at the load balancer/reverse proxy, and reliable volume backups. See [deployment](docs/DEPLOYMENT.md), [architecture](docs/ARCHITECTURE.md), [API](docs/API.md), and [Supabase migration](docs/SUPABASE.md).
+
+## Troubleshooting
+
+- `database is locked`: confirm the database directory—not just the file—is writable by the PHP container. The app enables WAL and a 5-second busy timeout.
+- Login fails after changing `.env`: seed values only create a missing account; use `user:create` for a new credential.
+- PostgreSQL cannot connect: verify host/port, TLS mode, pooler type, and whether transaction-pooler emulated prepares are enabled.
+- Assets are missing: rebuild the images; hashed CSS/JS and `manifest.json` are produced during the Docker build.

@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Console\Kernel;
+use App\Core\Config;
+
+require dirname(__DIR__) . '/bootstrap/autoload.php';
+Config::load(dirname(__DIR__) . '/config');
+exit((new Kernel())->run($argv));

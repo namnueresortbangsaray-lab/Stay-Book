@@ -1,0 +1,25 @@
+services:
+  php:
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+  nginx:
+    volumes:
+      - .:/var/www/html:ro
+  node:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    profiles: ["dev"]
+    volumes:
+      - ./resources:/app/resources
+      - ./public/build:/app/public/build
+      - ./tailwind.config.js:/app/tailwind.config.js:ro
+      - ./scripts:/app/scripts:ro
+  sqlite-browser:
+    image: coleifer/sqlite-web:latest
+    profiles: ["tools"]
+    command: ["sqlite_web", "-H", "0.0.0.0", "-p", "8080", "/data/stay_book.sqlite", "--read-only"]
+    ports: ["8081:8080"]
+    volumes:
+      - staybook_database:/data:ro
