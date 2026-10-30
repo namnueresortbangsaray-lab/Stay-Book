@@ -1,6 +1,15 @@
 import { api } from './core/api.js';
 import { $, $$, escapeHtml as h, formObject, toast } from './core/dom.js';
 import { icon } from './core/icons.js';
+import {
+  button as uiButton,
+  closeDropdownMenu,
+  iconButton,
+  menuTriggerButton,
+  openDropdownMenu,
+  selectControl,
+  setButtonLoading,
+} from './core/ui.js';
 
 if ($('#app')) {
   const role = $('#app').dataset.role;
@@ -27,6 +36,25 @@ if ($('#app')) {
   const statusText = ['รอเช็กอิน', 'กำลังเข้าพัก', 'เช็กเอาต์แล้ว'];
   const statusIcons = ['clock', 'bed', 'check'];
   const statusBadgeClass = ['badge-booked', 'badge-occupied', 'badge-completed'];
+
+  function stayMenuItems(stay) {
+    const status = Number(stay.status);
+    const items = [];
+    if (canBook && status === 0) items.push({ action: 'edit-booking', id: stay.id, label: 'แก้ไข Booking', icon: 'edit' });
+    if (canBook && status === 1) items.push({ action: 'extend', id: stay.id, label: 'ต่อระยะเวลาเข้าพัก', icon: 'clock' });
+    items.push({ action: 'upload', id: stay.id, label: 'แนบไฟล์', icon: 'upload' });
+    if (canBook) {
+      items.push({ separator: true });
+      items.push({ action: 'delete-booking', id: stay.id, label: 'ลบ Booking', icon: 'trash', destructive: true });
+    }
+    return items;
+  }
+
+  function roomMenuItems(room) {
+    return [
+      { action: 'delete-room', id: room.id, label: 'ลบห้องพัก', icon: 'trash', destructive: true },
+    ];
+  }
 
   const money = satang => new Intl.NumberFormat('th-TH', {
     style: 'currency',
@@ -80,7 +108,7 @@ if ($('#app')) {
           <p class="truncate text-sm font-bold text-ink">ห้อง ${h(s.room_name)} · ${h(s.guest_name)}</p>
           <p class="mt-0.5 text-xs text-muted">${h(s.phone || 'ไม่มีเบอร์โทร')} · ${s.guests} ท่าน</p>
         </div>
-        ${action ? `<button class="${tone === 'primary' ? 'btn-primary' : 'btn-secondary'} btn-sm" data-action="${action}" data-id="${s.id}">${label}</button>` : ''}
+        ${action ? uiButton({ label, variant: tone, size: 'sm', attributes: { 'data-action': action, 'data-id': s.id } }) : ''}
       </div>`;
 
     $('#today-desk').innerHTML = `
@@ -90,7 +118,7 @@ if ($('#app')) {
           <h2 class="mt-1 text-2xl font-bold tracking-tight text-ink">สวัสดีตอนเช้า · ${thaiDate(today)}</h2>
           <p class="mt-1 text-sm text-muted">งานที่ต้องดูแลวันนี้ถูกรวมไว้ในที่เดียว</p>
         </div>
-        <button class="btn-secondary" data-action="command">${icon('search', 'w-4 h-4')}<span>ค้นหาทุกอย่าง</span></button>
+        ${uiButton({ label: 'ค้นหาทุกอย่าง', variant: 'secondary', iconName: 'search', attributes: { 'data-action': 'command' } })}
       </div>
       <div class="mb-6 grid grid-cols-2 gap-3 xl:grid-cols-4">
         ${[
@@ -169,10 +197,7 @@ if ($('#app')) {
           </div>
           <p class="text-base font-semibold text-ink">ยังไม่มีข้อมูลห้องพัก</p>
           <p class="text-xs text-muted mt-1">เริ่มต้นโดยการเพิ่มห้องพักในแท็บ 'ห้องพัก'</p>
-          <button class="btn-primary mt-4" data-action="new-room">
-            ${icon('plus', 'w-4 h-4')}
-            <span>เพิ่มห้องพักแรก</span>
-          </button>
+          ${uiButton({ label: 'เพิ่มห้องพักแรก', variant: 'primary', iconName: 'plus', className: 'mt-4', attributes: { 'data-action': 'new-room' } })}
         </div>
       `;
       return;
@@ -339,45 +364,12 @@ if ($('#app')) {
           </div>
         ` : ''}
 
-        <!-- Card Action Buttons -->
-        <div class="no-print mt-4 flex flex-wrap items-center gap-2 pt-3 border-t border-line/60">
-          ${statusIdx === 0 && canBook ? `
-            <button class="btn-primary btn-sm" data-action="check-in" data-id="${s.id}">
-              ${icon('check', 'w-3.5 h-3.5')}
-              <span>เช็กอิน</span>
-            </button>
-            <button class="btn-secondary btn-sm" data-action="edit-booking" data-id="${s.id}">
-              ${icon('edit', 'w-3.5 h-3.5')}
-              <span>แก้ไข</span>
-            </button>
-          ` : ''}
-
-          ${statusIdx === 1 && canCheckout ? `
-            <button class="btn-primary btn-sm" data-action="checkout" data-id="${s.id}">
-              ${icon('signout', 'w-3.5 h-3.5')}
-              <span>เช็กเอาต์</span>
-            </button>
-            ${canBook ? `<button class="btn-secondary btn-sm" data-action="extend" data-id="${s.id}">
-              ${icon('clock', 'w-3.5 h-3.5')}
-              <span>ต่อเวลา</span>
-            </button>` : ''}
-          ` : ''}
-
-          ${statusIdx === 2 && canBook ? `
-            <button class="btn-secondary btn-sm" data-action="feedback" data-id="${s.id}">
-              ${icon('star', 'w-3.5 h-3.5')}
-              <span>แบบประเมิน</span>
-            </button>
-          ` : ''}
-
-          <button class="btn-secondary btn-sm" data-action="upload" data-id="${s.id}">
-            ${icon('upload', 'w-3.5 h-3.5')}
-            <span>แนบไฟล์</span>
-          </button>
-          ${canBook ? `<button class="btn-danger btn-sm ml-auto" data-action="delete-booking" data-id="${s.id}">
-            ${icon('trash', 'w-3.5 h-3.5')}
-            <span>ลบ</span>
-          </button>` : ''}
+        <!-- One primary action plus a compact overflow menu keeps scanning predictable. -->
+        <div class="no-print mt-4 flex items-center gap-2 border-t border-line/60 pt-3">
+          ${statusIdx === 0 && canBook ? uiButton({ label: 'เช็กอิน', variant: 'primary', size: 'sm', iconName: 'check', attributes: { 'data-action': 'check-in', 'data-id': s.id } }) : ''}
+          ${statusIdx === 1 && canCheckout ? uiButton({ label: 'เช็กเอาต์', variant: 'primary', size: 'sm', iconName: 'signout', attributes: { 'data-action': 'checkout', 'data-id': s.id } }) : ''}
+          ${statusIdx === 2 && canBook ? uiButton({ label: 'บันทึกแบบประเมิน', variant: 'secondary', size: 'sm', iconName: 'star', attributes: { 'data-action': 'feedback', 'data-id': s.id } }) : ''}
+          <span class="ml-auto">${menuTriggerButton({ context: 'stay', id: s.id, label: `การทำงานของ Booking ห้อง ${s.room_name}`, size: 'sm' })}</span>
         </div>
       </article>
     `;
@@ -396,6 +388,7 @@ if ($('#app')) {
             </div>
             <p class="text-base font-semibold text-ink">ไม่พบรายการ Booking</p>
             <p class="text-xs text-muted mt-1">ลองเปลี่ยนคำค้นหา หรือเปิดรายการเข้าพักใหม่</p>
+            ${canBook ? uiButton({ label: 'สร้าง Booking', variant: 'primary', iconName: 'plus', className: 'mt-4', attributes: { 'data-action': 'new-booking' } }) : ''}
           </div>
         `}
       </div>
@@ -465,21 +458,14 @@ if ($('#app')) {
         <!-- Month Navigation Header -->
         <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-2">
-            <button class="btn-secondary !min-h-[36px] !p-2" data-calendar-nav="-1" aria-label="เดือนก่อนหน้า">
-              ${icon('chevronLeft', 'w-4 h-4')}
-            </button>
+            ${iconButton({ label: 'เดือนก่อนหน้า', iconName: 'chevronLeft', size: 'sm', attributes: { 'data-calendar-nav': '-1' } })}
             <h2 class="text-base font-bold text-ink min-w-[140px] text-center">
               ${new Intl.DateTimeFormat('th-TH', { month: 'long', year: 'numeric' }).format(first)}
             </h2>
-            <button class="btn-secondary !min-h-[36px] !p-2" data-calendar-nav="1" aria-label="เดือนถัดไป">
-              ${icon('chevronRight', 'w-4 h-4')}
-            </button>
+            ${iconButton({ label: 'เดือนถัดไป', iconName: 'chevronRight', size: 'sm', attributes: { 'data-calendar-nav': '1' } })}
           </div>
 
-          <button class="btn-secondary !min-h-[36px] px-3 text-xs" data-calendar-today>
-            ${icon('calendar', 'w-3.5 h-3.5')}
-            <span>วันนี้</span>
-          </button>
+          ${uiButton({ label: 'วันนี้', variant: 'secondary', size: 'sm', iconName: 'calendar', attributes: { 'data-calendar-today': true } })}
         </div>
 
         <div class="calendar-scroll" tabindex="0" aria-label="ปฏิทินรายเดือน เลื่อนแนวนอนได้บนหน้าจอขนาดเล็ก">
@@ -708,15 +694,9 @@ if ($('#app')) {
           </div>
         </div>
 
-        <div class="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:items-center">
-          <button class="btn-secondary btn-sm" data-action="edit-room" data-id="${r.id}">
-            ${icon('edit', 'w-3.5 h-3.5')}
-            <span>แก้ไข</span>
-          </button>
-          <button class="btn-danger btn-sm" data-action="delete-room" data-id="${r.id}">
-            ${icon('trash', 'w-3.5 h-3.5')}
-            <span>ลบ</span>
-          </button>
+        <div class="flex w-full items-center justify-end gap-2 sm:w-auto">
+          ${uiButton({ label: 'แก้ไข', variant: 'secondary', size: 'sm', iconName: 'edit', attributes: { 'data-action': 'edit-room', 'data-id': r.id } })}
+          ${menuTriggerButton({ context: 'room', id: r.id, label: `การทำงานของห้อง ${r.name}`, size: 'sm' })}
         </div>
       </article>
     `).join('') || `
@@ -891,6 +871,9 @@ if ($('#app')) {
       f.elements.room_id.innerHTML = roomOptions(s.room_id);
     }
 
+    $('#booking-dialog h2').textContent = id ? 'แก้ไข Booking' : 'สร้าง Booking';
+    f.querySelector('[data-submit-label]').textContent = id ? 'บันทึกการเปลี่ยนแปลง' : 'สร้าง Booking';
+
     updatePrice();
     $('#booking-dialog').showModal();
   }
@@ -983,6 +966,9 @@ if ($('#app')) {
       });
     }
 
+    $('#room-dialog h2').textContent = id ? 'แก้ไขห้องพัก' : 'เพิ่มห้องพัก';
+    f.querySelector('[data-submit-label]').textContent = id ? 'บันทึกการเปลี่ยนแปลง' : 'เพิ่มห้องพัก';
+
     $('#room-dialog').showModal();
   }
 
@@ -1046,6 +1032,13 @@ if ($('#app')) {
       upload: 'แนบไฟล์เอกสาร / รูปภาพ',
     };
     $('#action-title').textContent = titles[action] || 'ดำเนินการ';
+    const submitLabels = {
+      checkout: 'ยืนยันเช็กเอาต์',
+      extend: 'บันทึกวันเช็กเอาต์ใหม่',
+      feedback: 'บันทึกแบบประเมิน',
+      upload: 'แนบไฟล์',
+    };
+    f.querySelector('[data-submit-label]').textContent = submitLabels[action] || 'ยืนยันการทำรายการ';
 
     let fields = '';
 
@@ -1094,14 +1087,12 @@ if ($('#app')) {
             ['service_rating', 'การบริการของพนักงาน'],
             ['facility_rating', 'สิ่งอำนวยความสะดวก'],
             ['overall_rating', 'ความพึงพอใจโดยรวม'],
-          ].map(([n, l]) => `
-            <div>
-              <label class="label">${l}</label>
-              <select class="field" name="${n}">
-                ${[5, 4, 3, 2, 1].map(x => `<option value="${x}">${'★'.repeat(x)} (${x} คะแนน)</option>`).join('')}
-              </select>
-            </div>
-          `).join('')}
+          ].map(([n, l]) => selectControl({
+            name: n,
+            label: l,
+            value: 5,
+            options: [5, 4, 3, 2, 1].map(x => ({ value: x, label: `${'★'.repeat(x)} (${x} คะแนน)` })),
+          })).join('')}
         </div>
         <div class="pt-2">
           <label class="flex items-center gap-3 rounded-xl border border-line bg-canvas/40 p-3 text-xs font-semibold text-ink cursor-pointer">
@@ -1130,11 +1121,46 @@ if ($('#app')) {
     $('#action-dialog').showModal();
   }
 
+  function confirmAction({ title, message, confirmLabel = 'ยืนยัน', destructive = false }) {
+    const dialog = $('#confirm-dialog');
+    const accept = dialog.querySelector('[data-confirm-accept]');
+    const cancel = dialog.querySelector('[data-confirm-cancel]');
+    $('#confirm-title').textContent = title;
+    $('#confirm-message').textContent = message;
+    accept.textContent = confirmLabel;
+    accept.className = `${destructive ? 'btn-destructive' : 'btn-primary'} btn-md`;
+
+    return new Promise(resolve => {
+      const finish = result => {
+        dialog.close();
+        accept.removeEventListener('click', onAccept);
+        cancel.removeEventListener('click', onCancel);
+        dialog.removeEventListener('cancel', onCancel);
+        dialog.removeEventListener('click', onBackdrop);
+        resolve(result);
+      };
+      const onAccept = () => finish(true);
+      const onCancel = event => {
+        event?.preventDefault();
+        finish(false);
+      };
+      const onBackdrop = event => {
+        if (event.target === dialog) finish(false);
+      };
+      accept.addEventListener('click', onAccept);
+      cancel.addEventListener('click', onCancel);
+      dialog.addEventListener('cancel', onCancel);
+      dialog.addEventListener('click', onBackdrop);
+      dialog.showModal();
+      requestAnimationFrame(() => accept.focus());
+    });
+  }
+
   async function mutate(path, method, body, form = null) {
     const submit = form?.querySelector('[type="submit"]');
     form?.querySelectorAll('[aria-invalid="true"]').forEach(field => field.removeAttribute('aria-invalid'));
     form?.querySelectorAll('[data-field-error]').forEach(error => error.remove());
-    if (submit) submit.disabled = true;
+    setButtonLoading(submit, true);
     try {
       await api(path, {
         method,
@@ -1154,7 +1180,7 @@ if ($('#app')) {
       toast(`${e.message}${Object.keys(e.errors || {}).length ? ' · ' + Object.values(e.errors).join(' · ') : ''}`, 'error');
       return false;
     } finally {
-      if (submit) submit.disabled = false;
+      setButtonLoading(submit, false);
     }
   }
 
@@ -1163,7 +1189,25 @@ if ($('#app')) {
     const b = e.target.closest('button, a');
     if (!b) return;
 
-    if (b.dataset.page) navigate(b.dataset.page);
+    if (b.dataset.menuTrigger) {
+      const item = b.dataset.menuTrigger === 'stay'
+        ? state.data.stays.find(stay => stay.id === b.dataset.id)
+        : state.data.rooms.find(room => room.id === b.dataset.id);
+      if (!item) return;
+      openDropdownMenu(
+        b,
+        b.dataset.menuTrigger === 'stay' ? stayMenuItems(item) : roomMenuItems(item),
+        b.getAttribute('aria-label') || 'เมนูการทำงาน',
+      );
+      return;
+    }
+
+    if (b.closest('.action-menu')) closeDropdownMenu();
+
+    if (b.dataset.page) {
+      b.closest('dialog')?.close();
+      navigate(b.dataset.page);
+    }
     if (b.hasAttribute('data-close')) b.closest('dialog')?.close();
     if (b.dataset.commandPage) {
       $('#command-dialog').close();
@@ -1180,7 +1224,11 @@ if ($('#app')) {
     const id = b.dataset.id;
 
     if (a === 'new-booking') openBooking(null, id);
-    if (a === 'command') openCommand();
+    if (a === 'command') {
+      b.closest('dialog')?.close();
+      openCommand();
+    }
+    if (a === 'mobile-more') $('#mobile-more-dialog').showModal();
     if (a === 'retry-load') load().catch(error => toast(error.message, 'error'));
     if (a === 'edit-booking') openBooking(id);
     if (a === 'new-room') openRoom();
@@ -1197,16 +1245,36 @@ if ($('#app')) {
       openAction(a, id);
     }
 
-    if (a === 'check-in' && confirm('ยืนยันเช็กอินรายการนี้?')) {
-      await mutate(`/api/v1/stays/${id}/check-in`, 'POST', {});
+    if (a === 'check-in') {
+      const stay = state.data.stays.find(item => item.id === id);
+      const confirmed = await confirmAction({
+        title: 'ยืนยันเช็กอิน',
+        message: `ตรวจสอบตัวตนและข้อมูลการชำระเงินของ ${stay?.guest_name || 'ผู้เข้าพัก'} ห้อง ${stay?.room_name || ''} แล้วใช่หรือไม่`,
+        confirmLabel: 'ยืนยันเช็กอิน',
+      });
+      if (confirmed) await mutate(`/api/v1/stays/${id}/check-in`, 'POST', {});
     }
 
-    if (a === 'delete-booking' && confirm('ลบรายการ Booking นี้อย่างถาวร?')) {
-      await mutate(`/api/v1/stays/${id}`, 'DELETE', {});
+    if (a === 'delete-booking') {
+      const stay = state.data.stays.find(item => item.id === id);
+      const confirmed = await confirmAction({
+        title: 'ลบ Booking นี้หรือไม่',
+        message: `Booking ของ ${stay?.guest_name || 'ผู้เข้าพัก'} ห้อง ${stay?.room_name || ''} จะถูกลบและไม่แสดงในรายการอีก`,
+        confirmLabel: 'ลบ Booking',
+        destructive: true,
+      });
+      if (confirmed) await mutate(`/api/v1/stays/${id}`, 'DELETE', {});
     }
 
-    if (a === 'delete-room' && confirm('ยืนยันลบห้องพักนี้?')) {
-      await mutate(`/api/v1/rooms/${id}`, 'DELETE', {});
+    if (a === 'delete-room') {
+      const room = state.data.rooms.find(item => item.id === id);
+      const confirmed = await confirmAction({
+        title: 'ลบห้องพักนี้หรือไม่',
+        message: `ห้อง ${room?.name || ''} จะถูกลบ หากมีประวัติการเข้าพักระบบอาจไม่อนุญาตให้ดำเนินการ`,
+        confirmLabel: 'ลบห้องพัก',
+        destructive: true,
+      });
+      if (confirmed) await mutate(`/api/v1/rooms/${id}`, 'DELETE', {});
     }
 
     if (a === 'print') window.print();
@@ -1215,9 +1283,7 @@ if ($('#app')) {
       state.bookingView = b.dataset.view;
       $$('[data-view]').forEach(btn => {
         const isCurrent = btn.dataset.view === state.bookingView;
-        btn.classList.toggle('text-brand-700', isCurrent);
-        btn.classList.toggle('bg-brand-50', isCurrent);
-        btn.classList.toggle('text-muted', !isCurrent);
+        btn.setAttribute('aria-pressed', String(isCurrent));
       });
       $('#booking-list').hidden = state.bookingView !== 'list';
       $('#booking-calendar').hidden = state.bookingView !== 'calendar';
@@ -1329,6 +1395,33 @@ if ($('#app')) {
 
   $('#apply-range')?.addEventListener('click', () => load().catch(e => toast(e.message, 'error')));
   $('#command-search')?.addEventListener('input', renderCommands);
+  $('#command-search')?.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      $('#command-results button')?.focus();
+    }
+  });
+  $('#command-results')?.addEventListener('keydown', e => {
+    const options = $$('#command-results button');
+    const index = options.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      options[(index + 1) % options.length]?.focus();
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (index <= 0) $('#command-search').focus();
+      else options[index - 1]?.focus();
+    }
+    if (e.key === 'Home') {
+      e.preventDefault();
+      options[0]?.focus();
+    }
+    if (e.key === 'End') {
+      e.preventDefault();
+      options.at(-1)?.focus();
+    }
+  });
   window.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
@@ -1339,6 +1432,7 @@ if ($('#app')) {
 
   $$('[data-range]').forEach(button => {
     button.addEventListener('click', () => {
+      $$('[data-range]').forEach(option => option.setAttribute('aria-pressed', String(option === button)));
       const now = new Date();
       const start = new Date(now);
       if (button.dataset.range === '7days') start.setDate(now.getDate() - 6);
@@ -1360,6 +1454,6 @@ if ($('#app')) {
   load().catch(e => {
     toast(e.message, 'error');
     $('#loading').hidden = false;
-    $('#loading').innerHTML = `<p class="font-semibold text-ink">โหลดข้อมูลไม่สำเร็จ</p><p class="mt-1 text-sm text-muted">${h(e.message)}</p><button class="btn-primary mt-4" data-action="retry-load">ลองอีกครั้ง</button>`;
+    $('#loading').innerHTML = `<p class="font-semibold text-ink">โหลดข้อมูลไม่สำเร็จ</p><p class="mt-1 text-sm text-muted">${h(e.message)}</p><button class="btn-primary btn-md mt-4" data-action="retry-load">ลองอีกครั้ง</button>`;
   });
 }

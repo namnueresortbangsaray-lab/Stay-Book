@@ -12,7 +12,7 @@
     <h1 class="mt-3 text-lg font-semibold text-ink"><?= View::e($message) ?></h1>
     <p class="mt-2 text-sm text-muted">หากพบปัญหาต่อเนื่อง กรุณาติดต่อผู้ดูแลระบบ</p>
     <div class="mt-7">
-      <a href="/" class="btn-primary w-full">กลับหน้าหลัก</a>
+      <a href="/" class="btn-primary btn-md w-full">กลับหน้าหลัก</a>
     </div>
   </section>
 </main>

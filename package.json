@@ -4,7 +4,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/build.mjs --watch",
-    "lint": "node --check resources/js/app.js && node --check resources/js/core/api.js && node --check resources/js/core/dom.js && node --check resources/js/core/icons.js"
+    "lint": "node --check resources/js/app.js && node --check resources/js/core/api.js && node --check resources/js/core/dom.js && node --check resources/js/core/icons.js && node --check resources/js/core/ui.js"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.10",

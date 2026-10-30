@@ -54,7 +54,7 @@
         </div>
 
         <div class="pt-2">
-          <button class="btn-primary w-full text-base font-medium py-3" type="submit">
+          <button class="btn-primary btn-lg w-full text-base font-medium" type="submit">
             เข้าสู่ระบบ
           </button>
         </div>

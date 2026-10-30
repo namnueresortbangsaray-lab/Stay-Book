@@ -13,10 +13,10 @@
   </div>
 
   <!-- Slim, Clean Quiet Luxury Sidebar -->
-  <aside class="no-print hidden border-r border-line bg-white p-5 md:flex md:flex-col md:justify-between z-20">
+  <aside class="sidebar-shell no-print hidden border-r border-brand-100 p-5 md:flex md:flex-col md:justify-between z-20">
     <div>
       <!-- Resort Brand Banner -->
-      <div class="px-2 pt-2 pb-6 border-b border-line/60">
+      <div class="sidebar-brand rounded-2xl border border-brand-100/80 bg-white/80 px-3 py-4 shadow-subtle">
         <a href="/" class="block">
           <img src="/images/logo_banner.webp" class="h-12 w-auto object-contain" alt="น้ำเหนือรีสอร์ท">
         </a>
@@ -27,29 +27,30 @@
       </div>
 
       <!-- Main Navigation Menu -->
-      <nav class="mt-6 space-y-1.5" aria-label="เมนูหลัก">
+      <p class="mb-2 mt-6 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700/70">เมนูจัดการ</p>
+      <nav class="space-y-1.5" aria-label="เมนูหลัก">
         <button class="nav-link active w-full" data-page="today">
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/><path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>
+          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/><path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg></span>
           <span>วันนี้</span>
         </button>
         <button class="nav-link w-full" data-page="room-map">
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="14" rx="1.5"/><rect width="7" height="7" x="3" y="14" rx="1.5"/></svg>
+          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="14" rx="1.5"/><rect width="7" height="7" x="3" y="14" rx="1.5"/></svg></span>
           <span>ผังห้อง</span>
         </button>
         <button class="nav-link w-full" data-page="bookings">
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/></svg>
+          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/></svg></span>
           <span>ตารางเข้าพัก</span>
         </button>
         <button class="nav-link w-full" data-page="dashboard">
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span>
           <span>ภาพรวม</span>
         </button>
         <button class="nav-link w-full" data-page="rooms" data-manager-only>
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/></svg>
+          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/></svg></span>
           <span>ห้องพัก</span>
         </button>
         <button class="nav-link w-full" data-page="guests">
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
           <span>ลูกค้า</span>
         </button>
       </nav>
@@ -57,7 +58,7 @@
 
     <!-- User Profile & Sign-out Pill -->
     <div class="mt-auto pt-6">
-      <div class="rounded-2xl border border-line bg-canvas/80 p-3.5">
+      <div class="sidebar-profile rounded-2xl border border-brand-100 p-3.5 shadow-subtle">
         <div class="flex items-center gap-3">
           <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-100 text-xs font-bold text-brand-700">
             <?= mb_substr((string)($user['name'] ?? 'U'), 0, 1) ?>
@@ -69,7 +70,7 @@
         </div>
         <form method="post" action="/logout" class="mt-3 pt-2.5 border-t border-line/60">
           <input type="hidden" name="_token" value="<?= View::e(Session::csrf()) ?>">
-          <button class="flex w-full items-center justify-between text-xs font-medium text-muted transition hover:text-red-600" type="submit">
+          <button class="btn-ghost btn-md w-full justify-between !px-2 text-xs hover:text-red-600" type="submit">
             <span>ออกจากระบบ</span>
             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
           </button>
@@ -87,13 +88,13 @@
         <p class="text-xs text-muted">น้ำเหนือรีสอร์ท · บางเสร่ ชลบุรี</p>
       </div>
       <div class="flex items-center gap-2">
-        <button class="btn-secondary hidden sm:inline-flex" data-action="command" aria-label="ค้นหาด่วน">
+        <button class="btn-secondary btn-md hidden sm:inline-flex" data-action="command" aria-label="ค้นหาด่วน">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <span>ค้นหา</span><kbd class="rounded bg-canvas px-1.5 py-0.5 text-[10px] text-muted">⌘ K</kbd>
         </button>
-        <button class="btn-primary" data-action="new-booking" data-booking-control>
+        <button class="btn-primary btn-md hidden md:inline-flex" data-action="new-booking" data-booking-control>
           <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-          <span class="hidden sm:inline">เปิดรายการเข้าพัก</span><span class="sm:hidden">เพิ่ม</span>
+          <span>สร้าง Booking</span>
         </button>
       </div>
     </header>
@@ -133,9 +134,9 @@
       <section id="page-bookings" data-page-panel hidden>
         <div class="mb-5 grid grid-cols-1 gap-3 sm:flex sm:flex-wrap sm:items-center sm:gap-2.5">
           <!-- View Switcher Segmented Control -->
-          <div class="inline-flex rounded-xl border border-line bg-white p-1 shadow-subtle">
-            <button class="btn-sm rounded-lg px-3.5 font-medium transition active text-brand-700 bg-brand-50" data-view="list">รายการ</button>
-            <button class="btn-sm rounded-lg px-3.5 font-medium transition text-muted hover:text-ink" data-view="calendar">ปฏิทิน</button>
+          <div class="segmented-control" role="group" aria-label="รูปแบบตารางเข้าพัก">
+            <button class="segmented-control-item" aria-pressed="true" data-view="list">รายการ</button>
+            <button class="segmented-control-item" aria-pressed="false" data-view="calendar">ปฏิทิน</button>
           </div>
           <!-- Filter Inputs -->
           <div class="relative min-w-0 flex-1">
@@ -160,10 +161,10 @@
         <!-- Range Filter Bar -->
         <div class="mb-6 card flex flex-wrap items-center justify-between gap-4 p-4">
           <div class="w-full space-y-3 lg:flex lg:w-auto lg:items-center lg:space-y-0">
-            <div class="grid grid-cols-3 rounded-xl border border-line bg-canvas/70 p-1 sm:inline-flex">
-              <button class="btn-sm rounded-lg px-3 font-medium text-muted hover:text-ink" data-range="today">วันนี้</button>
-              <button class="btn-sm rounded-lg px-3 font-medium text-muted hover:text-ink" data-range="7days">7 วันล่าสุด</button>
-              <button class="btn-sm rounded-lg px-3 font-medium text-muted hover:text-ink" data-range="month">เดือนนี้</button>
+            <div class="segmented-control grid grid-cols-3 sm:inline-flex" role="group" aria-label="ช่วงเวลารายงาน">
+              <button class="segmented-control-item" aria-pressed="false" data-range="today">วันนี้</button>
+              <button class="segmented-control-item" aria-pressed="false" data-range="7days">7 วันล่าสุด</button>
+              <button class="segmented-control-item" aria-pressed="true" data-range="month">เดือนนี้</button>
             </div>
             <div class="grid grid-cols-2 gap-2 text-sm sm:ml-2 sm:inline-flex sm:items-center">
               <input id="range-start" class="field !min-h-[44px] w-full !py-1.5 sm:w-auto" type="date" aria-label="วันที่เริ่มต้น">
@@ -193,7 +194,7 @@
             <h2 class="text-base font-bold text-ink">รายการห้องพักทั้งหมด</h2>
             <p class="text-xs text-muted">จัดการราคาพื้นฐาน เตียง และสิ่งอำนวยความสะดวก</p>
           </div>
-          <button class="btn-primary" data-action="new-room">
+          <button class="btn-primary btn-md" data-action="new-room">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
             <span>เพิ่มห้องพัก</span>
           </button>
@@ -227,7 +228,12 @@
   </div>
 
   <!-- Mobile Bottom Navigation Bar (Quiet Luxury) -->
-  <nav class="mobile-nav no-print fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t border-line bg-white/95 px-1 pt-1 backdrop-blur-md md:hidden shadow-dropdown" aria-label="เมนูมือถือ">
+  <button class="mobile-primary-fab no-print md:hidden" data-action="new-booking" data-booking-control>
+    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+    <span>สร้าง Booking</span>
+  </button>
+
+  <nav class="mobile-nav no-print fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line bg-white/95 px-1 pt-1 backdrop-blur-md md:hidden shadow-dropdown" aria-label="เมนูมือถือ">
     <button class="active flex flex-col items-center justify-center py-2 text-[10px] font-semibold text-brand-700 transition" data-page="today">
       <svg class="h-4 w-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
       <span>วันนี้</span>
@@ -244,13 +250,9 @@
       <svg class="h-4 w-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
       <span>ภาพรวม</span>
     </button>
-    <button class="flex flex-col items-center justify-center py-2 text-[10px] font-semibold text-muted transition hover:text-brand-700" data-page="rooms" data-manager-only>
-      <svg class="h-4 w-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/></svg>
-      <span>ห้อง</span>
-    </button>
-    <button class="flex flex-col items-center justify-center py-2 text-[10px] font-semibold text-muted transition hover:text-brand-700" data-page="guests">
-      <svg class="h-4 w-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      <span>ลูกค้า</span>
+    <button class="flex flex-col items-center justify-center py-2 text-[10px] font-semibold text-muted transition hover:text-brand-700" data-action="mobile-more" aria-haspopup="dialog">
+      <svg class="h-4 w-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+      <span>เพิ่มเติม</span>
     </button>
   </nav>
 </div>
@@ -277,7 +279,7 @@
         <h2 class="text-xl font-bold tracking-tight text-ink">เปิดรายการเข้าพัก</h2>
         <p class="text-xs text-muted mt-0.5">กรอกข้อมูลผู้เข้าพัก รายละเอียดห้อง และคำนวณราคา</p>
       </div>
-      <button type="button" class="btn-ghost !min-h-[36px] !p-2 text-muted hover:text-ink rounded-xl" data-close aria-label="ปิด">
+      <button type="button" class="icon-button icon-button-md" data-close aria-label="ปิด" title="ปิด">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
     </div>
@@ -383,8 +385,8 @@
 
     <!-- Form Footer Actions -->
     <div class="dialog-actions mt-6 flex items-center justify-end gap-3 pt-4 border-t border-line/60">
-      <button type="button" class="btn-secondary" data-close>ยกเลิก</button>
-      <button class="btn-primary" type="submit">บันทึก Booking</button>
+      <button type="button" class="btn-ghost btn-md" data-close>ยกเลิก</button>
+      <button class="btn-primary btn-md" type="submit" data-submit-label>สร้าง Booking</button>
     </div>
   </form>
 </dialog>
@@ -397,7 +399,7 @@
         <h2 class="text-xl font-bold tracking-tight text-ink">ข้อมูลห้องพัก</h2>
         <p class="text-xs text-muted mt-0.5">ตั้งค่าชื่อห้อง โซน ราคา และจำนวนแขกที่รองรับ</p>
       </div>
-      <button type="button" class="btn-ghost !min-h-[36px] !p-2 text-muted hover:text-ink rounded-xl" data-close aria-label="ปิด">
+      <button type="button" class="icon-button icon-button-md" data-close aria-label="ปิด" title="ปิด">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
     </div>
@@ -446,8 +448,8 @@
     </div>
 
     <div class="dialog-actions mt-6 flex items-center justify-end gap-3 pt-4 border-t border-line/60">
-      <button type="button" class="btn-secondary" data-close>ยกเลิก</button>
-      <button class="btn-primary" type="submit">บันทึกข้อมูลห้อง</button>
+      <button type="button" class="btn-ghost btn-md" data-close>ยกเลิก</button>
+      <button class="btn-primary btn-md" type="submit" data-submit-label>เพิ่มห้องพัก</button>
     </div>
   </form>
 </dialog>
@@ -460,7 +462,7 @@
         <h2 id="action-title" class="text-xl font-bold tracking-tight text-ink">ดำเนินการ</h2>
         <p class="text-xs text-muted mt-0.5">จัดการสถานะการเข้าพัก</p>
       </div>
-      <button type="button" class="btn-ghost !min-h-[36px] !p-2 text-muted hover:text-ink rounded-xl" data-close aria-label="ปิด">
+      <button type="button" class="icon-button icon-button-md" data-close aria-label="ปิด" title="ปิด">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
     </div>
@@ -471,8 +473,8 @@
     <div id="action-fields" class="mt-6 space-y-4"></div>
 
     <div class="dialog-actions mt-6 flex items-center justify-end gap-3 pt-4 border-t border-line/60">
-      <button type="button" class="btn-secondary" data-close>ยกเลิก</button>
-      <button class="btn-primary" type="submit">ยืนยัน</button>
+      <button type="button" class="btn-ghost btn-md" data-close>ยกเลิก</button>
+      <button class="btn-primary btn-md" type="submit" data-submit-label>ยืนยันการทำรายการ</button>
     </div>
   </form>
 </dialog>
@@ -485,7 +487,7 @@
         <h2 class="text-xl font-bold tracking-tight text-ink">ประวัติลูกค้า</h2>
         <p class="text-xs text-muted mt-0.5">ข้อมูลสถิติ โน้ตความชอบ และประวัติการจอง</p>
       </div>
-      <button type="button" class="btn-ghost !min-h-[36px] !p-2 text-muted hover:text-ink rounded-xl" data-close aria-label="ปิด">
+      <button type="button" class="icon-button icon-button-md" data-close aria-label="ปิด" title="ปิด">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
     </div>
@@ -529,8 +531,56 @@
     </div>
 
     <div class="dialog-actions mt-6 flex items-center justify-end gap-3 pt-4 border-t border-line/60">
-      <button type="button" class="btn-secondary" data-close>ยกเลิก</button>
-      <button class="btn-primary" type="submit">บันทึกข้อมูลลูกค้า</button>
+      <button type="button" class="btn-ghost btn-md" data-close>ยกเลิก</button>
+      <button class="btn-primary btn-md" type="submit">บันทึกการเปลี่ยนแปลง</button>
     </div>
   </form>
+</dialog>
+
+<!-- Mobile secondary navigation -->
+<dialog id="mobile-more-dialog" class="w-[min(94vw,420px)] rounded-2xl p-0 shadow-dialog border border-line bg-white">
+  <div class="p-4">
+    <div class="flex items-center justify-between border-b border-line pb-3">
+      <div>
+        <h2 class="text-base font-bold text-ink">เมนูเพิ่มเติม</h2>
+        <p class="text-xs text-muted">หน้าจัดการและเครื่องมือค้นหา</p>
+      </div>
+      <button type="button" class="icon-button icon-button-md" data-close aria-label="ปิด" title="ปิด">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="mt-3 grid gap-1">
+      <button class="nav-link w-full" data-page="guests">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/></svg>
+        <span>ลูกค้า</span>
+      </button>
+      <button class="nav-link w-full" data-page="rooms" data-manager-only>
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/></svg>
+        <span>จัดการห้องพัก</span>
+      </button>
+      <button class="nav-link w-full" data-action="command">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span>ค้นหาทุกอย่าง</span>
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Standard confirmation dialog for irreversible actions -->
+<dialog id="confirm-dialog" class="w-[min(92vw,460px)] rounded-2xl p-0 shadow-dialog border border-line bg-white">
+  <div class="p-5 sm:p-6">
+    <div class="flex items-start gap-3">
+      <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-status-danger-bg text-status-danger-ink">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.7 2.5 17.2A2 2 0 0 0 4.2 20h15.6a2 2 0 0 0 1.7-2.8L13.7 3.7a2 2 0 0 0-3.4 0Z"/></svg>
+      </div>
+      <div>
+        <h2 id="confirm-title" class="text-base font-bold text-ink">ยืนยันการทำรายการ</h2>
+        <p id="confirm-message" class="mt-1 text-sm text-muted"></p>
+      </div>
+    </div>
+    <div class="mt-6 flex items-center justify-end gap-2">
+      <button type="button" class="btn-ghost btn-md" data-confirm-cancel>ยกเลิก</button>
+      <button type="button" class="btn-destructive btn-md" data-confirm-accept>ยืนยัน</button>
+    </div>
+  </div>
 </dialog>

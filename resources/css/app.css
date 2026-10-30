@@ -72,24 +72,95 @@
     @apply card cursor-pointer hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-card-hover active:translate-y-0;
   }
 
-  /* Standardized Core Buttons */
+  /* Standard action system */
   .btn {
-    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold tracking-wide transition-all duration-200 ease-luxury select-none disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-transparent text-sm font-semibold transition-all duration-200 ease-luxury select-none disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98];
   }
   .btn-primary {
     @apply btn bg-brand-500 text-white shadow-subtle hover:bg-brand-600 hover:shadow-card focus-visible:ring-brand-500/40;
   }
   .btn-secondary {
-    @apply btn border border-line bg-white text-ink hover:border-brand-300 hover:bg-brand-50/60 hover:text-brand-700 shadow-subtle focus-visible:ring-brand-500/30;
+    @apply btn border-line bg-white text-ink shadow-subtle hover:border-brand-300 hover:bg-brand-50/60 hover:text-brand-700 focus-visible:ring-brand-500/30;
   }
   .btn-ghost {
     @apply btn bg-transparent text-muted hover:bg-brand-50/60 hover:text-brand-700;
   }
+  .btn-destructive,
   .btn-danger {
-    @apply btn border border-status-danger-border/60 bg-status-danger-bg text-status-danger-ink hover:bg-red-100/70 hover:border-status-danger-border focus-visible:ring-red-400/30;
+    @apply btn border-status-danger-border/60 bg-status-danger-bg text-status-danger-ink hover:border-status-danger-border hover:bg-red-100/70 focus-visible:ring-red-400/30;
+  }
+  .btn-link {
+    @apply btn min-h-0 border-0 bg-transparent p-0 text-brand-700 underline-offset-4 hover:underline;
   }
   .btn-sm {
     @apply min-h-[36px] px-3 py-1.5 text-xs;
+  }
+  .btn-md {
+    @apply min-h-[40px] px-4 py-2;
+  }
+  .btn-lg {
+    @apply min-h-[44px] px-5 py-2.5 text-base;
+  }
+  .btn-spinner {
+    @apply h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent;
+  }
+
+  .icon-button {
+    @apply inline-flex items-center justify-center rounded-xl border border-line bg-white text-muted shadow-subtle transition-all duration-200 ease-luxury hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .icon-button-sm {
+    @apply h-9 w-9;
+  }
+  .icon-button-md {
+    @apply h-10 w-10;
+  }
+  .icon-button-lg {
+    @apply h-11 w-11;
+  }
+  .icon-button-destructive {
+    @apply border-status-danger-border/60 bg-status-danger-bg text-status-danger-ink hover:border-status-danger-border hover:bg-red-100/70;
+  }
+
+  .split-button {
+    @apply inline-flex;
+  }
+  .split-button > :first-child {
+    @apply rounded-r-none border-r border-white/30;
+  }
+  .split-button > :nth-child(2) {
+    @apply rounded-l-none border-l-0 border-brand-500 bg-brand-500 text-white hover:border-brand-600 hover:bg-brand-600 hover:text-white;
+  }
+
+  .segmented-control {
+    @apply inline-flex rounded-xl border border-line bg-white p-1 shadow-subtle;
+  }
+  .segmented-control-item {
+    @apply inline-flex min-h-[36px] items-center justify-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-muted transition duration-150 hover:text-ink;
+  }
+  .segmented-control-item[aria-pressed='true'] {
+    @apply bg-brand-50 text-brand-700 shadow-subtle;
+  }
+
+  .action-menu-layer {
+    @apply fixed inset-0 z-[90];
+  }
+  .action-menu-backdrop {
+    @apply absolute inset-0 bg-transparent;
+  }
+  .action-menu {
+    @apply fixed z-10 overflow-hidden rounded-xl border border-line bg-white p-1.5 shadow-dropdown;
+  }
+  .action-menu-mobile-header {
+    @apply hidden items-center justify-between border-b border-line px-2 pb-2 text-sm text-ink;
+  }
+  .action-menu-item {
+    @apply flex min-h-[40px] w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium text-ink transition duration-150 hover:bg-brand-50 hover:text-brand-700 focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .action-menu-item-danger {
+    @apply text-status-danger-ink hover:bg-status-danger-bg hover:text-status-danger-ink;
+  }
+  .action-menu-separator {
+    @apply my-1 border-t border-line;
   }
 
   /* Form Elements */
@@ -126,11 +197,61 @@
   }
 
   /* Navigation Links */
+  .sidebar-shell {
+    background-color: #f8fbff;
+    background-image:
+      radial-gradient(circle at 0 0, rgba(37, 133, 230, 0.13), transparent 34%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(240, 247, 255, 0.82));
+  }
+  .sidebar-brand {
+    backdrop-filter: blur(10px);
+  }
+  .sidebar-profile {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 58%, #eaf8f1 100%);
+  }
   .nav-link {
-    @apply flex min-h-[44px] items-center gap-3 rounded-xl px-3.5 py-2 text-sm font-medium text-muted transition-all duration-200 ease-luxury hover:bg-brand-50 hover:text-brand-700 active:bg-brand-100/70;
+    @apply flex min-h-[48px] items-center gap-2.5 rounded-xl border border-transparent px-2 py-1.5 text-sm font-medium text-muted transition-all duration-200 ease-luxury hover:-translate-y-px hover:bg-white/80 hover:text-ink hover:shadow-subtle active:translate-y-0;
   }
   .nav-link.active {
-    @apply bg-brand-50 text-brand-700 font-semibold shadow-subtle;
+    @apply font-semibold shadow-subtle;
+  }
+  .nav-icon {
+    @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition duration-200;
+  }
+  .nav-link:hover .nav-icon {
+    @apply scale-105;
+  }
+  .nav-link[data-page='today'] .nav-icon {
+    @apply bg-brand-100 text-brand-700;
+  }
+  .nav-link[data-page='today'].active {
+    @apply border-brand-200 bg-brand-50 text-brand-700;
+  }
+  .nav-link[data-page='room-map'] .nav-icon,
+  .nav-link[data-page='guests'] .nav-icon {
+    @apply bg-status-completed-bg text-status-completed-ink;
+  }
+  .nav-link[data-page='room-map'].active,
+  .nav-link[data-page='guests'].active {
+    @apply border-status-completed-border bg-status-completed-bg text-status-completed-ink;
+  }
+  .nav-link[data-page='bookings'] .nav-icon {
+    @apply bg-status-booked-bg text-status-booked-ink;
+  }
+  .nav-link[data-page='bookings'].active {
+    @apply border-status-booked-border bg-status-booked-bg text-status-booked-ink;
+  }
+  .nav-link[data-page='dashboard'] .nav-icon {
+    @apply bg-status-occupied-bg text-occupied-ink;
+  }
+  .nav-link[data-page='dashboard'].active {
+    @apply border-status-occupied-border bg-status-occupied-bg text-occupied-ink;
+  }
+  .nav-link[data-page='rooms'] .nav-icon {
+    @apply bg-brand-200/70 text-brand-800;
+  }
+  .nav-link[data-page='rooms'].active {
+    @apply border-brand-300 bg-brand-100 text-brand-800;
   }
 
   .mobile-nav [data-page] {
@@ -188,6 +309,11 @@
   .calendar-weekdays {
     @apply sticky top-0 z-10 bg-white py-2;
   }
+
+  .mobile-primary-fab {
+    @apply fixed right-4 z-30 inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-brand-500 px-4 text-sm font-semibold text-white shadow-dialog transition hover:bg-brand-600 focus-visible:ring-brand-500/40;
+    bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
 }
 
 #app,
@@ -216,6 +342,17 @@ main,
 
   .btn-sm {
     min-height: 44px;
+  }
+
+  .btn-md,
+  .icon-button-sm,
+  .icon-button-md {
+    min-height: 44px;
+  }
+
+  .icon-button-sm,
+  .icon-button-md {
+    min-width: 44px;
   }
 
   .mobile-nav {
@@ -267,6 +404,35 @@ main,
     right: 12px;
     top: 72px;
   }
+
+  .action-menu-backdrop {
+    background-color: rgba(22, 50, 79, 0.24);
+    backdrop-filter: blur(2px);
+  }
+
+  .action-menu {
+    inset: auto 0 0 0 !important;
+    width: 100% !important;
+    max-height: min(70dvh, 560px);
+    overflow-y: auto;
+    border-radius: 16px 16px 0 0;
+    padding: 12px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    animation: menuSheetAppear 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .action-menu-mobile-header {
+    display: flex;
+  }
+
+  .action-menu-item {
+    min-height: 48px;
+  }
+}
+
+@keyframes menuSheetAppear {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @media (max-width: 389px) {

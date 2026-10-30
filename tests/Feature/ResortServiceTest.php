@@ -69,6 +69,42 @@ final class ResortServiceTest extends TestCase
         ]), null, $this->actor, '127.0.0.1');
     }
 
+    public function testBookingCanCompleteCreateCheckInAndCheckoutLifecycle(): void
+    {
+        $room = $this->repository->rooms()[0];
+        $created = $this->service->saveStay(
+            array_replace($this->stayInput((string) $room['id']), ['id_verified' => true]),
+            null,
+            $this->actor,
+            '127.0.0.1'
+        );
+
+        self::assertSame(0, (int) $created['status']);
+        $checkedIn = $this->service->checkIn((string) $created['id'], $this->actor, '127.0.0.1');
+        self::assertSame(1, (int) $checkedIn['status']);
+
+        $checkedOut = $this->service->checkout((string) $created['id'], [
+            'key_returned' => true,
+            'room_clean' => true,
+            'equipment_complete' => true,
+            'no_damage' => true,
+            'minibar_checked' => true,
+            'inspection_note' => '',
+        ], $this->actor, '127.0.0.1');
+
+        self::assertSame(2, (int) $checkedOut['status']);
+    }
+
+    public function testPendingBookingCanBeCancelled(): void
+    {
+        $room = $this->repository->rooms()[0];
+        $created = $this->service->saveStay($this->stayInput((string) $room['id']), null, $this->actor, '127.0.0.1');
+
+        self::assertNotNull($this->repository->stay((string) $created['id']));
+        $this->service->deleteStay((string) $created['id'], $this->actor, '127.0.0.1');
+        self::assertNull($this->repository->stay((string) $created['id']));
+    }
+
     /** @return array<string, mixed> */
     private function stayInput(string $roomId): array
     {
