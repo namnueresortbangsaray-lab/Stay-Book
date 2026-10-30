@@ -1,11 +1,12 @@
 # syntax=docker/dockerfile:1
 
-# 1. Front-end: Tailwind CSS + esbuild bundle -> wwwroot/css/app.css, wwwroot/js/app.js
+# 1. Front-end: contrast gate, fonts, icon sprite, Tailwind CSS and esbuild bundle -> wwwroot
 FROM node:22-bookworm-slim AS assets
 WORKDIR /web
 COPY src/ResortGuestbook.Web/package.json src/ResortGuestbook.Web/package-lock.json ./
 RUN npm ci --no-audit --no-fund
 COPY src/ResortGuestbook.Web/build.mjs src/ResortGuestbook.Web/tailwind.config.js ./
+COPY src/ResortGuestbook.Web/scripts ./scripts
 COPY src/ResortGuestbook.Web/Styles ./Styles
 COPY src/ResortGuestbook.Web/Scripts ./Scripts
 COPY src/ResortGuestbook.Web/Views ./Views
@@ -23,6 +24,8 @@ RUN dotnet restore src/ResortGuestbook.Web/ResortGuestbook.Web.csproj
 COPY src/ src/
 COPY --from=assets /web/wwwroot/css src/ResortGuestbook.Web/wwwroot/css
 COPY --from=assets /web/wwwroot/js src/ResortGuestbook.Web/wwwroot/js
+COPY --from=assets /web/wwwroot/fonts src/ResortGuestbook.Web/wwwroot/fonts
+COPY --from=assets /web/wwwroot/icons.svg src/ResortGuestbook.Web/wwwroot/icons.svg
 RUN dotnet publish src/ResortGuestbook.Web/ResortGuestbook.Web.csproj -c Release -o /app --no-restore -p:UseAppHost=false
 
 # 3. Runtime: Ubuntu-based ASP.NET image (ICU and tzdata included), non-root user "app" (uid 1654)

@@ -1,0 +1,111 @@
+@layer components {
+  /* ---------- App shell: sidebar (expanded or icon rail) + top bar + content ---------- */
+  .app-shell { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); min-height: 100dvh; }
+
+  .sidebar { @apply relative z-40 border-r border-line bg-surface; }
+  .sidebar-inner { @apply sticky top-0 flex flex-col overflow-y-auto px-3 pb-3; height: 100dvh; }
+  .brand { @apply flex items-center gap-2.5 px-1.5 pb-3 pt-4; }
+  .brand-mark { @apply hidden h-9 w-9 rounded; }
+  .brand-logo { @apply h-10 w-auto; }
+  .brand-place { @apply px-1.5 text-xs text-ink-subtle; }
+  .nav-heading { @apply px-3 pb-1.5 pt-5 text-xs font-medium text-ink-subtle; }
+  .nav-list { @apply space-y-0.5; }
+  .nav-item {
+    @apply relative flex h-10 w-full items-center gap-3 rounded px-3 text-left text-sm font-medium text-ink-muted hover:bg-sunken hover:text-ink;
+  }
+  .nav-item .icon { @apply h-[1.125rem] w-[1.125rem]; }
+  .nav-item.active { @apply bg-primary-subtle text-primary; }
+  .nav-item.active::before { @apply absolute -left-3 bottom-2 top-2 w-[3px] rounded-r-sm bg-primary; content: ''; }
+  .sidebar-footer { @apply mt-auto space-y-2 border-t border-line pt-3; }
+  .user-card { @apply flex items-center gap-2.5 px-1.5 py-1; }
+  .user-name { @apply truncate text-sm font-medium text-ink; }
+  .user-role { @apply text-xs text-ink-subtle; }
+
+  /* Icon rail: chosen by the user, or automatic on tablets unless the user expanded it. */
+  html[data-sidebar='collapsed'] .app-shell { grid-template-columns: var(--rail-w) minmax(0, 1fr); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    html:not([data-sidebar='expanded']) .app-shell { grid-template-columns: var(--rail-w) minmax(0, 1fr); }
+  }
+  html[data-sidebar='collapsed'] .sidebar-inner { @apply items-center px-2; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    html:not([data-sidebar='expanded']) .sidebar-inner { @apply items-center px-2; }
+  }
+
+  /* Rail mode hides labels visually (they stay available to screen readers) and shows the square logo. */
+  html[data-sidebar='collapsed'] .rail-hide,
+  html[data-sidebar='collapsed'] .nav-label { @apply sr-only; }
+  html[data-sidebar='collapsed'] .nav-item { @apply w-10 justify-center px-0; }
+  html[data-sidebar='collapsed'] .nav-item.active::before { @apply -left-2; }
+  html[data-sidebar='collapsed'] .nav-heading { @apply h-px w-8 bg-line p-0 text-[0]; margin: 0.875rem auto 0.5rem; }
+  html[data-sidebar='collapsed'] .brand-logo { @apply hidden; }
+  html[data-sidebar='collapsed'] .brand-mark { @apply block; }
+  html[data-sidebar='collapsed'] .user-card { @apply justify-center px-0; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    html:not([data-sidebar='expanded']) .rail-hide,
+    html:not([data-sidebar='expanded']) .nav-label { @apply sr-only; }
+    html:not([data-sidebar='expanded']) .nav-item { @apply w-10 justify-center px-0; }
+    html:not([data-sidebar='expanded']) .nav-item.active::before { @apply -left-2; }
+    html:not([data-sidebar='expanded']) .nav-heading { @apply h-px w-8 bg-line p-0 text-[0]; margin: 0.875rem auto 0.5rem; }
+    html:not([data-sidebar='expanded']) .brand-logo { @apply hidden; }
+    html:not([data-sidebar='expanded']) .brand-mark { @apply block; }
+    html:not([data-sidebar='expanded']) .user-card { @apply justify-center px-0; }
+  }
+
+  .app-main { @apply flex min-w-0 flex-col; }
+  .topbar {
+    @apply sticky top-0 z-30 flex items-center gap-3 border-b border-line bg-canvas px-4 sm:px-6;
+    height: var(--topbar-h);
+  }
+  .breadcrumb { @apply flex min-w-0 items-center gap-2 text-sm text-ink-subtle; }
+  .breadcrumb li:not(.hidden) { @apply flex min-w-0 items-center; }
+  .breadcrumb li + li::before { @apply mr-2 text-line-strong; content: '/'; }
+  .page-title { @apply truncate text-base font-semibold text-ink; }
+  .topbar-actions { @apply ml-auto flex items-center gap-1.5; }
+  .content { @apply mx-auto w-full flex-1 px-4 pb-10 pt-5 sm:px-6 lg:px-8 lg:pt-6; max-width: 92rem; }
+
+  /* ---------- Mobile: bottom tab bar + left drawer navigation ---------- */
+  .tabbar { @apply fixed inset-x-0 bottom-0 z-40 hidden grid-cols-5 border-t border-line bg-surface; padding-bottom: env(safe-area-inset-bottom); }
+  .tab-item { @apply relative flex h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium text-ink-muted; }
+  .tab-item .icon { @apply h-5 w-5; }
+  .tab-item.active { @apply text-primary; }
+  .tab-item.active::before { @apply absolute inset-x-5 top-0 h-[3px] rounded-b-sm bg-primary; content: ''; }
+
+  @media (max-width: 767px) {
+    .app-shell { display: block; }
+    .sidebar { display: none; }
+    .tabbar { display: grid; }
+    .content { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+    .topbar { @apply px-4; }
+  }
+
+  /* Rail tooltips (labels are visually hidden there). */
+  .nav-item[data-tip] { position: relative; }
+  html[data-sidebar='collapsed'] .sidebar .nav-item[data-tip]:is(:hover, :focus-visible)::after {
+    @apply pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded bg-ink px-2 py-1 text-xs text-canvas;
+    content: attr(data-tip);
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    html:not([data-sidebar='expanded']) .sidebar .nav-item[data-tip]:is(:hover, :focus-visible)::after {
+      @apply pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded bg-ink px-2 py-1 text-xs text-canvas;
+      content: attr(data-tip);
+    }
+  }
+
+  .theme-icon-dark { display: none; }
+  @media screen {
+    [data-theme='dark'] .theme-icon-light { display: none; }
+    [data-theme='dark'] .theme-icon-dark { display: block; }
+  }
+
+  /* ---------- Splash (first load only) ---------- */
+  .splash { @apply fixed inset-0 z-[100] flex flex-col items-center justify-center gap-4 bg-canvas; }
+  .splash .progress { @apply w-36; }
+
+  /* ---------- Logos: colour logo on light, white logo on dark ---------- */
+  .logo-dark { display: none; }
+  @media screen {
+    [data-theme='dark'] .logo-light { display: none; }
+    [data-theme='dark'] .logo-dark { display: block; }
+  }
+}

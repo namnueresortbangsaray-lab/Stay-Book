@@ -1,0 +1,4 @@
+@* Colour banner logo on light surfaces, white emblem on dark ones. Pass the image classes as the model. *@
+@model string
+<img src="/images/logo_banner.webp" alt="@T["app_name"] @T["location"]" class="logo-light @Model" width="188" height="54" data-logo>
+<img src="/images/logo_white.webp" alt="@T["app_name"] @T["location"]" class="logo-dark @Model" width="64" height="64" data-logo>

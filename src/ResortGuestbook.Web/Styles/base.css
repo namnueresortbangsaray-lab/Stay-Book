@@ -1,0 +1,112 @@
+@layer base {
+  :root {
+    color-scheme: light;
+    --control-h: 2.5rem;
+    --row-h: 2.75rem;
+    --sidebar-w: 15.5rem;
+    --rail-w: 4.25rem;
+    --topbar-h: 3.75rem;
+  }
+
+  @media screen {
+    [data-theme='dark'] {
+      color-scheme: dark;
+    }
+  }
+
+  [data-density='compact'] {
+    --control-h: 2.125rem;
+    --row-h: 2.25rem;
+  }
+
+  /* Touch screens keep 44px targets whatever the density. */
+  @media (pointer: coarse) {
+    :root,
+    [data-density='compact'] {
+      --control-h: 2.75rem;
+      --row-h: 3rem;
+    }
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    overflow-x: clip;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-base text-ink antialiased;
+    min-height: 100dvh;
+    font-kerning: normal;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-semibold text-ink;
+  }
+
+  ::selection {
+    background: rgb(var(--c-selection));
+    color: rgb(var(--c-ink));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-primary));
+    outline-offset: 2px;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Numbers line up in every list, table and stat. */
+  .num,
+  time,
+  td,
+  kbd {
+    font-variant-numeric: tabular-nums;
+  }
+
+  kbd {
+    @apply rounded-sm border border-line bg-sunken px-1.5 text-xs font-medium text-ink-muted;
+    font-family: inherit;
+  }
+
+  mark {
+    @apply rounded-sm bg-accent-subtle px-0.5 text-ink;
+  }
+
+  hr {
+    @apply border-line;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media screen {
+    [data-theme='dark'] img:not([data-logo]) {
+      filter: brightness(0.88);
+    }
+  }
+
+  /* Short colour transition when the theme changes at runtime only (never on first paint). */
+  @media (prefers-reduced-motion: no-preference) {
+    html.theme-switching *,
+    html.theme-switching *::before,
+    html.theme-switching *::after {
+      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, fill 150ms ease, stroke 150ms ease !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

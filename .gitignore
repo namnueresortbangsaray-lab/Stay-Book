@@ -36,3 +36,5 @@ storage/
 # Local backups of previous env files
 .env.*
 !.env.example
+/src/ResortGuestbook.Web/wwwroot/fonts/
+/src/ResortGuestbook.Web/wwwroot/icons.svg

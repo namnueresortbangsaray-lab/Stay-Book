@@ -1,593 +1,522 @@
 @model ResortGuestbook.Web.Services.Actor
 @{
-    var initial = string.IsNullOrEmpty(Model.Name) ? "U" : System.Globalization.StringInfo.GetNextTextElement(Model.Name);
+    var name = string.IsNullOrEmpty(Model.Name) ? T["ui.user.fallback"].Value : Model.Name;
+    var initial = System.Globalization.StringInfo.GetNextTextElement(name);
+    var role = T[$"ui.role.{Model.Role}"];
 }
-<div id="app" data-role="@Model.Role" class="min-h-screen md:grid md:grid-cols-[260px_1fr] bg-canvas">
-
-  <!-- Tranquil Splash Screen -->
-  <div id="splash" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white text-ink transition-opacity duration-300">
-    <div class="flex flex-col items-center max-w-xs text-center px-4">
-      <img src="/images/logo_banner.webp" class="h-20 w-auto object-contain" alt="น้ำเหนือรีสอร์ท บางเสร่">
-      <p class="mt-4 text-xs font-medium uppercase tracking-widest text-muted">บางเสร่ · Resort Guest Logbook</p>
-      <div class="mt-6 h-1 w-36 overflow-hidden rounded-full bg-line">
-        <div class="h-full w-2/3 animate-pulse rounded-full bg-brand-500"></div>
-      </div>
-    </div>
+<div id="app" data-role="@Model.Role" class="app-shell">
+  <div id="splash" class="splash" aria-hidden="true">
+    <partial name="_Logo" model='"h-14 w-auto"' />
+    <div class="progress"></div>
   </div>
 
-  <!-- Slim, Clean Quiet Luxury Sidebar -->
-  <aside class="sidebar-shell no-print hidden border-r border-brand-100 p-5 md:flex md:flex-col md:justify-between z-20">
-    <div>
-      <!-- Resort Brand Banner -->
-      <div class="sidebar-brand rounded-2xl border border-brand-100/80 bg-white/80 px-3 py-4 shadow-subtle">
-        <a href="/" class="block">
-          <img src="/images/logo_banner.webp" class="h-12 w-auto object-contain" alt="น้ำเหนือรีสอร์ท">
+  <aside class="sidebar no-print">
+    <div class="sidebar-inner">
+      <div class="brand">
+        <a href="/#today" class="flex items-center" aria-label="@T["ui.nav.today"]">
+          <partial name="_Logo" model='"brand-logo"' />
+          <img src="/images/logo_square.webp" alt="" class="brand-mark" width="36" height="36" data-logo>
         </a>
-        <div class="mt-2.5 flex items-center gap-1.5 text-xs text-muted">
-          <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-          <span>บางเสร่ · ระบบจัดการห้องพัก</span>
-        </div>
       </div>
-
-      <!-- Main Navigation Menu -->
-      <p class="mb-2 mt-6 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700/70">เมนูจัดการ</p>
-      <nav class="space-y-1.5" aria-label="เมนูหลัก">
-        <button class="nav-link active w-full" data-page="today">
-          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/><path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg></span>
-          <span>วันนี้</span>
-        </button>
-        <button class="nav-link w-full" data-page="room-map">
-          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="14" rx="1.5"/><rect width="7" height="7" x="3" y="14" rx="1.5"/></svg></span>
-          <span>ผังห้อง</span>
-        </button>
-        <button class="nav-link w-full" data-page="bookings">
-          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/></svg></span>
-          <span>ตารางเข้าพัก</span>
-        </button>
-        <button class="nav-link w-full" data-page="dashboard">
-          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span>
-          <span>ภาพรวม</span>
-        </button>
-        <button class="nav-link w-full" data-page="rooms" data-manager-only>
-          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/></svg></span>
-          <span>ห้องพัก</span>
-        </button>
-        <button class="nav-link w-full" data-page="guests">
-          <span class="nav-icon"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-          <span>ลูกค้า</span>
-        </button>
+      <p class="brand-place rail-hide">@T["ui.brand.place"]</p>
+      <nav aria-label="@T["ui.nav.label"]">
+        @{ ViewData["NavId"] = "side"; }
+        <partial name="_NavItems" />
       </nav>
-    </div>
 
-    <!-- User Profile & Sign-out Pill -->
-    <div class="mt-auto pt-6">
-      <div class="sidebar-profile rounded-2xl border border-brand-100 p-3.5 shadow-subtle">
-        <div class="flex items-center gap-3">
-          <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-100 text-xs font-bold text-brand-700">
-            @initial
-          </div>
-          <div class="min-w-0 flex-1">
-            <p class="truncate text-sm font-semibold text-ink">@(string.IsNullOrEmpty(Model.Name) ? "ผู้ใช้งาน" : Model.Name)</p>
-            <p class="text-[11px] uppercase tracking-wider text-muted font-medium">@(string.IsNullOrEmpty(Model.Role) ? "staff" : Model.Role)</p>
+      <div class="sidebar-footer">
+        <button type="button" class="nav-item" data-action="toggle-sidebar" data-tip="@T["ui.nav.collapse"]" aria-pressed="false">
+          <icon name="sidebarCollapse" />
+          <span class="nav-label">@T["ui.nav.collapse"]</span>
+        </button>
+        <div class="user-card">
+          <span class="avatar" aria-hidden="true">@initial</span>
+          <div class="min-w-0 rail-hide">
+            <p class="user-name">@name</p>
+            <p class="user-role">@(role.ResourceNotFound ? Model.Role : role)</p>
           </div>
         </div>
-        <form method="post" action="/logout" asp-antiforgery="true" class="mt-3 pt-2.5 border-t border-line/60">
-          <button class="btn-ghost btn-md w-full justify-between !px-2 text-xs hover:text-red-600" type="submit">
-            <span>ออกจากระบบ</span>
-            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
-          </button>
+        <form method="post" action="/logout" asp-antiforgery="true">
+          <button class="nav-item" type="submit" data-tip="@T["ui.nav.signout"]"><icon name="signout" /><span class="nav-label">@T["ui.nav.signout"]</span></button>
         </form>
       </div>
     </div>
   </aside>
 
-  <!-- Main Content Layout -->
-  <div class="app-content min-w-0 pb-24 md:pb-12 flex flex-col min-h-screen">
-    <!-- Airy Top Header -->
-    <header class="app-header no-print sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line bg-white/95 px-4 py-3 backdrop-blur-md sm:px-5 md:px-8 md:py-3.5">
-      <div class="min-w-0">
-        <h1 id="page-title" class="truncate text-lg font-bold tracking-tight text-ink sm:text-xl">งานวันนี้</h1>
-        <p class="text-xs text-muted">น้ำเหนือรีสอร์ท · บางเสร่ ชลบุรี</p>
-      </div>
-      <div class="flex items-center gap-2">
-        <button class="btn-secondary btn-md hidden sm:inline-flex" data-action="command" aria-label="ค้นหาด่วน">
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <span>ค้นหา</span><kbd class="rounded bg-canvas px-1.5 py-0.5 text-[10px] text-muted">⌘ K</kbd>
+  <div class="app-main">
+    <header class="topbar no-print">
+      <nav aria-label="@T["ui.breadcrumb"]" class="min-w-0">
+        <ol class="breadcrumb">
+          <li class="hidden sm:block">@T["app_name"]</li>
+          <li id="page-group" class="hidden md:block">@T["ui.nav.group.daily"]</li>
+          <li class="min-w-0"><h1 id="page-title" class="page-title">@T["ui.nav.today"]</h1></li>
+        </ol>
+      </nav>
+      <div class="topbar-actions">
+        <button type="button" class="btn btn-secondary hidden sm:inline-flex" data-action="command">
+          <icon name="search" />
+          <span>@T["ui.search"]</span>
+          <kbd class="hidden lg:inline">Ctrl K</kbd>
         </button>
-        <button class="btn-primary btn-md hidden md:inline-flex" data-action="new-booking" data-booking-control>
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-          <span>สร้าง Booking</span>
+        <button type="button" class="btn btn-ghost btn-icon sm:hidden" data-action="command" aria-label="@T["ui.search"]"><icon name="search" /></button>
+        <button type="button" class="btn btn-ghost btn-icon hidden md:inline-flex" data-action="theme-menu" aria-haspopup="menu" aria-expanded="false" aria-label="@T["ui.theme.label"]" title="@T["ui.theme.label"]"><icon name="sun" class="theme-icon-light" /><icon name="moon" class="theme-icon-dark" /></button>
+        <button type="button" class="btn btn-ghost btn-icon hidden md:inline-flex" data-action="toggle-density" aria-pressed="false" aria-label="@T["ui.density.compact"]" title="@T["ui.density.compact"]"><icon name="density" /></button>
+        <button type="button" class="btn btn-primary" data-action="new-booking" data-booking-control>
+          <icon name="plus" />
+          <span class="hidden sm:inline">@T["ui.booking.new"]</span>
+          <span class="sr-only sm:hidden">@T["ui.booking.new"]</span>
         </button>
       </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="mx-auto w-full min-w-0 max-w-7xl flex-1 p-4 sm:p-5 md:p-8">
-      <!-- Loading Skeleton Indicator -->
-      <div id="loading" class="space-y-4" aria-busy="true" aria-label="กำลังเตรียมข้อมูลรีสอร์ท">
-        <div class="card p-4 sm:p-5">
-          <div class="skeleton h-4 w-28"></div>
-          <div class="skeleton mt-3 h-7 w-56 max-w-full"></div>
-          <div class="skeleton mt-2 h-3 w-40 max-w-full"></div>
-        </div>
-        <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          @for (var i = 0; i < 4; i++)
+    <main id="main" class="content" tabindex="-1">
+      <div id="loading" aria-busy="true">
+        <p class="sr-only">@T["ui.loading"]</p>
+        <div class="skeleton h-5 w-48"></div>
+        <div class="skeleton mt-3 h-8 w-72 max-w-full"></div>
+        <div class="kpi-strip mt-6 grid-cols-2 lg:grid-cols-5">
+          @for (var i = 0; i < 5; i++)
           {
-            <div class="card p-4"><div class="skeleton h-3 w-20"></div><div class="skeleton mt-3 h-8 w-12"></div></div>
+            <div class="kpi"><div class="skeleton h-3.5 w-24"></div><div class="skeleton mt-3 h-6 w-12"></div></div>
           }
         </div>
-        <p class="sr-only">กำลังเตรียมข้อมูลรีสอร์ท…</p>
+        <div class="skeleton mt-6 h-64 w-full"></div>
       </div>
 
-      <!-- Live Notification Toast Region -->
-      <div id="toast-region" aria-live="polite" class="fixed right-4 top-20 z-[70] space-y-2 pointer-events-none *:pointer-events-auto"></div>
+      <div id="toast-region" class="toast-region" role="status" aria-live="polite"></div>
 
-      <!-- Page 1: Today operations desk -->
-      <section id="page-today" data-page-panel>
+      <section id="page-today" data-page-panel aria-labelledby="page-title">
         <div id="today-desk"></div>
       </section>
 
-      <!-- Page 2: Room Map -->
-      <section id="page-room-map" data-page-panel>
+      <section id="page-room-map" data-page-panel hidden aria-labelledby="page-title">
         <div id="room-summary"></div>
         <div id="room-map"></div>
       </section>
 
-      <!-- Page 2: Bookings -->
-      <section id="page-bookings" data-page-panel hidden>
-        <div class="mb-5 grid grid-cols-1 gap-3 sm:flex sm:flex-wrap sm:items-center sm:gap-2.5">
-          <!-- View Switcher Segmented Control -->
-          <div class="segmented-control" role="group" aria-label="รูปแบบตารางเข้าพัก">
-            <button class="segmented-control-item" aria-pressed="true" data-view="list">รายการ</button>
-            <button class="segmented-control-item" aria-pressed="false" data-view="calendar">ปฏิทิน</button>
+      <section id="page-bookings" data-page-panel hidden aria-labelledby="page-title">
+        <div class="table-toolbar">
+          <div class="segmented" role="group" aria-label="@T["ui.bookings.view"]">
+            <button type="button" class="segmented-item" aria-pressed="true" data-view="list"><icon name="bookings" /><span>@T["ui.bookings.list"]</span></button>
+            <button type="button" class="segmented-item" aria-pressed="false" data-view="calendar"><icon name="calendarDays" /><span>@T["ui.bookings.calendar"]</span></button>
           </div>
-          <!-- Filter Inputs -->
-          <div class="relative min-w-0 flex-1">
-            <input id="stay-search" class="field pl-9" placeholder="ค้นหาชื่อ เบอร์โทร ห้อง โซน หรือหมายเหตุ">
-            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-muted">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            </div>
+          <div class="search-field min-w-[14rem] flex-1">
+            <icon name="search" />
+            <input id="stay-search" class="field" type="search" placeholder="@T["ui.bookings.search"]" aria-label="@T["ui.bookings.search"]" autocomplete="off">
           </div>
-          <select id="stay-status" class="field w-full sm:w-auto sm:min-w-[140px]">
-            <option value="">ทุกสถานะ</option>
-            <option value="0">รอเช็กอิน</option>
-            <option value="1">กำลังเข้าพัก</option>
-            <option value="2">เช็กเอาต์แล้ว</option>
-          </select>
+          <button type="button" class="btn btn-secondary" data-columns="bookings" aria-haspopup="menu" aria-expanded="false"><icon name="columns" /><span>@T["ui.table.columns"]</span></button>
         </div>
+        <div id="stay-status-chips" class="chip-row mb-3" role="group" aria-label="@T["ui.bookings.status_filter"]"></div>
+        <select id="stay-status" hidden aria-hidden="true" tabindex="-1">
+          <option value=""></option>
+          <option value="0"></option>
+          <option value="1"></option>
+          <option value="2"></option>
+        </select>
         <div id="booking-list"></div>
         <div id="booking-calendar" hidden></div>
       </section>
 
-      <!-- Page 3: Dashboard / Analytics -->
-      <section id="page-dashboard" data-page-panel hidden>
-        <!-- Range Filter Bar -->
-        <div class="mb-6 card flex flex-wrap items-center justify-between gap-4 p-4">
-          <div class="w-full space-y-3 lg:flex lg:w-auto lg:items-center lg:space-y-0">
-            <div class="segmented-control grid grid-cols-3 sm:inline-flex" role="group" aria-label="ช่วงเวลารายงาน">
-              <button class="segmented-control-item" aria-pressed="false" data-range="today">วันนี้</button>
-              <button class="segmented-control-item" aria-pressed="false" data-range="7days">7 วันล่าสุด</button>
-              <button class="segmented-control-item" aria-pressed="true" data-range="month">เดือนนี้</button>
-            </div>
-            <div class="grid grid-cols-2 gap-2 text-sm sm:ml-2 sm:inline-flex sm:items-center">
-              <input id="range-start" class="field !min-h-[44px] w-full !py-1.5 sm:w-auto" type="date" aria-label="วันที่เริ่มต้น">
-              <span class="hidden text-xs text-muted sm:inline">ถึง</span>
-              <input id="range-end" class="field !min-h-[44px] w-full !py-1.5 sm:w-auto" type="date" aria-label="วันที่สิ้นสุด">
-              <button id="apply-range" class="btn-primary col-span-2 !min-h-[44px] px-3 !py-1.5 text-xs sm:col-span-1">แสดงผล</button>
+      <section id="page-dashboard" data-page-panel hidden aria-labelledby="page-title">
+        <div class="print-only mb-6">
+          <p class="font-serif text-xl font-semibold">@T["app_name"] @T["location"] · @T["ui.nav.reports"]</p>
+          <p id="report-print-range" class="text-sm"></p>
+        </div>
+        <div class="card no-print mb-6 flex flex-wrap items-end gap-3 p-4">
+          <div>
+            <p class="label">@T["ui.reports.period"]</p>
+            <div class="segmented" role="group" aria-label="@T["ui.reports.period"]">
+              <button type="button" class="segmented-item" aria-pressed="false" data-range="today">@T["ui.reports.today"]</button>
+              <button type="button" class="segmented-item" aria-pressed="false" data-range="7days">@T["ui.reports.7days"]</button>
+              <button type="button" class="segmented-item" aria-pressed="true" data-range="month">@T["ui.reports.month"]</button>
             </div>
           </div>
-          <div class="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:items-center">
-            <a class="btn-secondary !min-h-[44px] !py-1.5 text-xs" href="/api/v1/reports/bookings.csv">
-              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-              <span>ส่งออก CSV</span>
-            </a>
-            <button class="btn-secondary !min-h-[44px] !py-1.5 text-xs" data-action="print">
-              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
-              <span>พิมพ์</span>
-            </button>
+          <div>
+            <label class="label" for="range-start">@T["ui.reports.from"]</label>
+            <input id="range-start" class="field w-44" type="date">
+          </div>
+          <div>
+            <label class="label" for="range-end">@T["ui.reports.to"]</label>
+            <input id="range-end" class="field w-44" type="date">
+          </div>
+          <button id="apply-range" type="button" class="btn btn-secondary">@T["ui.reports.apply"]</button>
+          <div class="flex gap-2 sm:ml-auto">
+            <a class="btn btn-secondary" href="/api/v1/reports/bookings.csv"><icon name="download" /><span>@T["ui.reports.csv"]</span></a>
+            <button type="button" class="btn btn-secondary" data-action="print"><icon name="print" /><span>@T["ui.reports.print"]</span></button>
           </div>
         </div>
         <div id="analytics"></div>
       </section>
 
-      <!-- Page 4: Rooms Management -->
-      <section id="page-rooms" data-page-panel hidden>
-        <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <div class="min-w-0">
-            <h2 class="text-base font-bold text-ink">รายการห้องพักทั้งหมด</h2>
-            <p class="text-xs text-muted">จัดการราคาพื้นฐาน เตียง และสิ่งอำนวยความสะดวก</p>
+      <section id="page-rooms" data-page-panel hidden aria-labelledby="page-title">
+        <div class="section-head">
+          <div>
+            <h2 class="text-lg font-semibold">@T["ui.rooms.title"]</h2>
+            <p class="text-sm text-ink-muted">@T["ui.rooms.subtitle"]</p>
           </div>
-          <button class="btn-primary btn-md" data-action="new-room">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-            <span>เพิ่มห้องพัก</span>
-          </button>
+          <button type="button" class="btn btn-primary" data-action="new-room"><icon name="plus" /><span>@T["ui.rooms.new"]</span></button>
         </div>
-        <div id="rooms-list" class="space-y-3"></div>
+        <div id="rooms-list"></div>
       </section>
 
-      <!-- Page 5: Guests Directory -->
-      <section id="page-guests" data-page-panel hidden>
-        <div class="mb-5 grid grid-cols-1 gap-3 sm:flex sm:flex-wrap sm:items-center">
-          <div class="relative min-w-0 flex-1">
-            <input id="guest-search" class="field pl-9" placeholder="ค้นหาชื่อหรือเบอร์โทรลูกค้า">
-            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-muted">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            </div>
+      <section id="page-guests" data-page-panel hidden aria-labelledby="page-title">
+        <div class="table-toolbar">
+          <div class="search-field min-w-[14rem] flex-1">
+            <icon name="search" />
+            <input id="guest-search" class="field" type="search" placeholder="@T["ui.guests.search"]" aria-label="@T["ui.guests.search"]" autocomplete="off">
           </div>
-          <select id="guest-sort" class="field w-full sm:w-auto sm:min-w-[150px]">
-            <option value="latest">เข้าพักล่าสุด</option>
-            <option value="count">จำนวนครั้งที่พัก</option>
-            <option value="value">ยอดใช้จ่ายสะสม</option>
-            <option value="name">เรียงตามชื่อ</option>
-          </select>
-          <label class="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-line bg-white px-4 text-xs font-semibold text-ink cursor-pointer hover:border-brand-300 shadow-subtle select-none">
-            <input id="regular-only" type="checkbox" class="rounded border-line text-brand-500 focus:ring-brand-500/30">
-            <span>ลูกค้าประจำเท่านั้น</span>
+          <label class="md:hidden">
+            <span class="sr-only">@T["ui.guests.sort"]</span>
+            <select id="guest-sort" class="field form-select w-auto">
+              <option value="latest">@T["ui.guests.sort.latest"]</option>
+              <option value="count">@T["ui.guests.sort.count"]</option>
+              <option value="value">@T["ui.guests.sort.value"]</option>
+              <option value="name">@T["ui.guests.sort.name"]</option>
+            </select>
+          </label>
+          <label class="chip cursor-pointer gap-2">
+            <input id="regular-only" type="checkbox" class="switch">
+            <span>@T["ui.guests.regular_only"]</span>
           </label>
         </div>
-        <div id="guest-list" class="grid gap-3.5 md:grid-cols-2"></div>
+        <div id="guest-list"></div>
       </section>
     </main>
   </div>
 
-  <!-- Mobile Bottom Navigation Bar (Quiet Luxury) -->
-  <button class="mobile-primary-fab no-print md:hidden" data-action="new-booking" data-booking-control>
-    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-    <span>สร้าง Booking</span>
-  </button>
-
-  <nav class="mobile-nav no-print fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line bg-white/95 px-1 pt-1 backdrop-blur-md md:hidden shadow-dropdown" aria-label="เมนูมือถือ">
-    <button class="active flex flex-col items-center justify-center py-2 text-[10px] font-semibold text-brand-700 transition" data-page="today">
-      <svg class="h-4 w-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
-      <span>วันนี้</span>
-    </button>
-    <button class="flex flex-col items-center justify-center py-2 text-[10px] font-semibold text-muted transition" data-page="room-map">
-      <svg class="h-4 w-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="14" rx="1.5"/><rect width="7" height="7" x="3" y="14" rx="1.5"/></svg>
-      <span>ผังห้อง</span>
-    </button>
-    <button class="flex flex-col items-center justify-center py-2 text-[10px] font-semibold text-muted transition hover:text-brand-700" data-page="bookings">
-      <svg class="h-4 w-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/></svg>
-      <span>Booking</span>
-    </button>
-    <button class="flex flex-col items-center justify-center py-2 text-[10px] font-semibold text-muted transition hover:text-brand-700" data-page="dashboard">
-      <svg class="h-4 w-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-      <span>ภาพรวม</span>
-    </button>
-    <button class="flex flex-col items-center justify-center py-2 text-[10px] font-semibold text-muted transition hover:text-brand-700" data-action="mobile-more" aria-haspopup="dialog">
-      <svg class="h-4 w-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
-      <span>เพิ่มเติม</span>
-    </button>
+  <nav class="tabbar no-print" aria-label="@T["ui.nav.mobile"]">
+    <button type="button" class="tab-item" data-page="today"><icon name="today" /><span>@T["ui.nav.today"]</span></button>
+    <button type="button" class="tab-item" data-page="room-map"><icon name="roomMap" /><span>@T["ui.nav.room_map_short"]</span></button>
+    <button type="button" class="tab-item" data-page="bookings"><icon name="bookings" /><span>@T["ui.nav.bookings_short"]</span></button>
+    <button type="button" class="tab-item" data-page="guests"><icon name="guests" /><span>@T["ui.nav.guests"]</span></button>
+    <button type="button" class="tab-item" data-action="mobile-more" aria-haspopup="dialog"><icon name="menu" /><span>@T["ui.nav.more"]</span></button>
   </nav>
 </div>
 
-<!-- ================= MODALS / DIALOGS ================= -->
-
-<!-- Global command palette -->
-<dialog id="command-dialog" class="w-[min(94vw,620px)] rounded-3xl p-0 shadow-dialog border border-line bg-white">
-  <div class="p-4 md:p-5">
-    <div class="flex items-center gap-3 border-b border-line pb-3">
-      <svg class="h-5 w-5 text-brand-500" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      <input id="command-search" class="min-w-0 flex-1 border-0 bg-transparent text-base text-ink placeholder:text-muted focus:ring-0" placeholder="ค้นหาลูกค้า เบอร์โทร ห้อง หรือเมนู…" autocomplete="off">
-      <button type="button" class="btn-ghost !min-h-[34px] !px-2 text-xs" data-close>Esc</button>
-    </div>
-    <div id="command-results" class="mt-3 max-h-[55vh] space-y-1 overflow-y-auto" role="listbox"></div>
+<!-- Command palette -->
+<dialog id="command-dialog" class="modal [--dialog-w:40rem]" aria-label="@T["ui.command.label"]">
+  <div class="flex items-center gap-3 border-b border-line px-4">
+    <icon name="search" class="h-5 w-5 text-ink-subtle" />
+    <input id="command-search" class="h-14 min-w-0 flex-1 border-0 bg-transparent text-base text-ink placeholder:text-ink-subtle focus:outline-none focus:ring-0" placeholder="@T["ui.command.placeholder"]" aria-label="@T["ui.command.placeholder"]" autocomplete="off">
+    <button type="button" class="btn btn-ghost btn-sm" data-close><kbd>Esc</kbd></button>
   </div>
+  <div id="command-results" class="max-h-[60dvh] overflow-y-auto p-2"></div>
 </dialog>
 
-<!-- 1. Booking Dialog -->
-<dialog id="booking-dialog" class="w-[min(96vw,740px)] rounded-3xl p-0 shadow-dialog border border-line bg-white">
-  <form id="booking-form" class="p-6 md:p-8">
-    <div class="flex items-center justify-between pb-4 border-b border-line/60">
+<!-- Booking drawer -->
+<dialog id="booking-dialog" class="drawer [--dialog-w:42rem]" aria-labelledby="booking-dialog-title">
+  <form id="booking-form" novalidate data-guard>
+    <div class="dialog-header">
       <div>
-        <h2 class="text-xl font-bold tracking-tight text-ink">เปิดรายการเข้าพัก</h2>
-        <p class="text-xs text-muted mt-0.5">กรอกข้อมูลผู้เข้าพัก รายละเอียดห้อง และคำนวณราคา</p>
+        <h2 id="booking-dialog-title" class="dialog-title" data-dialog-title>@T["ui.booking.new"]</h2>
+        <p class="dialog-sub">@T["ui.booking.subtitle"]</p>
       </div>
-      <button type="button" class="icon-button icon-button-md" data-close aria-label="ปิด" title="ปิด">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="@T["ui.close"]"><icon name="close" /></button>
     </div>
-
     <input type="hidden" name="id">
-
-    <div class="mt-6 space-y-6">
-      <!-- Section 1: Guest Information -->
-      <div>
-        <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-3">1. ข้อมูลผู้เข้าพัก</h3>
-        <div class="grid gap-4 md:grid-cols-2">
+    <div class="dialog-body">
+      <section class="form-section">
+        <h3 class="form-section-title">@T["ui.booking.section.guest"]</h3>
+        <div class="form-grid">
           <div>
-            <label class="label">เบอร์โทรศัพท์</label>
-            <input class="field" name="phone" required inputmode="tel" placeholder="08x-xxx-xxxx">
-            <p class="hint">ระบบจะค้นหาประวัติลูกค้าเก่าให้อัตโนมัติ</p>
+            <label class="label" for="booking-phone">@T["ui.booking.phone"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="booking-phone" class="field" name="phone" required inputmode="tel" autocomplete="tel" placeholder="08x-xxx-xxxx" aria-describedby="booking-phone-hint">
+            <p id="booking-phone-hint" class="hint">@T["ui.booking.phone_hint"]</p>
           </div>
           <div>
-            <label class="label">ชื่อ-นามสกุล ลูกค้า</label>
-            <input class="field" name="guest_name" required minlength="2" placeholder="คุณสมชาย ใจดี">
+            <label class="label" for="booking-name">@T["ui.booking.name"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="booking-name" class="field" name="guest_name" required minlength="2" autocomplete="name">
           </div>
         </div>
-      </div>
-
-      <!-- Section 2: Dates & Room -->
-      <div>
-        <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-3">2. วันที่และห้องพัก</h3>
-        <div class="grid gap-4 md:grid-cols-2">
+      </section>
+      <section class="form-section">
+        <h3 class="form-section-title">@T["ui.booking.section.stay"]</h3>
+        <div class="form-grid">
           <div>
-            <label class="label">วันที่เช็กอิน <span class="font-normal text-muted">(13.00 น.)</span></label>
-            <input class="field" type="date" name="check_in_date" required>
+            <label class="label" for="booking-in">@T["ui.booking.check_in"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="booking-in" class="field" type="date" name="check_in_date" required aria-describedby="booking-in-hint">
+            <p id="booking-in-hint" class="hint">@T["ui.booking.check_in_hint"]</p>
           </div>
           <div>
-            <label class="label">วันที่เช็กเอาต์ <span class="font-normal text-muted">(12.00 น.)</span></label>
-            <input class="field" type="date" name="check_out_date" required>
+            <label class="label" for="booking-out">@T["ui.booking.check_out"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="booking-out" class="field" type="date" name="check_out_date" required aria-describedby="booking-out-hint">
+            <p id="booking-out-hint" class="hint">@T["ui.booking.check_out_hint"]</p>
           </div>
-          <div class="md:col-span-2">
-            <label class="label">เลือกห้องพัก</label>
-            <select class="field" name="room_id" required></select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Section 3: Guests & Add-ons -->
-      <div>
-        <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-3">3. ผู้เข้าพัก & บริการเสริม</h3>
-        <div class="grid gap-4 md:grid-cols-2">
-          <div>
-            <label class="label">จำนวนผู้เข้าพัก (ท่าน)</label>
-            <input class="field" type="number" name="guests" min="1" value="2" required>
+          <div class="sm:col-span-2">
+            <label class="label" for="booking-room">@T["ui.booking.room"]<span class="req" aria-hidden="true">*</span></label>
+            <select id="booking-room" class="field form-select" name="room_id" required></select>
           </div>
           <div>
-            <label class="label">ประเภทสัตว์เลี้ยง</label>
-            <select class="field" name="pet_type">
-              <option value="">ไม่มี</option>
-              <option value="สุนัข">สุนัข</option>
-              <option value="แมว">แมว</option>
-              <option value="อื่น ๆ">อื่น ๆ</option>
+            <label class="label" for="booking-guests">@T["ui.booking.guests"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="booking-guests" class="field" type="number" name="guests" min="1" value="2" required inputmode="numeric">
+          </div>
+          <label class="check-row self-end">
+            <input type="checkbox" name="extra_bed" class="form-checkbox check">
+            <span>@T["ui.booking.extra_bed"]</span>
+          </label>
+          <div>
+            <label class="label" for="booking-pet-type">@T["ui.booking.pet_type"]</label>
+            <select id="booking-pet-type" class="field form-select" name="pet_type">
+              <option value="">@T["ui.booking.pet_none"]</option>
+              <option value="สุนัข">@T["ui.booking.pet_dog"]</option>
+              <option value="แมว">@T["ui.booking.pet_cat"]</option>
+              <option value="อื่น ๆ">@T["ui.booking.pet_other"]</option>
             </select>
           </div>
           <div>
-            <label class="label">จำนวนสัตว์เลี้ยง (ตัว)</label>
-            <input class="field" type="number" name="pet_count" min="0" value="0">
+            <label class="label" for="booking-pet-count">@T["ui.booking.pet_count"]</label>
+            <input id="booking-pet-count" class="field" type="number" name="pet_count" min="0" value="0" inputmode="numeric">
+          </div>
+        </div>
+      </section>
+      <section class="form-section">
+        <h3 class="form-section-title">@T["ui.booking.section.payment"]</h3>
+        <div class="form-grid">
+          <div>
+            <label class="label" for="booking-deposit">@T["ui.booking.deposit"]</label>
+            <input id="booking-deposit" class="field num" type="number" name="deposit_amount" min="0" step="0.01" value="0" inputmode="decimal">
           </div>
           <div>
-            <label class="label">ส่วนลดพิเศษ (บาท)</label>
-            <input class="field" type="number" name="discount_amount" min="0" step="0.01" value="0">
+            <label class="label" for="booking-discount">@T["ui.booking.discount"]</label>
+            <input id="booking-discount" class="field num" type="number" name="discount_amount" min="0" step="0.01" value="0" inputmode="decimal">
           </div>
-          <div>
-            <label class="label">เงินมัดจำ (บาท)</label>
-            <input class="field" type="number" name="deposit_amount" min="0" step="0.01" value="0">
-          </div>
-        </div>
-
-        <!-- Checkbox Options Grid -->
-        <div class="mt-4 grid gap-3 sm:grid-cols-2">
-          <label class="flex items-center gap-3 rounded-xl border border-line bg-canvas/40 p-3 cursor-pointer hover:border-brand-300">
-            <input type="checkbox" name="extra_bed" class="rounded border-line text-brand-500 focus:ring-brand-500/20">
-            <span class="text-xs font-medium text-ink">เตียงเสริม (+฿200/ครั้ง)</span>
+          <label class="check-row">
+            <input type="checkbox" name="deposit_paid" class="form-checkbox check">
+            <span>@T["ui.booking.deposit_paid"]</span>
           </label>
-          <label class="flex items-center gap-3 rounded-xl border border-line bg-canvas/40 p-3 cursor-pointer hover:border-brand-300">
-            <input type="checkbox" name="deposit_paid" class="rounded border-line text-brand-500 focus:ring-brand-500/20">
-            <span class="text-xs font-medium text-ink">ชำระมัดจำแล้ว</span>
+          <label class="check-row">
+            <input type="checkbox" name="id_verified" class="form-checkbox check">
+            <span>@T["ui.booking.id_verified"]</span>
           </label>
-          <label class="flex items-center gap-3 rounded-xl border border-line bg-canvas/40 p-3 cursor-pointer hover:border-brand-300">
-            <input type="checkbox" name="id_verified" class="rounded border-line text-brand-500 focus:ring-brand-500/20">
-            <span class="text-xs font-medium text-ink">ตรวจสอบบัตรประชาชนแล้ว</span>
-          </label>
-          <label class="flex items-center gap-3 rounded-xl border border-line bg-canvas/40 p-3 cursor-pointer hover:border-brand-300">
-            <input type="checkbox" name="check_in_now" class="rounded border-line text-brand-500 focus:ring-brand-500/20">
-            <span class="text-xs font-medium text-ink">เช็กอินทันที (เข้าพักตอนนี้)</span>
+          <label class="check-row sm:col-span-2">
+            <input type="checkbox" name="check_in_now" class="form-checkbox check">
+            <span>@T["ui.booking.check_in_now"]</span>
           </label>
         </div>
-
-        <div class="mt-4">
-          <label class="label">หมายเหตุการจอง / ข้อเรียกร้องพิเศษ</label>
-          <textarea class="field !min-h-[72px]" name="note" rows="2" placeholder="เช่น ขอเช็กอินสาย, มีผู้สูงอายุ, เตียงเสริม"></textarea>
-        </div>
-      </div>
+      </section>
+      <section class="form-section">
+        <label class="label" for="booking-note">@T["ui.booking.note"]</label>
+        <textarea id="booking-note" class="field" name="note" rows="3" placeholder="@T["ui.booking.note_placeholder"]"></textarea>
+      </section>
+      <div id="price-preview" class="mt-6 rounded-lg border border-line bg-surface p-4" aria-live="polite"></div>
     </div>
-
-    <!-- Live Dynamic Price Preview Breakdown -->
-    <div id="price-preview" class="mt-6 rounded-2xl border border-brand-200 bg-brand-50/70 p-4 text-sm text-ink"></div>
-
-    <!-- Form Footer Actions -->
-    <div class="dialog-actions mt-6 flex items-center justify-end gap-3 pt-4 border-t border-line/60">
-      <button type="button" class="btn-ghost btn-md" data-close>ยกเลิก</button>
-      <button class="btn-primary btn-md" type="submit" data-submit-label>สร้าง Booking</button>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-ghost" data-close>@T["ui.cancel"]</button>
+      <button class="btn btn-primary" type="submit" data-submit-label>@T["ui.booking.new"]</button>
     </div>
   </form>
 </dialog>
 
-<!-- 2. Room Dialog -->
-<dialog id="room-dialog" class="w-[min(96vw,560px)] rounded-3xl p-0 shadow-dialog border border-line bg-white">
-  <form id="room-form" class="p-6 md:p-8">
-    <div class="flex items-center justify-between pb-4 border-b border-line/60">
+<!-- Room drawer -->
+<dialog id="room-dialog" class="drawer [--dialog-w:36rem]" aria-labelledby="room-dialog-title">
+  <form id="room-form" novalidate data-guard>
+    <div class="dialog-header">
       <div>
-        <h2 class="text-xl font-bold tracking-tight text-ink">ข้อมูลห้องพัก</h2>
-        <p class="text-xs text-muted mt-0.5">ตั้งค่าชื่อห้อง โซน ราคา และจำนวนแขกที่รองรับ</p>
+        <h2 id="room-dialog-title" class="dialog-title" data-dialog-title>@T["ui.rooms.new"]</h2>
+        <p class="dialog-sub">@T["ui.room.subtitle"]</p>
       </div>
-      <button type="button" class="icon-button icon-button-md" data-close aria-label="ปิด" title="ปิด">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="@T["ui.close"]"><icon name="close" /></button>
     </div>
-
     <input type="hidden" name="id">
-
-    <div class="mt-6 grid gap-4 md:grid-cols-2">
-      <div>
-        <label class="label">ชื่อห้อง / หมายเลข</label>
-        <input class="field" name="name" placeholder="เช่น 1, 2, A1" required>
-      </div>
-      <div>
-        <label class="label">โซนที่ตั้ง</label>
-        <input class="field" name="zone" value="อาคารหลัก" required>
-      </div>
-      <div>
-        <label class="label">ประเภทห้อง / เตียง</label>
-        <input class="field" name="type" value="เตียงคู่" required>
-      </div>
-      <div>
-        <label class="label">ราคาปกติ / คืน (บาท)</label>
-        <input class="field" type="number" name="price" min="1" value="500" required>
-      </div>
-      <div>
-        <label class="label">จำนวนแขกพื้นฐาน</label>
-        <input class="field" type="number" name="base_guests" min="1" value="2">
-      </div>
-      <div>
-        <label class="label">จำนวนแขกสูงสุด</label>
-        <input class="field" type="number" name="max_guests" min="1" value="3">
-      </div>
-      <div>
-        <label class="label">ค่าแขกเสริม / ท่าน / คืน</label>
-        <input class="field" type="number" name="extra_guest_fee" min="0" value="100">
-      </div>
-      <div>
-        <label class="label">ลำดับการแสดงผล</label>
-        <input class="field" type="number" name="sort_order" min="0" value="0">
-      </div>
-      <div class="md:col-span-2 pt-2">
-        <label class="flex items-center gap-3 rounded-xl border border-line bg-canvas/40 p-3 cursor-pointer hover:border-brand-300">
-          <input type="checkbox" name="is_pet_friendly" class="rounded border-line text-brand-500 focus:ring-brand-500/20">
-          <span class="text-xs font-semibold text-ink">อนุญาตให้นำสัตว์เลี้ยงเข้าพัก (Pet Friendly)</span>
-        </label>
-      </div>
+    <div class="dialog-body">
+      <section class="form-section">
+        <h3 class="form-section-title">@T["ui.room.section.identity"]</h3>
+        <div class="form-grid">
+          <div>
+            <label class="label" for="room-name">@T["ui.room.name"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="room-name" class="field" name="name" required placeholder="@T["ui.room.name_placeholder"]">
+          </div>
+          <div>
+            <label class="label" for="room-zone">@T["ui.room.zone"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="room-zone" class="field" name="zone" value="อาคารหลัก" required>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="label" for="room-type">@T["ui.room.type"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="room-type" class="field" name="type" value="เตียงคู่" required>
+          </div>
+        </div>
+      </section>
+      <section class="form-section">
+        <h3 class="form-section-title">@T["ui.room.section.pricing"]</h3>
+        <div class="form-grid">
+          <div>
+            <label class="label" for="room-price">@T["ui.room.price"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="room-price" class="field num" type="number" name="price" min="1" value="500" required inputmode="decimal">
+          </div>
+          <div>
+            <label class="label" for="room-extra-fee">@T["ui.room.extra_fee"]</label>
+            <input id="room-extra-fee" class="field num" type="number" name="extra_guest_fee" min="0" value="100" inputmode="decimal">
+          </div>
+          <div>
+            <label class="label" for="room-base">@T["ui.room.base_guests"]</label>
+            <input id="room-base" class="field num" type="number" name="base_guests" min="1" value="2" inputmode="numeric">
+          </div>
+          <div>
+            <label class="label" for="room-max">@T["ui.room.max_guests"]</label>
+            <input id="room-max" class="field num" type="number" name="max_guests" min="1" value="3" inputmode="numeric">
+          </div>
+        </div>
+      </section>
+      <section class="form-section">
+        <h3 class="form-section-title">@T["ui.room.section.display"]</h3>
+        <div class="form-grid">
+          <div>
+            <label class="label" for="room-sort">@T["ui.room.sort_order"]</label>
+            <input id="room-sort" class="field num" type="number" name="sort_order" min="0" value="0" inputmode="numeric" aria-describedby="room-sort-hint">
+            <p id="room-sort-hint" class="hint">@T["ui.room.sort_hint"]</p>
+          </div>
+          <label class="check-row self-start sm:mt-7">
+            <input type="checkbox" name="is_pet_friendly" class="form-checkbox check">
+            <span>@T["ui.room.pet_friendly"]</span>
+          </label>
+        </div>
+      </section>
     </div>
-
-    <div class="dialog-actions mt-6 flex items-center justify-end gap-3 pt-4 border-t border-line/60">
-      <button type="button" class="btn-ghost btn-md" data-close>ยกเลิก</button>
-      <button class="btn-primary btn-md" type="submit" data-submit-label>เพิ่มห้องพัก</button>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-ghost" data-close>@T["ui.cancel"]</button>
+      <button class="btn btn-primary" type="submit" data-submit-label>@T["ui.rooms.new"]</button>
     </div>
   </form>
 </dialog>
 
-<!-- 3. Stay Action Dialog (Check-out checklist, Extension, Feedback, Upload) -->
-<dialog id="action-dialog" class="w-[min(96vw,580px)] rounded-3xl p-0 shadow-dialog border border-line bg-white">
-  <form id="action-form" class="p-6 md:p-8">
-    <div class="flex items-center justify-between pb-4 border-b border-line/60">
+<!-- Stay action drawer: checkout inspection, extension, feedback, upload -->
+<dialog id="action-dialog" class="drawer [--dialog-w:34rem]" aria-labelledby="action-title">
+  <form id="action-form" novalidate data-guard>
+    <div class="dialog-header">
       <div>
-        <h2 id="action-title" class="text-xl font-bold tracking-tight text-ink">ดำเนินการ</h2>
-        <p class="text-xs text-muted mt-0.5">จัดการสถานะการเข้าพัก</p>
+        <h2 id="action-title" class="dialog-title">@T["ui.action.title"]</h2>
+        <p id="action-subtitle" class="dialog-sub"></p>
       </div>
-      <button type="button" class="icon-button icon-button-md" data-close aria-label="ปิด" title="ปิด">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="@T["ui.close"]"><icon name="close" /></button>
     </div>
-
     <input type="hidden" name="stay_id">
     <input type="hidden" name="action">
-
-    <div id="action-fields" class="mt-6 space-y-4"></div>
-
-    <div class="dialog-actions mt-6 flex items-center justify-end gap-3 pt-4 border-t border-line/60">
-      <button type="button" class="btn-ghost btn-md" data-close>ยกเลิก</button>
-      <button class="btn-primary btn-md" type="submit" data-submit-label>ยืนยันการทำรายการ</button>
+    <div id="action-fields" class="dialog-body space-y-4"></div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-ghost" data-close>@T["ui.cancel"]</button>
+      <button class="btn btn-primary" type="submit" data-submit-label>@T["ui.action.submit"]</button>
     </div>
   </form>
 </dialog>
 
-<!-- 4. Guest Detail Dialog -->
-<dialog id="guest-dialog" class="w-[min(96vw,680px)] rounded-3xl p-0 shadow-dialog border border-line bg-white">
-  <form id="guest-form" class="p-6 md:p-8">
-    <div class="flex items-center justify-between pb-4 border-b border-line/60">
-      <div>
-        <h2 class="text-xl font-bold tracking-tight text-ink">ประวัติลูกค้า</h2>
-        <p class="text-xs text-muted mt-0.5">ข้อมูลสถิติ โน้ตความชอบ และประวัติการจอง</p>
-      </div>
-      <button type="button" class="icon-button icon-button-md" data-close aria-label="ปิด" title="ปิด">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+<!-- Guest profile drawer -->
+<dialog id="guest-dialog" class="drawer [--dialog-w:44rem]" aria-labelledby="guest-dialog-title">
+  <form id="guest-form" novalidate data-guard>
+    <div class="dialog-header">
+      <div id="guest-head" class="profile-head min-w-0"></div>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="@T["ui.close"]"><icon name="close" /></button>
     </div>
-
     <input type="hidden" name="id">
-
-    <div id="guest-stats" class="mt-6"></div>
-
-    <div class="mt-6 grid gap-4 md:grid-cols-2">
-      <div>
-        <label class="label">ชื่อ-นามสกุล</label>
-        <input class="field" name="name" required>
-      </div>
-      <div>
-        <label class="label">เบอร์โทรศัพท์</label>
-        <input class="field" name="phone" required>
-      </div>
-      <div>
-        <label class="label">กลุ่มลูกค้า</label>
-        <input class="field" name="customer_type" placeholder="เช่น ลูกค้าทั่วไป, นักท่องเที่ยว">
-      </div>
-      <div class="flex items-end">
-        <label class="flex min-h-[44px] w-full items-center gap-3 rounded-xl border border-line bg-canvas/40 px-3.5 cursor-pointer hover:border-brand-300">
-          <input type="checkbox" name="is_regular" class="rounded border-line text-brand-500 focus:ring-brand-500/20">
-          <span class="text-xs font-semibold text-brand-700">ลูกค้าประจำ (VIP Regular)</span>
-        </label>
-      </div>
-      <div class="md:col-span-2">
-        <label class="label">โน้ตถาวร / ข้อมูลสำคัญ</label>
-        <textarea class="field !min-h-[64px]" name="customer_note" rows="2" placeholder="เช่น ชอบห้องมุม, แพ้ขนสัตว์, มีเด็กเล็ก"></textarea>
-      </div>
-      <div class="md:col-span-2">
-        <label class="label">ความต้องการ / ความชอบเฉพาะตัว</label>
-        <textarea class="field !min-h-[64px]" name="preferences" rows="2" placeholder="เช่น เตียงเสริมเสริมหมอน, กาแฟดำ"></textarea>
+    <div class="px-5 sm:px-6">
+      <div class="tabs" role="tablist" aria-label="@T["ui.guest.tabs"]">
+        <button type="button" class="tab" role="tab" id="guest-tab-overview" aria-controls="guest-panel-overview" aria-selected="true">@T["ui.guest.tab.overview"]</button>
+        <button type="button" class="tab" role="tab" id="guest-tab-stays" aria-controls="guest-panel-stays" aria-selected="false" tabindex="-1">@T["ui.guest.tab.stays"]</button>
+        <button type="button" class="tab" role="tab" id="guest-tab-notes" aria-controls="guest-panel-notes" aria-selected="false" tabindex="-1">@T["ui.guest.tab.notes"]</button>
+        <button type="button" class="tab" role="tab" id="guest-tab-files" aria-controls="guest-panel-files" aria-selected="false" tabindex="-1">@T["ui.guest.tab.files"]</button>
       </div>
     </div>
-
-    <div class="mt-6">
-      <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-2.5">ประวัติการเข้าพักที่ผ่านมา</h3>
-      <div id="guest-history" class="space-y-2 max-h-52 overflow-y-auto pr-1"></div>
+    <div class="dialog-body">
+      <div id="guest-panel-overview" role="tabpanel" aria-labelledby="guest-tab-overview">
+        <div id="guest-stats"></div>
+        <div class="form-grid mt-6">
+          <div>
+            <label class="label" for="guest-name">@T["ui.guest.name"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="guest-name" class="field" name="name" required>
+          </div>
+          <div>
+            <label class="label" for="guest-phone">@T["ui.guest.phone"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="guest-phone" class="field" name="phone" required inputmode="tel">
+          </div>
+          <div>
+            <label class="label" for="guest-type">@T["ui.guest.type"]</label>
+            <input id="guest-type" class="field" name="customer_type" placeholder="@T["ui.guest.type_placeholder"]">
+          </div>
+          <label class="check-row self-end">
+            <input type="checkbox" name="is_regular" class="form-checkbox check">
+            <span>@T["ui.guest.regular"]</span>
+          </label>
+          <div class="sm:col-span-2">
+            <label class="label" for="guest-note">@T["ui.guest.note"]</label>
+            <textarea id="guest-note" class="field" name="customer_note" rows="2" placeholder="@T["ui.guest.note_placeholder"]"></textarea>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="label" for="guest-prefs">@T["ui.guest.preferences"]</label>
+            <textarea id="guest-prefs" class="field" name="preferences" rows="2" placeholder="@T["ui.guest.preferences_placeholder"]"></textarea>
+          </div>
+        </div>
+      </div>
+      <div id="guest-panel-stays" role="tabpanel" aria-labelledby="guest-tab-stays" hidden>
+        <div id="guest-history"></div>
+      </div>
+      <div id="guest-panel-notes" role="tabpanel" aria-labelledby="guest-tab-notes" hidden>
+        <div id="guest-notes"></div>
+      </div>
+      <div id="guest-panel-files" role="tabpanel" aria-labelledby="guest-tab-files" hidden>
+        <div id="guest-files"></div>
+      </div>
     </div>
-
-    <div class="dialog-actions mt-6 flex items-center justify-end gap-3 pt-4 border-t border-line/60">
-      <button type="button" class="btn-ghost btn-md" data-close>ยกเลิก</button>
-      <button class="btn-primary btn-md" type="submit">บันทึกการเปลี่ยนแปลง</button>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-ghost" data-close>@T["ui.cancel"]</button>
+      <button class="btn btn-primary" type="submit">@T["ui.save"]</button>
     </div>
   </form>
 </dialog>
 
-<!-- Mobile secondary navigation -->
-<dialog id="mobile-more-dialog" class="w-[min(94vw,420px)] rounded-2xl p-0 shadow-dialog border border-line bg-white">
-  <div class="p-4">
-    <div class="flex items-center justify-between border-b border-line pb-3">
-      <div>
-        <h2 class="text-base font-bold text-ink">เมนูเพิ่มเติม</h2>
-        <p class="text-xs text-muted">หน้าจัดการและเครื่องมือค้นหา</p>
-      </div>
-      <button type="button" class="icon-button icon-button-md" data-close aria-label="ปิด" title="ปิด">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+<!-- Attachment viewer -->
+<dialog id="file-dialog" class="modal [--dialog-w:56rem]" aria-labelledby="file-dialog-title">
+  <div class="dialog-header">
+    <h2 id="file-dialog-title" class="dialog-title truncate"></h2>
+    <div class="flex items-center gap-1">
+      <button type="button" class="btn btn-ghost btn-icon" data-file-step="-1" aria-label="@T["ui.files.previous"]"><icon name="chevronLeft" /></button>
+      <button type="button" class="btn btn-ghost btn-icon" data-file-step="1" aria-label="@T["ui.files.next"]"><icon name="chevronRight" /></button>
+      <a id="file-dialog-download" class="btn btn-ghost btn-icon" href="#" aria-label="@T["ui.files.download"]"><icon name="download" /></a>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="@T["ui.close"]"><icon name="close" /></button>
     </div>
-    <div class="mt-3 grid gap-1">
-      <button class="nav-link w-full" data-page="guests">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/></svg>
-        <span>ลูกค้า</span>
-      </button>
-      <button class="nav-link w-full" data-page="rooms" data-manager-only>
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/></svg>
-        <span>จัดการห้องพัก</span>
-      </button>
-      <button class="nav-link w-full" data-action="command">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <span>ค้นหาทุกอย่าง</span>
-      </button>
+  </div>
+  <div id="file-dialog-body" class="dialog-body bg-sunken"></div>
+</dialog>
+
+<!-- Mobile navigation drawer -->
+<dialog id="mobile-more-dialog" class="drawer drawer-left [--dialog-w:20rem]" aria-label="@T["ui.nav.label"]">
+  <div class="drawer-inner">
+    <div class="dialog-header items-center">
+      <partial name="_Logo" model='"h-9 w-auto"' />
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="@T["ui.close"]"><icon name="close" /></button>
+    </div>
+    <nav class="dialog-body px-3" aria-label="@T["ui.nav.label"]">
+      @{ ViewData["NavId"] = "drawer"; }
+      <partial name="_NavItems" />
+      <p class="nav-heading">@T["ui.theme.label"]</p>
+      <div class="px-1"><partial name="_ThemeSwitch" /></div>
+    </nav>
+    <div class="dialog-actions justify-between">
+      <div class="user-card min-w-0">
+        <span class="avatar" aria-hidden="true">@initial</span>
+        <div class="min-w-0">
+          <p class="user-name">@name</p>
+          <p class="user-role">@(role.ResourceNotFound ? Model.Role : role)</p>
+        </div>
+      </div>
+      <form method="post" action="/logout" asp-antiforgery="true">
+        <button class="btn btn-secondary" type="submit"><icon name="signout" /><span>@T["ui.nav.signout"]</span></button>
+      </form>
     </div>
   </div>
 </dialog>
 
-<!-- Standard confirmation dialog for irreversible actions -->
-<dialog id="confirm-dialog" class="w-[min(92vw,460px)] rounded-2xl p-0 shadow-dialog border border-line bg-white">
+<!-- Confirmation -->
+<dialog id="confirm-dialog" class="modal [--dialog-w:28rem]" role="alertdialog" aria-labelledby="confirm-title" aria-describedby="confirm-message">
   <div class="p-5 sm:p-6">
     <div class="flex items-start gap-3">
-      <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-status-danger-bg text-status-danger-ink">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.7 2.5 17.2A2 2 0 0 0 4.2 20h15.6a2 2 0 0 0 1.7-2.8L13.7 3.7a2 2 0 0 0-3.4 0Z"/></svg>
-      </div>
+      <span id="confirm-icon" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sunken text-ink-muted"><icon name="info" class="h-5 w-5" /></span>
       <div>
-        <h2 id="confirm-title" class="text-base font-bold text-ink">ยืนยันการทำรายการ</h2>
-        <p id="confirm-message" class="mt-1 text-sm text-muted"></p>
+        <h2 id="confirm-title" class="text-base font-semibold">@T["ui.action.submit"]</h2>
+        <p id="confirm-message" class="mt-1 text-sm text-ink-muted"></p>
       </div>
     </div>
-    <div class="mt-6 flex items-center justify-end gap-2">
-      <button type="button" class="btn-ghost btn-md" data-confirm-cancel>ยกเลิก</button>
-      <button type="button" class="btn-destructive btn-md" data-confirm-accept>ยืนยัน</button>
+    <div class="mt-6 flex justify-end gap-2">
+      <button type="button" class="btn btn-ghost" data-confirm-cancel>@T["ui.cancel"]</button>
+      <button type="button" class="btn btn-primary" data-confirm-accept>@T["ui.confirm"]</button>
     </div>
   </div>
 </dialog>
-
-@section Scripts {
-  <script type="module" src="~/js/app.js" asp-append-version="true" nonce="@Nonce.Value"></script>
-}

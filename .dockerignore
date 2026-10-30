@@ -11,6 +11,8 @@
 **/storage
 src/ResortGuestbook.Web/wwwroot/css
 src/ResortGuestbook.Web/wwwroot/js
+src/ResortGuestbook.Web/wwwroot/fonts
+src/ResortGuestbook.Web/wwwroot/icons.svg
 tests
 docs
 *.md

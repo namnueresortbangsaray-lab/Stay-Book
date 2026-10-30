@@ -1,16 +1,5 @@
-@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
-<!doctype html>
-<html lang="th" class="h-full">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f6fafe">
-  <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken">
-  <title>@T["login"] · Stay Book · @T["app_name"]</title>
-  <link rel="icon" href="/images/logo_square.webp">
-  <link rel="stylesheet" href="~/css/app.css" asp-append-version="true">
-</head>
-<body class="min-h-full bg-canvas text-ink antialiased">
-  @RenderBody()
-</body>
-</html>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = $"{T["login"]} · Stay Book · {T["app_name"]}";
+}
+@RenderBody()

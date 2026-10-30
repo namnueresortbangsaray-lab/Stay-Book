@@ -1,0 +1,13 @@
+@* Navigation shared by the desktop sidebar and the mobile drawer; app.js marks the active page. *@
+<p class="nav-heading" id="nav-daily-@ViewData["NavId"]">@T["ui.nav.group.daily"]</p>
+<ul class="nav-list" aria-labelledby="nav-daily-@ViewData["NavId"]">
+  <li><button type="button" class="nav-item" data-page="today" data-tip="@T["ui.nav.today"]"><icon name="today" /><span class="nav-label">@T["ui.nav.today"]</span></button></li>
+  <li><button type="button" class="nav-item" data-page="room-map" data-tip="@T["ui.nav.room_map"]"><icon name="roomMap" /><span class="nav-label">@T["ui.nav.room_map"]</span></button></li>
+  <li><button type="button" class="nav-item" data-page="bookings" data-tip="@T["ui.nav.bookings"]"><icon name="bookings" /><span class="nav-label">@T["ui.nav.bookings"]</span></button></li>
+</ul>
+<p class="nav-heading" id="nav-records-@ViewData["NavId"]">@T["ui.nav.group.records"]</p>
+<ul class="nav-list" aria-labelledby="nav-records-@ViewData["NavId"]">
+  <li><button type="button" class="nav-item" data-page="guests" data-tip="@T["ui.nav.guests"]"><icon name="guests" /><span class="nav-label">@T["ui.nav.guests"]</span></button></li>
+  <li><button type="button" class="nav-item" data-page="dashboard" data-tip="@T["ui.nav.reports"]"><icon name="reports" /><span class="nav-label">@T["ui.nav.reports"]</span></button></li>
+  <li data-manager-only><button type="button" class="nav-item" data-page="rooms" data-tip="@T["ui.nav.rooms"]"><icon name="rooms" /><span class="nav-label">@T["ui.nav.rooms"]</span></button></li>
+</ul>

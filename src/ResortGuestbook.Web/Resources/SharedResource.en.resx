@@ -21,4 +21,1078 @@
   <data name="login" xml:space="preserve">
     <value>Sign in</value>
   </data>
+  <data name="ui.skip" xml:space="preserve">
+    <value>Skip to main content</value>
+  </data>
+  <data name="ui.loading" xml:space="preserve">
+    <value>Preparing resort data…</value>
+  </data>
+  <data name="ui.load_failed" xml:space="preserve">
+    <value>Could not load the data</value>
+  </data>
+  <data name="ui.retry" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="ui.close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ui.cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ui.confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="ui.save" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="ui.saving" xml:space="preserve">
+    <value>Saving</value>
+  </data>
+  <data name="ui.edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="ui.no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="ui.search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="ui.breadcrumb" xml:space="preserve">
+    <value>You are here</value>
+  </data>
+  <data name="ui.menu.more" xml:space="preserve">
+    <value>More actions</value>
+  </data>
+  <data name="ui.toast.saved" xml:space="preserve">
+    <value>Saved</value>
+  </data>
+  <data name="ui.no_phone" xml:space="preserve">
+    <value>No phone number</value>
+  </data>
+  <data name="ui.guests_count" xml:space="preserve">
+    <value>{n} guests</value>
+  </data>
+  <data name="ui.nights_count" xml:space="preserve">
+    <value>{n} nights</value>
+  </data>
+  <data name="ui.items_count" xml:space="preserve">
+    <value>{n} items</value>
+  </data>
+  <data name="ui.rooms_count" xml:space="preserve">
+    <value>{n} rooms</value>
+  </data>
+  <data name="ui.room_label" xml:space="preserve">
+    <value>Room {name}</value>
+  </data>
+  <data name="ui.per_night" xml:space="preserve">
+    <value>per night</value>
+  </data>
+  <data name="ui.pet_friendly" xml:space="preserve">
+    <value>Pets allowed</value>
+  </data>
+  <data name="ui.user.fallback" xml:space="preserve">
+    <value>Staff member</value>
+  </data>
+  <data name="ui.role.admin" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="ui.role.front_desk" xml:space="preserve">
+    <value>Front desk</value>
+  </data>
+  <data name="ui.role.housekeeping" xml:space="preserve">
+    <value>Housekeeping</value>
+  </data>
+  <data name="ui.brand.place" xml:space="preserve">
+    <value>Bang Sare · Chon Buri</value>
+  </data>
+  <data name="ui.nav.label" xml:space="preserve">
+    <value>Main menu</value>
+  </data>
+  <data name="ui.nav.mobile" xml:space="preserve">
+    <value>Quick menu</value>
+  </data>
+  <data name="ui.nav.group.daily" xml:space="preserve">
+    <value>Daily work</value>
+  </data>
+  <data name="ui.nav.group.records" xml:space="preserve">
+    <value>Records and reports</value>
+  </data>
+  <data name="ui.nav.today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="ui.nav.room_map" xml:space="preserve">
+    <value>Room board</value>
+  </data>
+  <data name="ui.nav.room_map_short" xml:space="preserve">
+    <value>Rooms</value>
+  </data>
+  <data name="ui.nav.bookings" xml:space="preserve">
+    <value>Bookings</value>
+  </data>
+  <data name="ui.nav.bookings_short" xml:space="preserve">
+    <value>Bookings</value>
+  </data>
+  <data name="ui.nav.guests" xml:space="preserve">
+    <value>Guests</value>
+  </data>
+  <data name="ui.nav.reports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="ui.nav.rooms" xml:space="preserve">
+    <value>Room setup</value>
+  </data>
+  <data name="ui.nav.more" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="ui.nav.collapse" xml:space="preserve">
+    <value>Collapse or expand menu</value>
+  </data>
+  <data name="ui.nav.signout" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
+  <data name="ui.theme.label" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="ui.theme.light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="ui.theme.dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="ui.theme.system" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="ui.density.compact" xml:space="preserve">
+    <value>Compact rows</value>
+  </data>
+  <data name="ui.login.title" xml:space="preserve">
+    <value>Staff sign-in</value>
+  </data>
+  <data name="ui.login.subtitle" xml:space="preserve">
+    <value>Room management and guest logbook · Bang Sare</value>
+  </data>
+  <data name="ui.login.email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="ui.login.password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="ui.login.place" xml:space="preserve">
+    <value>Bang Sare · Chon Buri</value>
+  </data>
+  <data name="ui.login.panel" xml:space="preserve">
+    <value>The guest logbook for front desk and housekeeping: bookings, check-in, check-out and guest history in one place.</value>
+  </data>
+  <data name="ui.login.footer" xml:space="preserve">
+    <value>Nam Nuea Resort Bang Sare · simple, clean and safe stays</value>
+  </data>
+  <data name="ui.error.home" xml:space="preserve">
+    <value>Back to home</value>
+  </data>
+  <data name="ui.error.contact" xml:space="preserve">
+    <value>If this keeps happening, contact your administrator.</value>
+  </data>
+  <data name="ui.error.hint.default" xml:space="preserve">
+    <value>Go back to the home page and try again.</value>
+  </data>
+  <data name="ui.error.hint.403" xml:space="preserve">
+    <value>Your account cannot do this. Ask an administrator if you need access.</value>
+  </data>
+  <data name="ui.error.hint.404" xml:space="preserve">
+    <value>The link may be mistyped or the page has moved.</value>
+  </data>
+  <data name="ui.error.hint.413" xml:space="preserve">
+    <value>The file is larger than allowed. Resize the photo or choose another file.</value>
+  </data>
+  <data name="ui.error.hint.419" xml:space="preserve">
+    <value>This page was open too long. Sign in again or refresh, then retry.</value>
+  </data>
+  <data name="ui.error.hint.429" xml:space="preserve">
+    <value>Too many attempts. Please wait a moment and try again.</value>
+  </data>
+  <data name="ui.error.hint.500" xml:space="preserve">
+    <value>Something went wrong on our side. Saved data is safe; try again shortly.</value>
+  </data>
+  <data name="ui.status.booked" xml:space="preserve">
+    <value>Awaiting check-in</value>
+  </data>
+  <data name="ui.status.in_house" xml:space="preserve">
+    <value>In house</value>
+  </data>
+  <data name="ui.status.checked_out" xml:space="preserve">
+    <value>Checked out</value>
+  </data>
+  <data name="ui.room_state.vacant" xml:space="preserve">
+    <value>Vacant</value>
+  </data>
+  <data name="ui.room_state.arriving" xml:space="preserve">
+    <value>Arriving today</value>
+  </data>
+  <data name="ui.room_state.occupied" xml:space="preserve">
+    <value>Occupied</value>
+  </data>
+  <data name="ui.room_state.departing" xml:space="preserve">
+    <value>Departing today</value>
+  </data>
+  <data name="ui.flag.id_pending" xml:space="preserve">
+    <value>ID not checked</value>
+  </data>
+  <data name="ui.flag.deposit_pending" xml:space="preserve">
+    <value>Deposit due {amount}</value>
+  </data>
+  <data name="ui.flag.deposit_short" xml:space="preserve">
+    <value>Deposit due</value>
+  </data>
+  <data name="ui.filter.all" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="ui.filter.clear" xml:space="preserve">
+    <value>Clear filters</value>
+  </data>
+  <data name="ui.today.morning" xml:space="preserve">
+    <value>Good morning</value>
+  </data>
+  <data name="ui.today.afternoon" xml:space="preserve">
+    <value>Good afternoon</value>
+  </data>
+  <data name="ui.today.evening" xml:space="preserve">
+    <value>Good evening</value>
+  </data>
+  <data name="ui.today.arrivals" xml:space="preserve">
+    <value>Arrivals</value>
+  </data>
+  <data name="ui.today.arrivals_sub" xml:space="preserve">
+    <value>{n} without ID check</value>
+  </data>
+  <data name="ui.today.departures" xml:space="preserve">
+    <value>Departures</value>
+  </data>
+  <data name="ui.today.departures_sub" xml:space="preserve">
+    <value>Inspect before key return</value>
+  </data>
+  <data name="ui.today.in_house" xml:space="preserve">
+    <value>In house</value>
+  </data>
+  <data name="ui.today.occupancy" xml:space="preserve">
+    <value>Occupied tonight</value>
+  </data>
+  <data name="ui.today.occupancy_sub" xml:space="preserve">
+    <value>{used} of {total} rooms</value>
+  </data>
+  <data name="ui.today.deposits" xml:space="preserve">
+    <value>Deposits to follow up</value>
+  </data>
+  <data name="ui.today.arrivals_title" xml:space="preserve">
+    <value>Arriving today</value>
+  </data>
+  <data name="ui.today.departures_title" xml:space="preserve">
+    <value>Departing today</value>
+  </data>
+  <data name="ui.today.no_arrivals" xml:space="preserve">
+    <value>No arrivals today</value>
+  </data>
+  <data name="ui.today.no_departures" xml:space="preserve">
+    <value>No departures today</value>
+  </data>
+  <data name="ui.today.rooms_title" xml:space="preserve">
+    <value>Rooms right now</value>
+  </data>
+  <data name="ui.today.open_room_map" xml:space="preserve">
+    <value>Open room board</value>
+  </data>
+  <data name="ui.today.deposits_title" xml:space="preserve">
+    <value>Deposits not yet received</value>
+  </data>
+  <data name="ui.today.open_bookings" xml:space="preserve">
+    <value>View bookings</value>
+  </data>
+  <data name="ui.today.no_deposits" xml:space="preserve">
+    <value>No outstanding deposits</value>
+  </data>
+  <data name="ui.today.notes_title" xml:space="preserve">
+    <value>Booking notes</value>
+  </data>
+  <data name="ui.today.no_notes" xml:space="preserve">
+    <value>No notes for current or upcoming guests</value>
+  </data>
+  <data name="ui.room_board.state_filter" xml:space="preserve">
+    <value>Filter by room status</value>
+  </data>
+  <data name="ui.room_board.zone_filter" xml:space="preserve">
+    <value>Filter by zone</value>
+  </data>
+  <data name="ui.room_board.all_zones" xml:space="preserve">
+    <value>All zones</value>
+  </data>
+  <data name="ui.room_board.no_match" xml:space="preserve">
+    <value>No rooms match these filters</value>
+  </data>
+  <data name="ui.room_board.arrives_today" xml:space="preserve">
+    <value>Arrives today</value>
+  </data>
+  <data name="ui.room_board.leaves" xml:space="preserve">
+    <value>Leaves {date}</value>
+  </data>
+  <data name="ui.bookings.view" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="ui.bookings.list" xml:space="preserve">
+    <value>List</value>
+  </data>
+  <data name="ui.bookings.calendar" xml:space="preserve">
+    <value>Calendar</value>
+  </data>
+  <data name="ui.bookings.search" xml:space="preserve">
+    <value>Search name, phone, room, zone or note</value>
+  </data>
+  <data name="ui.bookings.status_filter" xml:space="preserve">
+    <value>Filter by booking status</value>
+  </data>
+  <data name="ui.bookings.empty_title" xml:space="preserve">
+    <value>No bookings found</value>
+  </data>
+  <data name="ui.bookings.empty_text" xml:space="preserve">
+    <value>Try another search or status, or create a new booking.</value>
+  </data>
+  <data name="ui.col.guest" xml:space="preserve">
+    <value>Guest</value>
+  </data>
+  <data name="ui.col.room" xml:space="preserve">
+    <value>Room</value>
+  </data>
+  <data name="ui.col.check_in" xml:space="preserve">
+    <value>Check-in</value>
+  </data>
+  <data name="ui.col.check_out" xml:space="preserve">
+    <value>Check-out</value>
+  </data>
+  <data name="ui.col.nights" xml:space="preserve">
+    <value>Nights</value>
+  </data>
+  <data name="ui.col.guests" xml:space="preserve">
+    <value>Guests</value>
+  </data>
+  <data name="ui.col.status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="ui.col.total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="ui.col.balance" xml:space="preserve">
+    <value>Balance</value>
+  </data>
+  <data name="ui.col.actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="ui.col.zone" xml:space="preserve">
+    <value>Zone</value>
+  </data>
+  <data name="ui.col.price" xml:space="preserve">
+    <value>Rate/night</value>
+  </data>
+  <data name="ui.col.capacity" xml:space="preserve">
+    <value>Capacity</value>
+  </data>
+  <data name="ui.col.extra_fee" xml:space="preserve">
+    <value>Extra guest/night</value>
+  </data>
+  <data name="ui.col.pet" xml:space="preserve">
+    <value>Pets</value>
+  </data>
+  <data name="ui.col.phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="ui.col.stays" xml:space="preserve">
+    <value>Stays</value>
+  </data>
+  <data name="ui.col.lifetime" xml:space="preserve">
+    <value>Lifetime value</value>
+  </data>
+  <data name="ui.col.last_stay" xml:space="preserve">
+    <value>Last stay</value>
+  </data>
+  <data name="ui.col.date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="ui.table.columns" xml:space="preserve">
+    <value>Columns</value>
+  </data>
+  <data name="ui.table.show_columns" xml:space="preserve">
+    <value>Columns to show</value>
+  </data>
+  <data name="ui.table.showing" xml:space="preserve">
+    <value>Showing {from}–{to} of {total}</value>
+  </data>
+  <data name="ui.table.count" xml:space="preserve">
+    <value>{total} items</value>
+  </data>
+  <data name="ui.table.previous" xml:space="preserve">
+    <value>Previous page</value>
+  </data>
+  <data name="ui.table.next" xml:space="preserve">
+    <value>Next page</value>
+  </data>
+  <data name="ui.calendar.previous" xml:space="preserve">
+    <value>Previous month</value>
+  </data>
+  <data name="ui.calendar.next" xml:space="preserve">
+    <value>Next month</value>
+  </data>
+  <data name="ui.calendar.today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="ui.calendar.scroll" xml:space="preserve">
+    <value>Monthly calendar, scrolls sideways on small screens</value>
+  </data>
+  <data name="ui.calendar.day_title" xml:space="preserve">
+    <value>Stays on {date}</value>
+  </data>
+  <data name="ui.calendar.empty" xml:space="preserve">
+    <value>No stays on this day</value>
+  </data>
+  <data name="ui.weekday.mon" xml:space="preserve">
+    <value>Mon</value>
+  </data>
+  <data name="ui.weekday.tue" xml:space="preserve">
+    <value>Tue</value>
+  </data>
+  <data name="ui.weekday.wed" xml:space="preserve">
+    <value>Wed</value>
+  </data>
+  <data name="ui.weekday.thu" xml:space="preserve">
+    <value>Thu</value>
+  </data>
+  <data name="ui.weekday.fri" xml:space="preserve">
+    <value>Fri</value>
+  </data>
+  <data name="ui.weekday.sat" xml:space="preserve">
+    <value>Sat</value>
+  </data>
+  <data name="ui.weekday.sun" xml:space="preserve">
+    <value>Sun</value>
+  </data>
+  <data name="ui.reports.period" xml:space="preserve">
+    <value>Period</value>
+  </data>
+  <data name="ui.reports.today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="ui.reports.7days" xml:space="preserve">
+    <value>Last 7 days</value>
+  </data>
+  <data name="ui.reports.month" xml:space="preserve">
+    <value>This month</value>
+  </data>
+  <data name="ui.reports.from" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="ui.reports.to" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="ui.reports.apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="ui.reports.csv" xml:space="preserve">
+    <value>Export CSV</value>
+  </data>
+  <data name="ui.reports.print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="ui.reports.group.stays" xml:space="preserve">
+    <value>Stays</value>
+  </data>
+  <data name="ui.reports.group.money" xml:space="preserve">
+    <value>Money</value>
+  </data>
+  <data name="ui.reports.group.other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="ui.reports.bookings" xml:space="preserve">
+    <value>Bookings</value>
+  </data>
+  <data name="ui.reports.checked_in" xml:space="preserve">
+    <value>Checked in</value>
+  </data>
+  <data name="ui.reports.checked_out" xml:space="preserve">
+    <value>Checked out</value>
+  </data>
+  <data name="ui.reports.guests" xml:space="preserve">
+    <value>Guests</value>
+  </data>
+  <data name="ui.reports.room_nights" xml:space="preserve">
+    <value>Room nights</value>
+  </data>
+  <data name="ui.reports.occupancy" xml:space="preserve">
+    <value>Occupancy</value>
+  </data>
+  <data name="ui.reports.net_revenue" xml:space="preserve">
+    <value>Net revenue</value>
+  </data>
+  <data name="ui.reports.discounts" xml:space="preserve">
+    <value>Discounts given</value>
+  </data>
+  <data name="ui.reports.deposits_received" xml:space="preserve">
+    <value>Deposits received</value>
+  </data>
+  <data name="ui.reports.deposits_pending" xml:space="preserve">
+    <value>Deposits pending</value>
+  </data>
+  <data name="ui.reports.pet_bookings" xml:space="preserve">
+    <value>Bookings with pets</value>
+  </data>
+  <data name="ui.reports.feedback" xml:space="preserve">
+    <value>Average feedback</value>
+  </data>
+  <data name="ui.reports.revenue_title" xml:space="preserve">
+    <value>Daily net revenue</value>
+  </data>
+  <data name="ui.reports.revenue_sub" xml:space="preserve">
+    <value>By check-in date, excluding bookings not yet checked in</value>
+  </data>
+  <data name="ui.reports.occupancy_title" xml:space="preserve">
+    <value>Occupied rooms per day</value>
+  </data>
+  <data name="ui.reports.occupancy_sub" xml:space="preserve">
+    <value>Out of {n} rooms</value>
+  </data>
+  <data name="ui.reports.rooms_used" xml:space="preserve">
+    <value>Rooms occupied</value>
+  </data>
+  <data name="ui.reports.show_table" xml:space="preserve">
+    <value>Show as table</value>
+  </data>
+  <data name="ui.reports.hide_table" xml:space="preserve">
+    <value>Hide table</value>
+  </data>
+  <data name="ui.reports.status_title" xml:space="preserve">
+    <value>Bookings by status</value>
+  </data>
+  <data name="ui.reports.deposit_title" xml:space="preserve">
+    <value>Deposit status</value>
+  </data>
+  <data name="ui.reports.deposit_paid" xml:space="preserve">
+    <value>Paid</value>
+  </data>
+  <data name="ui.reports.deposit_unpaid" xml:space="preserve">
+    <value>Not paid</value>
+  </data>
+  <data name="ui.reports.deposit_none" xml:space="preserve">
+    <value>No deposit</value>
+  </data>
+  <data name="ui.rooms.title" xml:space="preserve">
+    <value>All rooms</value>
+  </data>
+  <data name="ui.rooms.subtitle" xml:space="preserve">
+    <value>Base rates, beds and amenities</value>
+  </data>
+  <data name="ui.rooms.new" xml:space="preserve">
+    <value>Add room</value>
+  </data>
+  <data name="ui.rooms.delete" xml:space="preserve">
+    <value>Delete room</value>
+  </data>
+  <data name="ui.rooms.menu" xml:space="preserve">
+    <value>Actions for room {name}</value>
+  </data>
+  <data name="ui.rooms.empty_title" xml:space="preserve">
+    <value>No rooms yet</value>
+  </data>
+  <data name="ui.rooms.empty_text" xml:space="preserve">
+    <value>Add the first room to start taking bookings.</value>
+  </data>
+  <data name="ui.room.edit" xml:space="preserve">
+    <value>Edit room</value>
+  </data>
+  <data name="ui.room.subtitle" xml:space="preserve">
+    <value>Name, zone, rate and capacity</value>
+  </data>
+  <data name="ui.room.section.identity" xml:space="preserve">
+    <value>Room</value>
+  </data>
+  <data name="ui.room.section.pricing" xml:space="preserve">
+    <value>Rate and capacity</value>
+  </data>
+  <data name="ui.room.section.display" xml:space="preserve">
+    <value>Display</value>
+  </data>
+  <data name="ui.room.name" xml:space="preserve">
+    <value>Room name or number</value>
+  </data>
+  <data name="ui.room.name_placeholder" xml:space="preserve">
+    <value>e.g. 1, 2, A1</value>
+  </data>
+  <data name="ui.room.zone" xml:space="preserve">
+    <value>Zone</value>
+  </data>
+  <data name="ui.room.type" xml:space="preserve">
+    <value>Room or bed type</value>
+  </data>
+  <data name="ui.room.price" xml:space="preserve">
+    <value>Rate per night (THB)</value>
+  </data>
+  <data name="ui.room.extra_fee" xml:space="preserve">
+    <value>Extra guest per night (THB)</value>
+  </data>
+  <data name="ui.room.base_guests" xml:space="preserve">
+    <value>Base occupancy</value>
+  </data>
+  <data name="ui.room.max_guests" xml:space="preserve">
+    <value>Maximum occupancy</value>
+  </data>
+  <data name="ui.room.sort_order" xml:space="preserve">
+    <value>Display order</value>
+  </data>
+  <data name="ui.room.sort_hint" xml:space="preserve">
+    <value>Lower numbers appear first within a zone</value>
+  </data>
+  <data name="ui.room.pet_friendly" xml:space="preserve">
+    <value>Pets allowed</value>
+  </data>
+  <data name="ui.guests.search" xml:space="preserve">
+    <value>Search guest name or phone</value>
+  </data>
+  <data name="ui.guests.sort" xml:space="preserve">
+    <value>Sort by</value>
+  </data>
+  <data name="ui.guests.sort.latest" xml:space="preserve">
+    <value>Latest stay</value>
+  </data>
+  <data name="ui.guests.sort.count" xml:space="preserve">
+    <value>Number of stays</value>
+  </data>
+  <data name="ui.guests.sort.value" xml:space="preserve">
+    <value>Lifetime value</value>
+  </data>
+  <data name="ui.guests.sort.name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ui.guests.regular_only" xml:space="preserve">
+    <value>Regulars only</value>
+  </data>
+  <data name="ui.guests.empty_title" xml:space="preserve">
+    <value>No guests found</value>
+  </data>
+  <data name="ui.guests.empty_text" xml:space="preserve">
+    <value>Try another search. Guests are added when a booking is created.</value>
+  </data>
+  <data name="ui.guest.tabs" xml:space="preserve">
+    <value>Guest details</value>
+  </data>
+  <data name="ui.guest.tab.overview" xml:space="preserve">
+    <value>Overview</value>
+  </data>
+  <data name="ui.guest.tab.stays" xml:space="preserve">
+    <value>Stays</value>
+  </data>
+  <data name="ui.guest.tab.notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="ui.guest.tab.files" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="ui.guest.name" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+  <data name="ui.guest.phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="ui.guest.type" xml:space="preserve">
+    <value>Guest type</value>
+  </data>
+  <data name="ui.guest.type_placeholder" xml:space="preserve">
+    <value>e.g. walk-in, tourist</value>
+  </data>
+  <data name="ui.guest.regular" xml:space="preserve">
+    <value>Regular guest</value>
+  </data>
+  <data name="ui.guest.regular_short" xml:space="preserve">
+    <value>Regular</value>
+  </data>
+  <data name="ui.guest.note" xml:space="preserve">
+    <value>Permanent note</value>
+  </data>
+  <data name="ui.guest.note_placeholder" xml:space="preserve">
+    <value>e.g. prefers corner room, allergic to pets</value>
+  </data>
+  <data name="ui.guest.preferences" xml:space="preserve">
+    <value>Preferences</value>
+  </data>
+  <data name="ui.guest.preferences_placeholder" xml:space="preserve">
+    <value>e.g. extra pillow, black coffee in the morning</value>
+  </data>
+  <data name="ui.guest.completed" xml:space="preserve">
+    <value>Completed stays</value>
+  </data>
+  <data name="ui.guest.completed_sub" xml:space="preserve">
+    <value>stays</value>
+  </data>
+  <data name="ui.guest.nights" xml:space="preserve">
+    <value>Nights</value>
+  </data>
+  <data name="ui.guest.nights_sub" xml:space="preserve">
+    <value>nights</value>
+  </data>
+  <data name="ui.guest.lifetime" xml:space="preserve">
+    <value>Lifetime value</value>
+  </data>
+  <data name="ui.guest.lifetime_sub" xml:space="preserve">
+    <value>from completed stays</value>
+  </data>
+  <data name="ui.guest.discounts" xml:space="preserve">
+    <value>Discounts received</value>
+  </data>
+  <data name="ui.guest.discounts_sub" xml:space="preserve">
+    <value>all stays</value>
+  </data>
+  <data name="ui.guest.suggest_regular" xml:space="preserve">
+    <value>This guest has completed at least 3 stays. Consider marking them as a regular.</value>
+  </data>
+  <data name="ui.guest.no_stays" xml:space="preserve">
+    <value>No stays yet</value>
+  </data>
+  <data name="ui.guest.no_notes" xml:space="preserve">
+    <value>No notes for this guest yet</value>
+  </data>
+  <data name="ui.files.empty" xml:space="preserve">
+    <value>No files attached to this guest’s stays</value>
+  </data>
+  <data name="ui.files.open" xml:space="preserve">
+    <value>Open {name}</value>
+  </data>
+  <data name="ui.files.previous" xml:space="preserve">
+    <value>Previous file</value>
+  </data>
+  <data name="ui.files.next" xml:space="preserve">
+    <value>Next file</value>
+  </data>
+  <data name="ui.files.download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="ui.files.preview_unavailable" xml:space="preserve">
+    <value>PDF files can’t be previewed here. Download to open.</value>
+  </data>
+  <data name="ui.booking.new" xml:space="preserve">
+    <value>New booking</value>
+  </data>
+  <data name="ui.booking.edit" xml:space="preserve">
+    <value>Edit booking</value>
+  </data>
+  <data name="ui.booking.delete" xml:space="preserve">
+    <value>Delete booking</value>
+  </data>
+  <data name="ui.booking.menu" xml:space="preserve">
+    <value>Actions for the booking in room {room}</value>
+  </data>
+  <data name="ui.booking.subtitle" xml:space="preserve">
+    <value>Guest, dates, room and price</value>
+  </data>
+  <data name="ui.booking.section.guest" xml:space="preserve">
+    <value>Guest</value>
+  </data>
+  <data name="ui.booking.section.stay" xml:space="preserve">
+    <value>Dates, room and guests</value>
+  </data>
+  <data name="ui.booking.section.payment" xml:space="preserve">
+    <value>Payment and ID check</value>
+  </data>
+  <data name="ui.booking.phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="ui.booking.phone_hint" xml:space="preserve">
+    <value>Enter at least 9 digits to fill in a returning guest automatically.</value>
+  </data>
+  <data name="ui.booking.found" xml:space="preserve">
+    <value>Returning guest: {name}</value>
+  </data>
+  <data name="ui.booking.found_regular" xml:space="preserve">
+    <value>Regular guest: {name}</value>
+  </data>
+  <data name="ui.booking.name" xml:space="preserve">
+    <value>Guest name</value>
+  </data>
+  <data name="ui.booking.check_in" xml:space="preserve">
+    <value>Check-in date</value>
+  </data>
+  <data name="ui.booking.check_in_hint" xml:space="preserve">
+    <value>From 1:00 pm</value>
+  </data>
+  <data name="ui.booking.check_out" xml:space="preserve">
+    <value>Check-out date</value>
+  </data>
+  <data name="ui.booking.check_out_hint" xml:space="preserve">
+    <value>By 12:00 noon</value>
+  </data>
+  <data name="ui.booking.room" xml:space="preserve">
+    <value>Room</value>
+  </data>
+  <data name="ui.booking.room_option" xml:space="preserve">
+    <value>Room {name} · {zone} · {price}/night</value>
+  </data>
+  <data name="ui.booking.guests" xml:space="preserve">
+    <value>Number of guests</value>
+  </data>
+  <data name="ui.booking.extra_bed" xml:space="preserve">
+    <value>Extra bed (+฿200 per stay)</value>
+  </data>
+  <data name="ui.booking.pet_type" xml:space="preserve">
+    <value>Pet type</value>
+  </data>
+  <data name="ui.booking.pet_none" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="ui.booking.pet_dog" xml:space="preserve">
+    <value>Dog</value>
+  </data>
+  <data name="ui.booking.pet_cat" xml:space="preserve">
+    <value>Cat</value>
+  </data>
+  <data name="ui.booking.pet_other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="ui.booking.pet_count" xml:space="preserve">
+    <value>Number of pets</value>
+  </data>
+  <data name="ui.booking.deposit" xml:space="preserve">
+    <value>Deposit (THB)</value>
+  </data>
+  <data name="ui.booking.discount" xml:space="preserve">
+    <value>Discount (THB)</value>
+  </data>
+  <data name="ui.booking.deposit_paid" xml:space="preserve">
+    <value>Deposit received</value>
+  </data>
+  <data name="ui.booking.id_verified" xml:space="preserve">
+    <value>ID checked</value>
+  </data>
+  <data name="ui.booking.check_in_now" xml:space="preserve">
+    <value>Check in now (guest has arrived)</value>
+  </data>
+  <data name="ui.booking.note" xml:space="preserve">
+    <value>Booking note or special request</value>
+  </data>
+  <data name="ui.booking.note_placeholder" xml:space="preserve">
+    <value>e.g. late check-in, elderly guest</value>
+  </data>
+  <data name="ui.price.title" xml:space="preserve">
+    <value>Price summary</value>
+  </data>
+  <data name="ui.price.choose_room" xml:space="preserve">
+    <value>Choose a room to calculate the price</value>
+  </data>
+  <data name="ui.price.room" xml:space="preserve">
+    <value>Room, {nights} nights × {rate}</value>
+  </data>
+  <data name="ui.price.extra_guests" xml:space="preserve">
+    <value>{n} extra guests</value>
+  </data>
+  <data name="ui.price.extra_bed" xml:space="preserve">
+    <value>Extra bed</value>
+  </data>
+  <data name="ui.price.pet" xml:space="preserve">
+    <value>{n} pets</value>
+  </data>
+  <data name="ui.price.discount" xml:space="preserve">
+    <value>Discount</value>
+  </data>
+  <data name="ui.price.net" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="ui.price.deposit_paid" xml:space="preserve">
+    <value>Deposit received {amount}</value>
+  </data>
+  <data name="ui.price.deposit_unpaid" xml:space="preserve">
+    <value>Deposit not received</value>
+  </data>
+  <data name="ui.price.balance" xml:space="preserve">
+    <value>Balance {amount}</value>
+  </data>
+  <data name="ui.action.title" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="ui.action.submit" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="ui.action.check_in" xml:space="preserve">
+    <value>Check in</value>
+  </data>
+  <data name="ui.action.checkout" xml:space="preserve">
+    <value>Check out</value>
+  </data>
+  <data name="ui.action.inspect" xml:space="preserve">
+    <value>Inspect room</value>
+  </data>
+  <data name="ui.action.feedback" xml:space="preserve">
+    <value>Record feedback</value>
+  </data>
+  <data name="ui.action.extend" xml:space="preserve">
+    <value>Extend stay</value>
+  </data>
+  <data name="ui.action.upload" xml:space="preserve">
+    <value>Attach file</value>
+  </data>
+  <data name="ui.action.checkout_title" xml:space="preserve">
+    <value>Check-out inspection</value>
+  </data>
+  <data name="ui.action.checkout_submit" xml:space="preserve">
+    <value>Confirm check-out</value>
+  </data>
+  <data name="ui.action.extend_title" xml:space="preserve">
+    <value>Extend stay</value>
+  </data>
+  <data name="ui.action.extend_submit" xml:space="preserve">
+    <value>Save new check-out date</value>
+  </data>
+  <data name="ui.action.feedback_title" xml:space="preserve">
+    <value>Guest feedback</value>
+  </data>
+  <data name="ui.action.feedback_submit" xml:space="preserve">
+    <value>Save feedback</value>
+  </data>
+  <data name="ui.action.upload_title" xml:space="preserve">
+    <value>Attach a document or photo</value>
+  </data>
+  <data name="ui.action.upload_submit" xml:space="preserve">
+    <value>Attach file</value>
+  </data>
+  <data name="ui.checkout.intro" xml:space="preserve">
+    <value>Go through each item. If anything is damaged, untick it and describe it below.</value>
+  </data>
+  <data name="ui.checkout.legend" xml:space="preserve">
+    <value>Room inspection checklist</value>
+  </data>
+  <data name="ui.checkout.key" xml:space="preserve">
+    <value>Room key returned</value>
+  </data>
+  <data name="ui.checkout.clean" xml:space="preserve">
+    <value>Room cleanliness checked</value>
+  </data>
+  <data name="ui.checkout.equipment" xml:space="preserve">
+    <value>Room equipment complete (remote, towels, dryer…)</value>
+  </data>
+  <data name="ui.checkout.no_damage" xml:space="preserve">
+    <value>No damage to resort property</value>
+  </data>
+  <data name="ui.checkout.minibar" xml:space="preserve">
+    <value>Minibar checked</value>
+  </data>
+  <data name="ui.checkout.note" xml:space="preserve">
+    <value>Inspection note or damage details</value>
+  </data>
+  <data name="ui.checkout.note_hint" xml:space="preserve">
+    <value>Required when damage is found</value>
+  </data>
+  <data name="ui.extend.date" xml:space="preserve">
+    <value>New check-out date</value>
+  </data>
+  <data name="ui.extend.hint" xml:space="preserve">
+    <value>Currently checking out {date}</value>
+  </data>
+  <data name="ui.extend.discount" xml:space="preserve">
+    <value>Total discount (THB)</value>
+  </data>
+  <data name="ui.feedback.cleanliness" xml:space="preserve">
+    <value>Room cleanliness</value>
+  </data>
+  <data name="ui.feedback.service" xml:space="preserve">
+    <value>Staff service</value>
+  </data>
+  <data name="ui.feedback.facility" xml:space="preserve">
+    <value>Facilities</value>
+  </data>
+  <data name="ui.feedback.overall" xml:space="preserve">
+    <value>Overall satisfaction</value>
+  </data>
+  <data name="ui.feedback.score5" xml:space="preserve">
+    <value>5 — Excellent</value>
+  </data>
+  <data name="ui.feedback.score4" xml:space="preserve">
+    <value>4 — Good</value>
+  </data>
+  <data name="ui.feedback.score3" xml:space="preserve">
+    <value>3 — Fair</value>
+  </data>
+  <data name="ui.feedback.score2" xml:space="preserve">
+    <value>2 — Needs improvement</value>
+  </data>
+  <data name="ui.feedback.score1" xml:space="preserve">
+    <value>1 — Poor</value>
+  </data>
+  <data name="ui.feedback.would_return" xml:space="preserve">
+    <value>Guest would stay again</value>
+  </data>
+  <data name="ui.feedback.comment" xml:space="preserve">
+    <value>Guest comments</value>
+  </data>
+  <data name="ui.upload.file" xml:space="preserve">
+    <value>Choose a file</value>
+  </data>
+  <data name="ui.upload.hint" xml:space="preserve">
+    <value>JPEG, PNG, WebP or PDF up to 5 MB, e.g. a deposit slip or booking document</value>
+  </data>
+  <data name="ui.confirm.check_in_title" xml:space="preserve">
+    <value>Confirm check-in</value>
+  </data>
+  <data name="ui.confirm.check_in_message" xml:space="preserve">
+    <value>Have you checked ID and payment for {guest} in room {room}?</value>
+  </data>
+  <data name="ui.confirm.delete_booking_title" xml:space="preserve">
+    <value>Delete this booking?</value>
+  </data>
+  <data name="ui.confirm.delete_booking_message" xml:space="preserve">
+    <value>The booking for {guest} in room {room} will be removed.</value>
+  </data>
+  <data name="ui.confirm.delete_room_title" xml:space="preserve">
+    <value>Delete this room?</value>
+  </data>
+  <data name="ui.confirm.delete_room_message" xml:space="preserve">
+    <value>Room {room} and its stay history will be deleted.</value>
+  </data>
+  <data name="ui.unsaved.title" xml:space="preserve">
+    <value>Unsaved changes</value>
+  </data>
+  <data name="ui.unsaved.message" xml:space="preserve">
+    <value>If you close now, your changes in this form will be lost.</value>
+  </data>
+  <data name="ui.unsaved.discard" xml:space="preserve">
+    <value>Discard changes</value>
+  </data>
+  <data name="ui.command.label" xml:space="preserve">
+    <value>Quick search</value>
+  </data>
+  <data name="ui.command.placeholder" xml:space="preserve">
+    <value>Search guests, phones, rooms or pages…</value>
+  </data>
+  <data name="ui.command.pages" xml:space="preserve">
+    <value>Go to</value>
+  </data>
+  <data name="ui.command.stays" xml:space="preserve">
+    <value>Guests and bookings</value>
+  </data>
+  <data name="ui.command.empty" xml:space="preserve">
+    <value>Nothing found</value>
+  </data>
+  <data name="ui.command.move" xml:space="preserve">
+    <value>move</value>
+  </data>
+  <data name="ui.command.open" xml:space="preserve">
+    <value>open</value>
+  </data>
+  <data name="ui.command.today" xml:space="preserve">
+    <value>Arrivals, departures and open tasks</value>
+  </data>
+  <data name="ui.command.room_map" xml:space="preserve">
+    <value>Vacant rooms and who is staying</value>
+  </data>
+  <data name="ui.command.bookings" xml:space="preserve">
+    <value>Find and manage bookings</value>
+  </data>
+  <data name="ui.command.guests" xml:space="preserve">
+    <value>Guest history and preferences</value>
+  </data>
+  <data name="ui.command.reports" xml:space="preserve">
+    <value>Figures, revenue and CSV export</value>
+  </data>
+  <data name="ui.command.rooms" xml:space="preserve">
+    <value>Rates, capacity and amenities</value>
+  </data>
 </root>

@@ -1,17 +1,32 @@
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@inject Microsoft.AspNetCore.Mvc.ViewFeatures.IFileVersionProvider Versions
+@using System.Text.Json
+@{
+    var saved = Context.Request.Cookies["theme"];
+    var preference = saved is "light" or "dark" ? saved : "system";
+    var title = ViewData["Title"] as string ?? $"Stay Book · {T["app_name"]} {T["location"]}";
+    var strings = T.GetAllStrings(includeParentCultures: true).ToDictionary(s => s.Name, s => s.Value);
+}
 <!doctype html>
-<html lang="th" class="h-full">
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" data-theme-pref="@preference" data-theme="@(preference == "system" ? null : preference)">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="@(preference == "dark" ? "#121513" : "#f6f3ee")">
   <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken">
-  <title>Stay Book · @T["app_name"] @T["location"]</title>
+  <meta name="icon-sprite" content="@Versions.AddFileVersionToPath(Context.Request.PathBase, "/icons.svg")">
+  <partial name="_ThemeBoot" />
+  <title>@title</title>
   <link rel="icon" href="/images/logo_square.webp">
+  <link rel="preload" href="/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/ibm-plex-sans-thai-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="~/css/app.css" asp-append-version="true">
 </head>
-<body class="min-h-full bg-canvas text-ink antialiased">
+<body>
+  <a class="skip-link" href="#main">@T["ui.skip"]</a>
   @RenderBody()
-  @await RenderSectionAsync("Scripts", required: false)
+  <script type="application/json" id="ui-strings">@Html.Raw(JsonSerializer.Serialize(strings))</script>
+  <script type="module" src="~/js/app.js" asp-append-version="true" nonce="@Nonce.Value"></script>
 </body>
 </html>

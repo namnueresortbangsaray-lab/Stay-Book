@@ -1,0 +1,68 @@
+/*
+ * Design tokens — "a calm hospitality ledger".
+ * Colours are RGB channels so Tailwind opacity utilities work: rgb(var(--c-ink) / 0.6).
+ * Light values apply everywhere (including print); dark values only on screens with data-theme="dark".
+ * scripts/check-contrast.mjs verifies every text and UI pair against WCAG AA in both themes.
+ */
+:root,
+[data-theme='light'] {
+  --c-canvas: 246 243 238;
+  --c-surface: 252 250 247;
+  --c-raised: 255 255 255;
+  --c-sunken: 239 235 228;
+  --c-line: 228 223 214;
+  --c-line-strong: 207 200 187;
+  --c-control: 133 126 114;
+  --c-ink: 31 36 33;
+  --c-ink-muted: 84 92 87;
+  --c-ink-subtle: 97 104 99;
+  --c-primary: 31 92 79;
+  --c-primary-hover: 23 74 64;
+  --c-primary-subtle: 227 239 234;
+  --c-on-primary: 255 255 255;
+  --c-accent: 166 120 50;
+  --c-accent-ink: 122 85 32;
+  --c-accent-subtle: 244 234 214;
+  --c-success: 40 110 70;
+  --c-success-subtle: 228 241 232;
+  --c-warning: 143 86 6;
+  --c-warning-subtle: 250 238 214;
+  --c-danger: 167 58 41;
+  --c-danger-subtle: 248 231 227;
+  --c-info: 46 106 142;
+  --c-info-subtle: 227 237 244;
+  --c-selection: 205 226 217;
+  --theme-color: #f6f3ee;
+}
+
+@media screen {
+  [data-theme='dark'] {
+    --c-canvas: 18 21 19;
+    --c-surface: 26 30 27;
+    --c-raised: 33 38 34;
+    --c-sunken: 22 26 23;
+    --c-line: 46 53 47;
+    --c-line-strong: 59 68 61;
+    --c-control: 112 121 114;
+    --c-ink: 237 235 229;
+    --c-ink-muted: 168 175 168;
+    --c-ink-subtle: 142 150 142;
+    --c-primary: 79 179 154;
+    --c-primary-hover: 108 199 176;
+    --c-primary-subtle: 30 58 51;
+    --c-on-primary: 13 26 22;
+    --c-accent: 217 168 91;
+    --c-accent-ink: 226 186 120;
+    --c-accent-subtle: 58 47 28;
+    --c-success: 112 196 141;
+    --c-success-subtle: 26 50 35;
+    --c-warning: 226 171 84;
+    --c-warning-subtle: 56 42 18;
+    --c-danger: 240 141 122;
+    --c-danger-subtle: 63 30 25;
+    --c-info: 128 184 220;
+    --c-info-subtle: 24 44 58;
+    --c-selection: 40 82 71;
+    --theme-color: #121513;
+  }
+}

@@ -21,4 +21,1078 @@
   <data name="login" xml:space="preserve">
     <value>เข้าสู่ระบบ</value>
   </data>
+  <data name="ui.skip" xml:space="preserve">
+    <value>ข้ามไปยังเนื้อหาหลัก</value>
+  </data>
+  <data name="ui.loading" xml:space="preserve">
+    <value>กำลังเตรียมข้อมูลรีสอร์ท…</value>
+  </data>
+  <data name="ui.load_failed" xml:space="preserve">
+    <value>โหลดข้อมูลไม่สำเร็จ</value>
+  </data>
+  <data name="ui.retry" xml:space="preserve">
+    <value>ลองอีกครั้ง</value>
+  </data>
+  <data name="ui.close" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="ui.cancel" xml:space="preserve">
+    <value>ยกเลิก</value>
+  </data>
+  <data name="ui.confirm" xml:space="preserve">
+    <value>ยืนยัน</value>
+  </data>
+  <data name="ui.save" xml:space="preserve">
+    <value>บันทึกการเปลี่ยนแปลง</value>
+  </data>
+  <data name="ui.saving" xml:space="preserve">
+    <value>กำลังบันทึก</value>
+  </data>
+  <data name="ui.edit" xml:space="preserve">
+    <value>แก้ไข</value>
+  </data>
+  <data name="ui.no" xml:space="preserve">
+    <value>ไม่</value>
+  </data>
+  <data name="ui.search" xml:space="preserve">
+    <value>ค้นหา</value>
+  </data>
+  <data name="ui.breadcrumb" xml:space="preserve">
+    <value>ตำแหน่งปัจจุบัน</value>
+  </data>
+  <data name="ui.menu.more" xml:space="preserve">
+    <value>การทำงานเพิ่มเติม</value>
+  </data>
+  <data name="ui.toast.saved" xml:space="preserve">
+    <value>บันทึกเรียบร้อยแล้ว</value>
+  </data>
+  <data name="ui.no_phone" xml:space="preserve">
+    <value>ไม่มีเบอร์โทร</value>
+  </data>
+  <data name="ui.guests_count" xml:space="preserve">
+    <value>{n} ท่าน</value>
+  </data>
+  <data name="ui.nights_count" xml:space="preserve">
+    <value>{n} คืน</value>
+  </data>
+  <data name="ui.items_count" xml:space="preserve">
+    <value>{n} รายการ</value>
+  </data>
+  <data name="ui.rooms_count" xml:space="preserve">
+    <value>{n} ห้อง</value>
+  </data>
+  <data name="ui.room_label" xml:space="preserve">
+    <value>ห้อง {name}</value>
+  </data>
+  <data name="ui.per_night" xml:space="preserve">
+    <value>ต่อคืน</value>
+  </data>
+  <data name="ui.pet_friendly" xml:space="preserve">
+    <value>รับสัตว์เลี้ยง</value>
+  </data>
+  <data name="ui.user.fallback" xml:space="preserve">
+    <value>ผู้ใช้งาน</value>
+  </data>
+  <data name="ui.role.admin" xml:space="preserve">
+    <value>ผู้ดูแลระบบ</value>
+  </data>
+  <data name="ui.role.front_desk" xml:space="preserve">
+    <value>พนักงานต้อนรับ</value>
+  </data>
+  <data name="ui.role.housekeeping" xml:space="preserve">
+    <value>แม่บ้าน</value>
+  </data>
+  <data name="ui.brand.place" xml:space="preserve">
+    <value>บางเสร่ · ชลบุรี</value>
+  </data>
+  <data name="ui.nav.label" xml:space="preserve">
+    <value>เมนูหลัก</value>
+  </data>
+  <data name="ui.nav.mobile" xml:space="preserve">
+    <value>เมนูด่วน</value>
+  </data>
+  <data name="ui.nav.group.daily" xml:space="preserve">
+    <value>งานประจำวัน</value>
+  </data>
+  <data name="ui.nav.group.records" xml:space="preserve">
+    <value>ข้อมูลและรายงาน</value>
+  </data>
+  <data name="ui.nav.today" xml:space="preserve">
+    <value>งานวันนี้</value>
+  </data>
+  <data name="ui.nav.room_map" xml:space="preserve">
+    <value>ผังห้อง</value>
+  </data>
+  <data name="ui.nav.room_map_short" xml:space="preserve">
+    <value>ผังห้อง</value>
+  </data>
+  <data name="ui.nav.bookings" xml:space="preserve">
+    <value>ตารางเข้าพัก</value>
+  </data>
+  <data name="ui.nav.bookings_short" xml:space="preserve">
+    <value>Booking</value>
+  </data>
+  <data name="ui.nav.guests" xml:space="preserve">
+    <value>ลูกค้า</value>
+  </data>
+  <data name="ui.nav.reports" xml:space="preserve">
+    <value>รายงาน</value>
+  </data>
+  <data name="ui.nav.rooms" xml:space="preserve">
+    <value>ตั้งค่าห้องพัก</value>
+  </data>
+  <data name="ui.nav.more" xml:space="preserve">
+    <value>เมนู</value>
+  </data>
+  <data name="ui.nav.collapse" xml:space="preserve">
+    <value>ย่อ / ขยายแถบเมนู</value>
+  </data>
+  <data name="ui.nav.signout" xml:space="preserve">
+    <value>ออกจากระบบ</value>
+  </data>
+  <data name="ui.theme.label" xml:space="preserve">
+    <value>ธีมสี</value>
+  </data>
+  <data name="ui.theme.light" xml:space="preserve">
+    <value>สว่าง</value>
+  </data>
+  <data name="ui.theme.dark" xml:space="preserve">
+    <value>มืด</value>
+  </data>
+  <data name="ui.theme.system" xml:space="preserve">
+    <value>ตามเครื่อง</value>
+  </data>
+  <data name="ui.density.compact" xml:space="preserve">
+    <value>แสดงแบบกระชับ</value>
+  </data>
+  <data name="ui.login.title" xml:space="preserve">
+    <value>เข้าสู่ระบบพนักงาน</value>
+  </data>
+  <data name="ui.login.subtitle" xml:space="preserve">
+    <value>ระบบบริหารห้องพักและสมุดบันทึกผู้เข้าพัก · บางเสร่</value>
+  </data>
+  <data name="ui.login.email" xml:space="preserve">
+    <value>อีเมลเข้าใช้งาน</value>
+  </data>
+  <data name="ui.login.password" xml:space="preserve">
+    <value>รหัสผ่าน</value>
+  </data>
+  <data name="ui.login.place" xml:space="preserve">
+    <value>บางเสร่ · ชลบุรี</value>
+  </data>
+  <data name="ui.login.panel" xml:space="preserve">
+    <value>สมุดบันทึกผู้เข้าพักของทีมหน้าฟรอนต์และแม่บ้าน: การจอง เช็กอิน เช็กเอาต์ และประวัติลูกค้าอยู่ในที่เดียว</value>
+  </data>
+  <data name="ui.login.footer" xml:space="preserve">
+    <value>น้ำเหนือรีสอร์ท บางเสร่ · ที่พักหลักร้อย สะดวก สะอาด ปลอดภัย</value>
+  </data>
+  <data name="ui.error.home" xml:space="preserve">
+    <value>กลับหน้าหลัก</value>
+  </data>
+  <data name="ui.error.contact" xml:space="preserve">
+    <value>หากพบปัญหาต่อเนื่อง กรุณาติดต่อผู้ดูแลระบบ</value>
+  </data>
+  <data name="ui.error.hint.default" xml:space="preserve">
+    <value>ลองกลับไปที่หน้าหลักแล้วทำรายการอีกครั้ง</value>
+  </data>
+  <data name="ui.error.hint.403" xml:space="preserve">
+    <value>บัญชีของคุณไม่มีสิทธิ์ทำรายการนี้ หากจำเป็นต้องใช้ ให้ผู้ดูแลระบบปรับสิทธิ์ให้</value>
+  </data>
+  <data name="ui.error.hint.404" xml:space="preserve">
+    <value>ลิงก์อาจพิมพ์ผิดหรือหน้านี้ถูกย้ายไปแล้ว</value>
+  </data>
+  <data name="ui.error.hint.413" xml:space="preserve">
+    <value>ไฟล์ใหญ่เกินกว่าที่ระบบรับได้ ลองย่อขนาดรูปหรือเลือกไฟล์อื่น</value>
+  </data>
+  <data name="ui.error.hint.419" xml:space="preserve">
+    <value>หน้านี้เปิดค้างไว้นานเกินไป กรุณาเข้าสู่ระบบหรือรีเฟรชหน้าแล้วลองใหม่</value>
+  </data>
+  <data name="ui.error.hint.429" xml:space="preserve">
+    <value>มีการลองเข้าระบบหรือส่งคำขอบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่</value>
+  </data>
+  <data name="ui.error.hint.500" xml:space="preserve">
+    <value>ระบบขัดข้องชั่วคราว ข้อมูลที่บันทึกไว้แล้วยังปลอดภัย ลองใหม่อีกครั้งในอีกสักครู่</value>
+  </data>
+  <data name="ui.status.booked" xml:space="preserve">
+    <value>รอเช็กอิน</value>
+  </data>
+  <data name="ui.status.in_house" xml:space="preserve">
+    <value>กำลังเข้าพัก</value>
+  </data>
+  <data name="ui.status.checked_out" xml:space="preserve">
+    <value>เช็กเอาต์แล้ว</value>
+  </data>
+  <data name="ui.room_state.vacant" xml:space="preserve">
+    <value>ว่าง</value>
+  </data>
+  <data name="ui.room_state.arriving" xml:space="preserve">
+    <value>เข้าวันนี้</value>
+  </data>
+  <data name="ui.room_state.occupied" xml:space="preserve">
+    <value>มีผู้เข้าพัก</value>
+  </data>
+  <data name="ui.room_state.departing" xml:space="preserve">
+    <value>ออกวันนี้</value>
+  </data>
+  <data name="ui.flag.id_pending" xml:space="preserve">
+    <value>ยังไม่ตรวจบัตร</value>
+  </data>
+  <data name="ui.flag.deposit_pending" xml:space="preserve">
+    <value>มัดจำค้าง {amount}</value>
+  </data>
+  <data name="ui.flag.deposit_short" xml:space="preserve">
+    <value>มัดจำค้าง</value>
+  </data>
+  <data name="ui.filter.all" xml:space="preserve">
+    <value>ทั้งหมด</value>
+  </data>
+  <data name="ui.filter.clear" xml:space="preserve">
+    <value>ล้างตัวกรอง</value>
+  </data>
+  <data name="ui.today.morning" xml:space="preserve">
+    <value>สวัสดีตอนเช้า</value>
+  </data>
+  <data name="ui.today.afternoon" xml:space="preserve">
+    <value>สวัสดีตอนบ่าย</value>
+  </data>
+  <data name="ui.today.evening" xml:space="preserve">
+    <value>สวัสดีตอนเย็น</value>
+  </data>
+  <data name="ui.today.arrivals" xml:space="preserve">
+    <value>เช็กอินวันนี้</value>
+  </data>
+  <data name="ui.today.arrivals_sub" xml:space="preserve">
+    <value>ยังไม่ตรวจบัตร {n} ราย</value>
+  </data>
+  <data name="ui.today.departures" xml:space="preserve">
+    <value>เช็กเอาต์วันนี้</value>
+  </data>
+  <data name="ui.today.departures_sub" xml:space="preserve">
+    <value>ตรวจห้องก่อนคืนกุญแจ</value>
+  </data>
+  <data name="ui.today.in_house" xml:space="preserve">
+    <value>กำลังเข้าพัก</value>
+  </data>
+  <data name="ui.today.occupancy" xml:space="preserve">
+    <value>ห้องที่มีผู้พักคืนนี้</value>
+  </data>
+  <data name="ui.today.occupancy_sub" xml:space="preserve">
+    <value>{used} จาก {total} ห้อง</value>
+  </data>
+  <data name="ui.today.deposits" xml:space="preserve">
+    <value>มัดจำรอติดตาม</value>
+  </data>
+  <data name="ui.today.arrivals_title" xml:space="preserve">
+    <value>ผู้เข้าพักที่จะมาถึงวันนี้</value>
+  </data>
+  <data name="ui.today.departures_title" xml:space="preserve">
+    <value>ห้องที่ต้องเช็กเอาต์วันนี้</value>
+  </data>
+  <data name="ui.today.no_arrivals" xml:space="preserve">
+    <value>ไม่มีรายการเช็กอินวันนี้</value>
+  </data>
+  <data name="ui.today.no_departures" xml:space="preserve">
+    <value>ไม่มีรายการเช็กเอาต์วันนี้</value>
+  </data>
+  <data name="ui.today.rooms_title" xml:space="preserve">
+    <value>สถานะห้องพักตอนนี้</value>
+  </data>
+  <data name="ui.today.open_room_map" xml:space="preserve">
+    <value>เปิดผังห้อง</value>
+  </data>
+  <data name="ui.today.deposits_title" xml:space="preserve">
+    <value>มัดจำที่ยังไม่ได้รับ</value>
+  </data>
+  <data name="ui.today.open_bookings" xml:space="preserve">
+    <value>ดูตารางเข้าพัก</value>
+  </data>
+  <data name="ui.today.no_deposits" xml:space="preserve">
+    <value>ไม่มีมัดจำค้างชำระ</value>
+  </data>
+  <data name="ui.today.notes_title" xml:space="preserve">
+    <value>หมายเหตุจากการจอง</value>
+  </data>
+  <data name="ui.today.no_notes" xml:space="preserve">
+    <value>ไม่มีหมายเหตุสำหรับผู้เข้าพักที่กำลังจะมาหรืออยู่ในรีสอร์ท</value>
+  </data>
+  <data name="ui.room_board.state_filter" xml:space="preserve">
+    <value>กรองตามสถานะห้อง</value>
+  </data>
+  <data name="ui.room_board.zone_filter" xml:space="preserve">
+    <value>กรองตามโซน</value>
+  </data>
+  <data name="ui.room_board.all_zones" xml:space="preserve">
+    <value>ทุกโซน</value>
+  </data>
+  <data name="ui.room_board.no_match" xml:space="preserve">
+    <value>ไม่มีห้องที่ตรงกับตัวกรอง</value>
+  </data>
+  <data name="ui.room_board.arrives_today" xml:space="preserve">
+    <value>เข้าพักวันนี้</value>
+  </data>
+  <data name="ui.room_board.leaves" xml:space="preserve">
+    <value>ออก {date}</value>
+  </data>
+  <data name="ui.bookings.view" xml:space="preserve">
+    <value>รูปแบบการแสดงผล</value>
+  </data>
+  <data name="ui.bookings.list" xml:space="preserve">
+    <value>รายการ</value>
+  </data>
+  <data name="ui.bookings.calendar" xml:space="preserve">
+    <value>ปฏิทิน</value>
+  </data>
+  <data name="ui.bookings.search" xml:space="preserve">
+    <value>ค้นหาชื่อ เบอร์โทร ห้อง โซน หรือหมายเหตุ</value>
+  </data>
+  <data name="ui.bookings.status_filter" xml:space="preserve">
+    <value>กรองตามสถานะการจอง</value>
+  </data>
+  <data name="ui.bookings.empty_title" xml:space="preserve">
+    <value>ไม่พบรายการ Booking</value>
+  </data>
+  <data name="ui.bookings.empty_text" xml:space="preserve">
+    <value>ลองเปลี่ยนคำค้นหรือสถานะ หรือเปิดรายการเข้าพักใหม่</value>
+  </data>
+  <data name="ui.col.guest" xml:space="preserve">
+    <value>ผู้เข้าพัก</value>
+  </data>
+  <data name="ui.col.room" xml:space="preserve">
+    <value>ห้อง</value>
+  </data>
+  <data name="ui.col.check_in" xml:space="preserve">
+    <value>เช็กอิน</value>
+  </data>
+  <data name="ui.col.check_out" xml:space="preserve">
+    <value>เช็กเอาต์</value>
+  </data>
+  <data name="ui.col.nights" xml:space="preserve">
+    <value>คืน</value>
+  </data>
+  <data name="ui.col.guests" xml:space="preserve">
+    <value>ผู้พัก</value>
+  </data>
+  <data name="ui.col.status" xml:space="preserve">
+    <value>สถานะ</value>
+  </data>
+  <data name="ui.col.total" xml:space="preserve">
+    <value>ยอดสุทธิ</value>
+  </data>
+  <data name="ui.col.balance" xml:space="preserve">
+    <value>คงเหลือ</value>
+  </data>
+  <data name="ui.col.actions" xml:space="preserve">
+    <value>การทำงาน</value>
+  </data>
+  <data name="ui.col.zone" xml:space="preserve">
+    <value>โซน</value>
+  </data>
+  <data name="ui.col.price" xml:space="preserve">
+    <value>ราคา/คืน</value>
+  </data>
+  <data name="ui.col.capacity" xml:space="preserve">
+    <value>รองรับ (ท่าน)</value>
+  </data>
+  <data name="ui.col.extra_fee" xml:space="preserve">
+    <value>คนเพิ่ม/คืน</value>
+  </data>
+  <data name="ui.col.pet" xml:space="preserve">
+    <value>สัตว์เลี้ยง</value>
+  </data>
+  <data name="ui.col.phone" xml:space="preserve">
+    <value>เบอร์โทร</value>
+  </data>
+  <data name="ui.col.stays" xml:space="preserve">
+    <value>ครั้งที่พัก</value>
+  </data>
+  <data name="ui.col.lifetime" xml:space="preserve">
+    <value>ยอดใช้จ่ายสะสม</value>
+  </data>
+  <data name="ui.col.last_stay" xml:space="preserve">
+    <value>เข้าพักล่าสุด</value>
+  </data>
+  <data name="ui.col.date" xml:space="preserve">
+    <value>วันที่</value>
+  </data>
+  <data name="ui.table.columns" xml:space="preserve">
+    <value>คอลัมน์</value>
+  </data>
+  <data name="ui.table.show_columns" xml:space="preserve">
+    <value>เลือกคอลัมน์ที่แสดง</value>
+  </data>
+  <data name="ui.table.showing" xml:space="preserve">
+    <value>แสดง {from}–{to} จาก {total} รายการ</value>
+  </data>
+  <data name="ui.table.count" xml:space="preserve">
+    <value>{total} รายการ</value>
+  </data>
+  <data name="ui.table.previous" xml:space="preserve">
+    <value>หน้าก่อนหน้า</value>
+  </data>
+  <data name="ui.table.next" xml:space="preserve">
+    <value>หน้าถัดไป</value>
+  </data>
+  <data name="ui.calendar.previous" xml:space="preserve">
+    <value>เดือนก่อนหน้า</value>
+  </data>
+  <data name="ui.calendar.next" xml:space="preserve">
+    <value>เดือนถัดไป</value>
+  </data>
+  <data name="ui.calendar.today" xml:space="preserve">
+    <value>วันนี้</value>
+  </data>
+  <data name="ui.calendar.scroll" xml:space="preserve">
+    <value>ปฏิทินรายเดือน เลื่อนด้านข้างได้บนจอเล็ก</value>
+  </data>
+  <data name="ui.calendar.day_title" xml:space="preserve">
+    <value>รายการเข้าพักวันที่ {date}</value>
+  </data>
+  <data name="ui.calendar.empty" xml:space="preserve">
+    <value>ไม่มีผู้เข้าพักในวันนี้</value>
+  </data>
+  <data name="ui.weekday.mon" xml:space="preserve">
+    <value>จันทร์</value>
+  </data>
+  <data name="ui.weekday.tue" xml:space="preserve">
+    <value>อังคาร</value>
+  </data>
+  <data name="ui.weekday.wed" xml:space="preserve">
+    <value>พุธ</value>
+  </data>
+  <data name="ui.weekday.thu" xml:space="preserve">
+    <value>พฤหัส</value>
+  </data>
+  <data name="ui.weekday.fri" xml:space="preserve">
+    <value>ศุกร์</value>
+  </data>
+  <data name="ui.weekday.sat" xml:space="preserve">
+    <value>เสาร์</value>
+  </data>
+  <data name="ui.weekday.sun" xml:space="preserve">
+    <value>อาทิตย์</value>
+  </data>
+  <data name="ui.reports.period" xml:space="preserve">
+    <value>ช่วงเวลา</value>
+  </data>
+  <data name="ui.reports.today" xml:space="preserve">
+    <value>วันนี้</value>
+  </data>
+  <data name="ui.reports.7days" xml:space="preserve">
+    <value>7 วันล่าสุด</value>
+  </data>
+  <data name="ui.reports.month" xml:space="preserve">
+    <value>เดือนนี้</value>
+  </data>
+  <data name="ui.reports.from" xml:space="preserve">
+    <value>ตั้งแต่วันที่</value>
+  </data>
+  <data name="ui.reports.to" xml:space="preserve">
+    <value>ถึงวันที่</value>
+  </data>
+  <data name="ui.reports.apply" xml:space="preserve">
+    <value>แสดงผล</value>
+  </data>
+  <data name="ui.reports.csv" xml:space="preserve">
+    <value>ส่งออก CSV</value>
+  </data>
+  <data name="ui.reports.print" xml:space="preserve">
+    <value>พิมพ์</value>
+  </data>
+  <data name="ui.reports.group.stays" xml:space="preserve">
+    <value>การเข้าพัก</value>
+  </data>
+  <data name="ui.reports.group.money" xml:space="preserve">
+    <value>การเงิน</value>
+  </data>
+  <data name="ui.reports.group.other" xml:space="preserve">
+    <value>อื่น ๆ</value>
+  </data>
+  <data name="ui.reports.bookings" xml:space="preserve">
+    <value>Booking ทั้งหมด</value>
+  </data>
+  <data name="ui.reports.checked_in" xml:space="preserve">
+    <value>เช็กอินแล้ว</value>
+  </data>
+  <data name="ui.reports.checked_out" xml:space="preserve">
+    <value>เช็กเอาต์แล้ว</value>
+  </data>
+  <data name="ui.reports.guests" xml:space="preserve">
+    <value>จำนวนผู้เข้าพัก</value>
+  </data>
+  <data name="ui.reports.room_nights" xml:space="preserve">
+    <value>คืนห้องพักที่ขายได้</value>
+  </data>
+  <data name="ui.reports.occupancy" xml:space="preserve">
+    <value>อัตราการเข้าพัก</value>
+  </data>
+  <data name="ui.reports.net_revenue" xml:space="preserve">
+    <value>รายได้สุทธิ</value>
+  </data>
+  <data name="ui.reports.discounts" xml:space="preserve">
+    <value>ส่วนลดที่ให้</value>
+  </data>
+  <data name="ui.reports.deposits_received" xml:space="preserve">
+    <value>มัดจำรับแล้ว</value>
+  </data>
+  <data name="ui.reports.deposits_pending" xml:space="preserve">
+    <value>มัดจำรอชำระ</value>
+  </data>
+  <data name="ui.reports.pet_bookings" xml:space="preserve">
+    <value>Booking ที่มีสัตว์เลี้ยง</value>
+  </data>
+  <data name="ui.reports.feedback" xml:space="preserve">
+    <value>คะแนนความพึงพอใจเฉลี่ย</value>
+  </data>
+  <data name="ui.reports.revenue_title" xml:space="preserve">
+    <value>รายได้สุทธิรายวัน</value>
+  </data>
+  <data name="ui.reports.revenue_sub" xml:space="preserve">
+    <value>นับตามวันที่เช็กอิน ไม่รวม Booking ที่ยังไม่เข้าพัก</value>
+  </data>
+  <data name="ui.reports.occupancy_title" xml:space="preserve">
+    <value>ห้องที่มีผู้พักรายวัน</value>
+  </data>
+  <data name="ui.reports.occupancy_sub" xml:space="preserve">
+    <value>จากทั้งหมด {n} ห้อง</value>
+  </data>
+  <data name="ui.reports.rooms_used" xml:space="preserve">
+    <value>ห้องที่มีผู้พัก</value>
+  </data>
+  <data name="ui.reports.show_table" xml:space="preserve">
+    <value>ดูเป็นตาราง</value>
+  </data>
+  <data name="ui.reports.hide_table" xml:space="preserve">
+    <value>ซ่อนตาราง</value>
+  </data>
+  <data name="ui.reports.status_title" xml:space="preserve">
+    <value>สัดส่วนสถานะการจอง</value>
+  </data>
+  <data name="ui.reports.deposit_title" xml:space="preserve">
+    <value>สถานะเงินมัดจำ</value>
+  </data>
+  <data name="ui.reports.deposit_paid" xml:space="preserve">
+    <value>ชำระมัดจำแล้ว</value>
+  </data>
+  <data name="ui.reports.deposit_unpaid" xml:space="preserve">
+    <value>ยังไม่ชำระ</value>
+  </data>
+  <data name="ui.reports.deposit_none" xml:space="preserve">
+    <value>ไม่มีมัดจำ</value>
+  </data>
+  <data name="ui.rooms.title" xml:space="preserve">
+    <value>รายการห้องพักทั้งหมด</value>
+  </data>
+  <data name="ui.rooms.subtitle" xml:space="preserve">
+    <value>จัดการราคาพื้นฐาน เตียง และสิ่งอำนวยความสะดวก</value>
+  </data>
+  <data name="ui.rooms.new" xml:space="preserve">
+    <value>เพิ่มห้องพัก</value>
+  </data>
+  <data name="ui.rooms.delete" xml:space="preserve">
+    <value>ลบห้องพัก</value>
+  </data>
+  <data name="ui.rooms.menu" xml:space="preserve">
+    <value>การทำงานของห้อง {name}</value>
+  </data>
+  <data name="ui.rooms.empty_title" xml:space="preserve">
+    <value>ยังไม่มีห้องพัก</value>
+  </data>
+  <data name="ui.rooms.empty_text" xml:space="preserve">
+    <value>เพิ่มห้องแรกเพื่อเริ่มรับ Booking</value>
+  </data>
+  <data name="ui.room.edit" xml:space="preserve">
+    <value>แก้ไขห้องพัก</value>
+  </data>
+  <data name="ui.room.subtitle" xml:space="preserve">
+    <value>ชื่อห้อง โซน ราคา และจำนวนผู้พักที่รองรับ</value>
+  </data>
+  <data name="ui.room.section.identity" xml:space="preserve">
+    <value>ข้อมูลห้อง</value>
+  </data>
+  <data name="ui.room.section.pricing" xml:space="preserve">
+    <value>ราคาและความจุ</value>
+  </data>
+  <data name="ui.room.section.display" xml:space="preserve">
+    <value>การแสดงผล</value>
+  </data>
+  <data name="ui.room.name" xml:space="preserve">
+    <value>ชื่อห้อง / หมายเลข</value>
+  </data>
+  <data name="ui.room.name_placeholder" xml:space="preserve">
+    <value>เช่น 1, 2, A1</value>
+  </data>
+  <data name="ui.room.zone" xml:space="preserve">
+    <value>โซนที่ตั้ง</value>
+  </data>
+  <data name="ui.room.type" xml:space="preserve">
+    <value>ประเภทห้อง / เตียง</value>
+  </data>
+  <data name="ui.room.price" xml:space="preserve">
+    <value>ราคาปกติต่อคืน (บาท)</value>
+  </data>
+  <data name="ui.room.extra_fee" xml:space="preserve">
+    <value>ค่าผู้พักเพิ่มต่อท่านต่อคืน (บาท)</value>
+  </data>
+  <data name="ui.room.base_guests" xml:space="preserve">
+    <value>จำนวนผู้พักพื้นฐาน</value>
+  </data>
+  <data name="ui.room.max_guests" xml:space="preserve">
+    <value>จำนวนผู้พักสูงสุด</value>
+  </data>
+  <data name="ui.room.sort_order" xml:space="preserve">
+    <value>ลำดับการแสดงผล</value>
+  </data>
+  <data name="ui.room.sort_hint" xml:space="preserve">
+    <value>ตัวเลขน้อยแสดงก่อนภายในโซนเดียวกัน</value>
+  </data>
+  <data name="ui.room.pet_friendly" xml:space="preserve">
+    <value>อนุญาตให้นำสัตว์เลี้ยงเข้าพัก</value>
+  </data>
+  <data name="ui.guests.search" xml:space="preserve">
+    <value>ค้นหาชื่อหรือเบอร์โทรลูกค้า</value>
+  </data>
+  <data name="ui.guests.sort" xml:space="preserve">
+    <value>เรียงตาม</value>
+  </data>
+  <data name="ui.guests.sort.latest" xml:space="preserve">
+    <value>เข้าพักล่าสุด</value>
+  </data>
+  <data name="ui.guests.sort.count" xml:space="preserve">
+    <value>จำนวนครั้งที่พัก</value>
+  </data>
+  <data name="ui.guests.sort.value" xml:space="preserve">
+    <value>ยอดใช้จ่ายสะสม</value>
+  </data>
+  <data name="ui.guests.sort.name" xml:space="preserve">
+    <value>ชื่อ</value>
+  </data>
+  <data name="ui.guests.regular_only" xml:space="preserve">
+    <value>เฉพาะลูกค้าประจำ</value>
+  </data>
+  <data name="ui.guests.empty_title" xml:space="preserve">
+    <value>ไม่พบข้อมูลลูกค้า</value>
+  </data>
+  <data name="ui.guests.empty_text" xml:space="preserve">
+    <value>ลองเปลี่ยนคำค้น ลูกค้าใหม่จะถูกเพิ่มเมื่อสร้าง Booking</value>
+  </data>
+  <data name="ui.guest.tabs" xml:space="preserve">
+    <value>ข้อมูลลูกค้า</value>
+  </data>
+  <data name="ui.guest.tab.overview" xml:space="preserve">
+    <value>ภาพรวม</value>
+  </data>
+  <data name="ui.guest.tab.stays" xml:space="preserve">
+    <value>การเข้าพัก</value>
+  </data>
+  <data name="ui.guest.tab.notes" xml:space="preserve">
+    <value>บันทึก</value>
+  </data>
+  <data name="ui.guest.tab.files" xml:space="preserve">
+    <value>ไฟล์</value>
+  </data>
+  <data name="ui.guest.name" xml:space="preserve">
+    <value>ชื่อ-นามสกุล</value>
+  </data>
+  <data name="ui.guest.phone" xml:space="preserve">
+    <value>เบอร์โทรศัพท์</value>
+  </data>
+  <data name="ui.guest.type" xml:space="preserve">
+    <value>กลุ่มลูกค้า</value>
+  </data>
+  <data name="ui.guest.type_placeholder" xml:space="preserve">
+    <value>เช่น ลูกค้าทั่วไป, นักท่องเที่ยว</value>
+  </data>
+  <data name="ui.guest.regular" xml:space="preserve">
+    <value>ลูกค้าประจำ</value>
+  </data>
+  <data name="ui.guest.regular_short" xml:space="preserve">
+    <value>ลูกค้าประจำ</value>
+  </data>
+  <data name="ui.guest.note" xml:space="preserve">
+    <value>โน้ตถาวร / ข้อมูลสำคัญ</value>
+  </data>
+  <data name="ui.guest.note_placeholder" xml:space="preserve">
+    <value>เช่น ชอบห้องมุม, แพ้ขนสัตว์, มีเด็กเล็ก</value>
+  </data>
+  <data name="ui.guest.preferences" xml:space="preserve">
+    <value>ความต้องการ / ความชอบเฉพาะตัว</value>
+  </data>
+  <data name="ui.guest.preferences_placeholder" xml:space="preserve">
+    <value>เช่น หมอนเพิ่ม, กาแฟดำตอนเช้า</value>
+  </data>
+  <data name="ui.guest.completed" xml:space="preserve">
+    <value>เข้าพักสำเร็จ</value>
+  </data>
+  <data name="ui.guest.completed_sub" xml:space="preserve">
+    <value>ครั้ง</value>
+  </data>
+  <data name="ui.guest.nights" xml:space="preserve">
+    <value>คืนสะสม</value>
+  </data>
+  <data name="ui.guest.nights_sub" xml:space="preserve">
+    <value>คืน</value>
+  </data>
+  <data name="ui.guest.lifetime" xml:space="preserve">
+    <value>ยอดใช้จ่ายสะสม</value>
+  </data>
+  <data name="ui.guest.lifetime_sub" xml:space="preserve">
+    <value>จาก Booking ที่เช็กเอาต์แล้ว</value>
+  </data>
+  <data name="ui.guest.discounts" xml:space="preserve">
+    <value>ส่วนลดที่เคยได้รับ</value>
+  </data>
+  <data name="ui.guest.discounts_sub" xml:space="preserve">
+    <value>รวมทุกครั้ง</value>
+  </data>
+  <data name="ui.guest.suggest_regular" xml:space="preserve">
+    <value>ลูกค้าเข้าพักสำเร็จอย่างน้อย 3 ครั้งแล้ว แนะนำให้ตั้งเป็นลูกค้าประจำ</value>
+  </data>
+  <data name="ui.guest.no_stays" xml:space="preserve">
+    <value>ยังไม่มีประวัติการเข้าพัก</value>
+  </data>
+  <data name="ui.guest.no_notes" xml:space="preserve">
+    <value>ยังไม่มีบันทึกสำหรับลูกค้ารายนี้</value>
+  </data>
+  <data name="ui.files.empty" xml:space="preserve">
+    <value>ยังไม่มีไฟล์แนบจากการเข้าพักของลูกค้ารายนี้</value>
+  </data>
+  <data name="ui.files.open" xml:space="preserve">
+    <value>เปิดไฟล์ {name}</value>
+  </data>
+  <data name="ui.files.previous" xml:space="preserve">
+    <value>ไฟล์ก่อนหน้า</value>
+  </data>
+  <data name="ui.files.next" xml:space="preserve">
+    <value>ไฟล์ถัดไป</value>
+  </data>
+  <data name="ui.files.download" xml:space="preserve">
+    <value>ดาวน์โหลด</value>
+  </data>
+  <data name="ui.files.preview_unavailable" xml:space="preserve">
+    <value>ไฟล์ PDF แสดงตัวอย่างไม่ได้ ดาวน์โหลดเพื่อเปิดดู</value>
+  </data>
+  <data name="ui.booking.new" xml:space="preserve">
+    <value>สร้าง Booking</value>
+  </data>
+  <data name="ui.booking.edit" xml:space="preserve">
+    <value>แก้ไข Booking</value>
+  </data>
+  <data name="ui.booking.delete" xml:space="preserve">
+    <value>ลบ Booking</value>
+  </data>
+  <data name="ui.booking.menu" xml:space="preserve">
+    <value>การทำงานของ Booking ห้อง {room}</value>
+  </data>
+  <data name="ui.booking.subtitle" xml:space="preserve">
+    <value>ข้อมูลผู้เข้าพัก วันที่ ห้อง และราคา</value>
+  </data>
+  <data name="ui.booking.section.guest" xml:space="preserve">
+    <value>ผู้เข้าพัก</value>
+  </data>
+  <data name="ui.booking.section.stay" xml:space="preserve">
+    <value>วันที่ ห้อง และจำนวนผู้พัก</value>
+  </data>
+  <data name="ui.booking.section.payment" xml:space="preserve">
+    <value>การชำระเงินและการตรวจบัตร</value>
+  </data>
+  <data name="ui.booking.phone" xml:space="preserve">
+    <value>เบอร์โทรศัพท์</value>
+  </data>
+  <data name="ui.booking.phone_hint" xml:space="preserve">
+    <value>พิมพ์เบอร์ครบ 9 หลักขึ้นไป ระบบจะดึงชื่อลูกค้าเดิมให้อัตโนมัติ</value>
+  </data>
+  <data name="ui.booking.found" xml:space="preserve">
+    <value>พบลูกค้าเดิม: {name}</value>
+  </data>
+  <data name="ui.booking.found_regular" xml:space="preserve">
+    <value>พบลูกค้าประจำ: {name}</value>
+  </data>
+  <data name="ui.booking.name" xml:space="preserve">
+    <value>ชื่อ-นามสกุล ลูกค้า</value>
+  </data>
+  <data name="ui.booking.check_in" xml:space="preserve">
+    <value>วันที่เช็กอิน</value>
+  </data>
+  <data name="ui.booking.check_in_hint" xml:space="preserve">
+    <value>เช็กอินได้ตั้งแต่ 13.00 น.</value>
+  </data>
+  <data name="ui.booking.check_out" xml:space="preserve">
+    <value>วันที่เช็กเอาต์</value>
+  </data>
+  <data name="ui.booking.check_out_hint" xml:space="preserve">
+    <value>เช็กเอาต์ภายใน 12.00 น.</value>
+  </data>
+  <data name="ui.booking.room" xml:space="preserve">
+    <value>ห้องพัก</value>
+  </data>
+  <data name="ui.booking.room_option" xml:space="preserve">
+    <value>ห้อง {name} · {zone} · {price}/คืน</value>
+  </data>
+  <data name="ui.booking.guests" xml:space="preserve">
+    <value>จำนวนผู้เข้าพัก (ท่าน)</value>
+  </data>
+  <data name="ui.booking.extra_bed" xml:space="preserve">
+    <value>เตียงเสริม (+฿200 ต่อการเข้าพัก)</value>
+  </data>
+  <data name="ui.booking.pet_type" xml:space="preserve">
+    <value>ประเภทสัตว์เลี้ยง</value>
+  </data>
+  <data name="ui.booking.pet_none" xml:space="preserve">
+    <value>ไม่มี</value>
+  </data>
+  <data name="ui.booking.pet_dog" xml:space="preserve">
+    <value>สุนัข</value>
+  </data>
+  <data name="ui.booking.pet_cat" xml:space="preserve">
+    <value>แมว</value>
+  </data>
+  <data name="ui.booking.pet_other" xml:space="preserve">
+    <value>อื่น ๆ</value>
+  </data>
+  <data name="ui.booking.pet_count" xml:space="preserve">
+    <value>จำนวนสัตว์เลี้ยง (ตัว)</value>
+  </data>
+  <data name="ui.booking.deposit" xml:space="preserve">
+    <value>เงินมัดจำ (บาท)</value>
+  </data>
+  <data name="ui.booking.discount" xml:space="preserve">
+    <value>ส่วนลดพิเศษ (บาท)</value>
+  </data>
+  <data name="ui.booking.deposit_paid" xml:space="preserve">
+    <value>ได้รับมัดจำแล้ว</value>
+  </data>
+  <data name="ui.booking.id_verified" xml:space="preserve">
+    <value>ตรวจบัตรประชาชนแล้ว</value>
+  </data>
+  <data name="ui.booking.check_in_now" xml:space="preserve">
+    <value>เช็กอินทันที (ผู้เข้าพักมาถึงแล้ว)</value>
+  </data>
+  <data name="ui.booking.note" xml:space="preserve">
+    <value>หมายเหตุการจอง / ข้อเรียกร้องพิเศษ</value>
+  </data>
+  <data name="ui.booking.note_placeholder" xml:space="preserve">
+    <value>เช่น ขอเช็กอินดึก, มีผู้สูงอายุ</value>
+  </data>
+  <data name="ui.price.title" xml:space="preserve">
+    <value>สรุปราคา</value>
+  </data>
+  <data name="ui.price.choose_room" xml:space="preserve">
+    <value>เลือกห้องพักเพื่อคำนวณราคา</value>
+  </data>
+  <data name="ui.price.room" xml:space="preserve">
+    <value>ค่าห้อง {nights} คืน × {rate}</value>
+  </data>
+  <data name="ui.price.extra_guests" xml:space="preserve">
+    <value>ผู้พักเพิ่ม {n} ท่าน</value>
+  </data>
+  <data name="ui.price.extra_bed" xml:space="preserve">
+    <value>เตียงเสริม</value>
+  </data>
+  <data name="ui.price.pet" xml:space="preserve">
+    <value>สัตว์เลี้ยง {n} ตัว</value>
+  </data>
+  <data name="ui.price.discount" xml:space="preserve">
+    <value>ส่วนลดพิเศษ</value>
+  </data>
+  <data name="ui.price.net" xml:space="preserve">
+    <value>ยอดรวมสุทธิ</value>
+  </data>
+  <data name="ui.price.deposit_paid" xml:space="preserve">
+    <value>มัดจำที่รับแล้ว {amount}</value>
+  </data>
+  <data name="ui.price.deposit_unpaid" xml:space="preserve">
+    <value>มัดจำยังไม่ได้รับ</value>
+  </data>
+  <data name="ui.price.balance" xml:space="preserve">
+    <value>คงเหลือ {amount}</value>
+  </data>
+  <data name="ui.action.title" xml:space="preserve">
+    <value>ดำเนินการ</value>
+  </data>
+  <data name="ui.action.submit" xml:space="preserve">
+    <value>ยืนยันการทำรายการ</value>
+  </data>
+  <data name="ui.action.check_in" xml:space="preserve">
+    <value>เช็กอิน</value>
+  </data>
+  <data name="ui.action.checkout" xml:space="preserve">
+    <value>เช็กเอาต์</value>
+  </data>
+  <data name="ui.action.inspect" xml:space="preserve">
+    <value>ตรวจห้อง</value>
+  </data>
+  <data name="ui.action.feedback" xml:space="preserve">
+    <value>บันทึกแบบประเมิน</value>
+  </data>
+  <data name="ui.action.extend" xml:space="preserve">
+    <value>ต่อระยะเวลาเข้าพัก</value>
+  </data>
+  <data name="ui.action.upload" xml:space="preserve">
+    <value>แนบไฟล์</value>
+  </data>
+  <data name="ui.action.checkout_title" xml:space="preserve">
+    <value>ตรวจห้องก่อนเช็กเอาต์</value>
+  </data>
+  <data name="ui.action.checkout_submit" xml:space="preserve">
+    <value>ยืนยันเช็กเอาต์</value>
+  </data>
+  <data name="ui.action.extend_title" xml:space="preserve">
+    <value>ต่อระยะเวลาเข้าพัก</value>
+  </data>
+  <data name="ui.action.extend_submit" xml:space="preserve">
+    <value>บันทึกวันเช็กเอาต์ใหม่</value>
+  </data>
+  <data name="ui.action.feedback_title" xml:space="preserve">
+    <value>แบบประเมินความพึงพอใจ</value>
+  </data>
+  <data name="ui.action.feedback_submit" xml:space="preserve">
+    <value>บันทึกแบบประเมิน</value>
+  </data>
+  <data name="ui.action.upload_title" xml:space="preserve">
+    <value>แนบเอกสารหรือรูปภาพ</value>
+  </data>
+  <data name="ui.action.upload_submit" xml:space="preserve">
+    <value>แนบไฟล์</value>
+  </data>
+  <data name="ui.checkout.intro" xml:space="preserve">
+    <value>ตรวจตามรายการด้านล่าง หากพบความเสียหายให้เอาเครื่องหมายออกและระบุรายละเอียด</value>
+  </data>
+  <data name="ui.checkout.legend" xml:space="preserve">
+    <value>รายการตรวจห้อง</value>
+  </data>
+  <data name="ui.checkout.key" xml:space="preserve">
+    <value>ได้รับกุญแจห้องคืนแล้ว</value>
+  </data>
+  <data name="ui.checkout.clean" xml:space="preserve">
+    <value>ตรวจความสะอาดห้องเบื้องต้นแล้ว</value>
+  </data>
+  <data name="ui.checkout.equipment" xml:space="preserve">
+    <value>อุปกรณ์ในห้องครบ (รีโมท ผ้าเช็ดตัว ไดร์ ฯลฯ)</value>
+  </data>
+  <data name="ui.checkout.no_damage" xml:space="preserve">
+    <value>ไม่พบความเสียหายต่อทรัพย์สินของรีสอร์ท</value>
+  </data>
+  <data name="ui.checkout.minibar" xml:space="preserve">
+    <value>ตรวจมินิบาร์เรียบร้อย</value>
+  </data>
+  <data name="ui.checkout.note" xml:space="preserve">
+    <value>หมายเหตุการตรวจ / รายละเอียดความเสียหาย</value>
+  </data>
+  <data name="ui.checkout.note_hint" xml:space="preserve">
+    <value>จำเป็นต้องกรอกเมื่อพบความเสียหาย</value>
+  </data>
+  <data name="ui.extend.date" xml:space="preserve">
+    <value>วันเช็กเอาต์ใหม่</value>
+  </data>
+  <data name="ui.extend.hint" xml:space="preserve">
+    <value>วันเช็กเอาต์เดิม {date}</value>
+  </data>
+  <data name="ui.extend.discount" xml:space="preserve">
+    <value>ส่วนลดรวม (บาท)</value>
+  </data>
+  <data name="ui.feedback.cleanliness" xml:space="preserve">
+    <value>ความสะอาดของห้องพัก</value>
+  </data>
+  <data name="ui.feedback.service" xml:space="preserve">
+    <value>การบริการของพนักงาน</value>
+  </data>
+  <data name="ui.feedback.facility" xml:space="preserve">
+    <value>สิ่งอำนวยความสะดวก</value>
+  </data>
+  <data name="ui.feedback.overall" xml:space="preserve">
+    <value>ความพึงพอใจโดยรวม</value>
+  </data>
+  <data name="ui.feedback.score5" xml:space="preserve">
+    <value>5 — ดีมาก</value>
+  </data>
+  <data name="ui.feedback.score4" xml:space="preserve">
+    <value>4 — ดี</value>
+  </data>
+  <data name="ui.feedback.score3" xml:space="preserve">
+    <value>3 — พอใช้</value>
+  </data>
+  <data name="ui.feedback.score2" xml:space="preserve">
+    <value>2 — ควรปรับปรุง</value>
+  </data>
+  <data name="ui.feedback.score1" xml:space="preserve">
+    <value>1 — ต้องแก้ไข</value>
+  </data>
+  <data name="ui.feedback.would_return" xml:space="preserve">
+    <value>ผู้เข้าพักอยากกลับมาพักอีก</value>
+  </data>
+  <data name="ui.feedback.comment" xml:space="preserve">
+    <value>ข้อเสนอแนะจากผู้เข้าพัก</value>
+  </data>
+  <data name="ui.upload.file" xml:space="preserve">
+    <value>เลือกไฟล์</value>
+  </data>
+  <data name="ui.upload.hint" xml:space="preserve">
+    <value>JPEG, PNG, WebP หรือ PDF ขนาดไม่เกิน 5 MB เช่น สลิปโอนมัดจำหรือเอกสารการจอง</value>
+  </data>
+  <data name="ui.confirm.check_in_title" xml:space="preserve">
+    <value>ยืนยันเช็กอิน</value>
+  </data>
+  <data name="ui.confirm.check_in_message" xml:space="preserve">
+    <value>ตรวจบัตรและการชำระเงินของ {guest} ห้อง {room} เรียบร้อยแล้วใช่ไหม</value>
+  </data>
+  <data name="ui.confirm.delete_booking_title" xml:space="preserve">
+    <value>ลบ Booking นี้หรือไม่</value>
+  </data>
+  <data name="ui.confirm.delete_booking_message" xml:space="preserve">
+    <value>Booking ของ {guest} ห้อง {room} จะถูกลบและไม่แสดงในรายการอีก</value>
+  </data>
+  <data name="ui.confirm.delete_room_title" xml:space="preserve">
+    <value>ลบห้องพักนี้หรือไม่</value>
+  </data>
+  <data name="ui.confirm.delete_room_message" xml:space="preserve">
+    <value>ห้อง {room} และประวัติการเข้าพักของห้องนี้จะถูกลบ</value>
+  </data>
+  <data name="ui.unsaved.title" xml:space="preserve">
+    <value>ยังไม่ได้บันทึกการเปลี่ยนแปลง</value>
+  </data>
+  <data name="ui.unsaved.message" xml:space="preserve">
+    <value>หากปิดตอนนี้ ข้อมูลที่แก้ไขในฟอร์มจะหายไป</value>
+  </data>
+  <data name="ui.unsaved.discard" xml:space="preserve">
+    <value>ปิดโดยไม่บันทึก</value>
+  </data>
+  <data name="ui.command.label" xml:space="preserve">
+    <value>ค้นหาด่วน</value>
+  </data>
+  <data name="ui.command.placeholder" xml:space="preserve">
+    <value>ค้นหาลูกค้า เบอร์โทร ห้อง หรือเมนู…</value>
+  </data>
+  <data name="ui.command.pages" xml:space="preserve">
+    <value>ไปที่หน้า</value>
+  </data>
+  <data name="ui.command.stays" xml:space="preserve">
+    <value>ผู้เข้าพักและ Booking</value>
+  </data>
+  <data name="ui.command.empty" xml:space="preserve">
+    <value>ไม่พบข้อมูลที่ค้นหา</value>
+  </data>
+  <data name="ui.command.move" xml:space="preserve">
+    <value>เลื่อน</value>
+  </data>
+  <data name="ui.command.open" xml:space="preserve">
+    <value>เปิด</value>
+  </data>
+  <data name="ui.command.today" xml:space="preserve">
+    <value>เช็กอิน เช็กเอาต์ และงานค้างของวันนี้</value>
+  </data>
+  <data name="ui.command.room_map" xml:space="preserve">
+    <value>ห้องว่างและผู้เข้าพักแต่ละห้อง</value>
+  </data>
+  <data name="ui.command.bookings" xml:space="preserve">
+    <value>ค้นหาและจัดการ Booking</value>
+  </data>
+  <data name="ui.command.guests" xml:space="preserve">
+    <value>ประวัติและความต้องการของลูกค้า</value>
+  </data>
+  <data name="ui.command.reports" xml:space="preserve">
+    <value>สถิติ รายได้ และส่งออก CSV</value>
+  </data>
+  <data name="ui.command.rooms" xml:space="preserve">
+    <value>ราคา ความจุ และสิ่งอำนวยความสะดวก</value>
+  </data>
 </root>
