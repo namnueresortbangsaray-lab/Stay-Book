@@ -1,0 +1,17 @@
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+<!doctype html>
+<html lang="th" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken">
+  <title>Stay Book · @T["app_name"] @T["location"]</title>
+  <link rel="icon" href="/images/logo_square.webp">
+  <link rel="stylesheet" href="~/css/app.css" asp-append-version="true">
+</head>
+<body class="min-h-full bg-canvas text-ink antialiased">
+  @RenderBody()
+  @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

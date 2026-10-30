@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <UserSecretsId>resortguestbook-web</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ResortGuestbook.Data\ResortGuestbook.Data.csproj" />
+    <ProjectReference Include="..\ResortGuestbook.Migrations.Sqlite\ResortGuestbook.Migrations.Sqlite.csproj" />
+    <ProjectReference Include="..\ResortGuestbook.Migrations.Postgres\ResortGuestbook.Migrations.Postgres.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Serilog.Sinks.File" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="package.json;package-lock.json" />
+    <None Include="package.json" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,14 @@
+{
+  "upload-disallowed-type": [
+    "status",
+    "body:json"
+  ],
+  "upload-missing-file": [
+    "status",
+    "body:json"
+  ],
+  "protected-uploads-direct": [
+    "body:title",
+    "body:text"
+  ]
+}
