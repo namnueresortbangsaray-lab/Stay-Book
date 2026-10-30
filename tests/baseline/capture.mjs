@@ -2,12 +2,12 @@
 // Usage: BASE_URL=http://localhost:8090 node tests/baseline/capture.mjs
 // Requires the seeded admin plus housekeeping@staybook.local / Housekeeping123! (role housekeeping).
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const base = process.env.BASE_URL ?? 'http://localhost:8090';
-const out = join(here, process.env.BASELINE_OUT ?? 'cases');
+const out = resolve(here, process.env.BASELINE_OUT ?? 'cases');
 const logo = readFileSync(join(here, 'fixtures', 'logo_square.webp'));
 mkdirSync(out, { recursive: true });
 

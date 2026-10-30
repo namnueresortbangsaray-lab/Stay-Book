@@ -1,12 +1,12 @@
 // Compares a replay (BASELINE_OUT=replay node capture.mjs) with the recorded PHP baseline.
 // Usage: node tests/baseline/compare.mjs [replayDir]   — exits 1 when an unexpected difference is found.
 import { readFileSync, readdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const baselineDir = join(here, 'cases');
-const replayDir = join(here, process.argv[2] ?? 'replay');
+const replayDir = resolve(here, process.argv[2] ?? 'replay');
 const deviations = JSON.parse(readFileSync(join(here, 'deviations.json'), 'utf8'));
 
 const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi;
