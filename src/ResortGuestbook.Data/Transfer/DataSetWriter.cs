@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using ResortGuestbook.Data.Entities;
 
 namespace ResortGuestbook.Data.Transfer;
 

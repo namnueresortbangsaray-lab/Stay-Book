@@ -11,7 +11,7 @@ public static class AppDbContextOptions
     public const string SqliteMigrationsAssembly = "ResortGuestbook.Migrations.Sqlite";
     public const string PostgresMigrationsAssembly = "ResortGuestbook.Migrations.Postgres";
 
-    /// <param name="clock">When null, timestamps are not stamped (used when copying rows verbatim).</param>
+    /// <summary>Configures EF Core for <paramref name="provider"/>; a null <paramref name="clock"/> disables timestamp stamping (used when copying rows verbatim).</summary>
     public static DbContextOptionsBuilder Configure(DbContextOptionsBuilder builder, DatabaseProvider provider, string connectionString, TimeProvider? clock)
     {
         if (provider == DatabaseProvider.Sqlite)

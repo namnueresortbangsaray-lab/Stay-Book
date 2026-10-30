@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
 using ResortGuestbook.Data;
 using ResortGuestbook.Data.Providers;
 using ResortGuestbook.Data.Seed;
