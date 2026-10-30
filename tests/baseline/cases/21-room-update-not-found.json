@@ -1,0 +1,36 @@
+{
+  "name": "room-update-not-found",
+  "request": {
+    "method": "PUT",
+    "path": "/api/v1/rooms/00000000-0000-4000-8000-000000000000",
+    "json": {
+      "name": "X",
+      "zone": "Z",
+      "type": "T",
+      "price": 1,
+      "base_guests": 1,
+      "max_guests": 1
+    },
+    "csrf": true,
+    "multipart": false
+  },
+  "status": 404,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "json",
+    "json": {
+      "success": false,
+      "data": null,
+      "message": "ไม่พบห้องพัก",
+      "errors": {}
+    }
+  }
+}

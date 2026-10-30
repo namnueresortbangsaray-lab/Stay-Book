@@ -1,0 +1,29 @@
+{
+  "name": "api-after-logout-401",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/snapshot",
+    "csrf": false,
+    "multipart": false
+  },
+  "status": 401,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+    "set-cookie": "PHPSESSID=d35eaf3a5046773e19a1b4c111486f2c; expires=Fri, 30 Oct 2026 16:37:43 GMT; Max-Age=7200; path=/; HttpOnly; SameSite=Lax"
+  },
+  "body": {
+    "kind": "json",
+    "json": {
+      "success": false,
+      "data": null,
+      "message": "กรุณาเข้าสู่ระบบ",
+      "errors": {}
+    }
+  }
+}

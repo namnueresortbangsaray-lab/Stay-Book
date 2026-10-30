@@ -1,0 +1,301 @@
+{
+  "name": "snapshot",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/snapshot?start=2030-01-01&end=2030-01-31",
+    "csrf": false,
+    "multipart": false
+  },
+  "status": 200,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "json",
+    "json": {
+      "success": true,
+      "data": {
+        "rooms": [
+          {
+            "id": "af4b1ffd-d3fe-4272-8d9a-76e25562e9fb",
+            "name": "1",
+            "zone": "อาคารหลัก",
+            "type": "เตียงคู่",
+            "price_satang": 50000,
+            "base_guests": 2,
+            "max_guests": 3,
+            "extra_guest_fee_satang": 10000,
+            "sort_order": 1,
+            "status": 0,
+            "is_pet_friendly": false,
+            "created_at": "2026-10-30T14:36:15+00:00",
+            "updated_at": "2026-10-30T14:36:15+00:00",
+            "deleted_at": null
+          },
+          {
+            "id": "3dbab1dd-a303-4c4b-8510-20d8522163c7",
+            "name": "2",
+            "zone": "อาคารหลัก",
+            "type": "เตียงคู่",
+            "price_satang": 50000,
+            "base_guests": 2,
+            "max_guests": 3,
+            "extra_guest_fee_satang": 10000,
+            "sort_order": 2,
+            "status": 0,
+            "is_pet_friendly": false,
+            "created_at": "2026-10-30T14:36:15+00:00",
+            "updated_at": "2026-10-30T14:36:15+00:00",
+            "deleted_at": null
+          },
+          {
+            "id": "4cf54bf2-5f12-4fef-93e0-198d4f3fc0e9",
+            "name": "3",
+            "zone": "อาคารหลัก",
+            "type": "เตียงคู่",
+            "price_satang": 50000,
+            "base_guests": 2,
+            "max_guests": 3,
+            "extra_guest_fee_satang": 10000,
+            "sort_order": 3,
+            "status": 0,
+            "is_pet_friendly": true,
+            "created_at": "2026-10-30T14:36:15+00:00",
+            "updated_at": "2026-10-30T14:36:15+00:00",
+            "deleted_at": null
+          },
+          {
+            "id": "ce3f3324-af17-4dca-aa5d-c43243d5002a",
+            "name": "4",
+            "zone": "โซน B",
+            "type": "เตียงเดี่ยว",
+            "price_satang": 45000,
+            "base_guests": 2,
+            "max_guests": 2,
+            "extra_guest_fee_satang": 10000,
+            "sort_order": 4,
+            "status": 0,
+            "is_pet_friendly": true,
+            "created_at": "2026-10-30T14:36:15+00:00",
+            "updated_at": "2026-10-30T14:36:15+00:00",
+            "deleted_at": null
+          },
+          {
+            "id": "6bcddb8a-c9b9-4599-b270-1f04669d13f7",
+            "name": "5",
+            "zone": "โซน B",
+            "type": "เตียงคู่",
+            "price_satang": 55000,
+            "base_guests": 2,
+            "max_guests": 4,
+            "extra_guest_fee_satang": 10000,
+            "sort_order": 5,
+            "status": 0,
+            "is_pet_friendly": true,
+            "created_at": "2026-10-30T14:36:15+00:00",
+            "updated_at": "2026-10-30T14:36:15+00:00",
+            "deleted_at": null
+          }
+        ],
+        "stays": [],
+        "guests": [],
+        "attachments": [],
+        "analytics": {
+          "start": "2030-01-01",
+          "end": "2030-01-31",
+          "day_count": 31,
+          "total_rooms": 5,
+          "booking_count": 0,
+          "check_in_count": 0,
+          "check_out_count": 0,
+          "guest_count": 0,
+          "occupied_room_nights": 0,
+          "occupancy_rate": 0,
+          "gross_revenue_satang": 0,
+          "discount_satang": 0,
+          "net_revenue_satang": 0,
+          "deposit_received_satang": 0,
+          "deposit_pending_satang": 0,
+          "pet_bookings": 0,
+          "average_feedback": 0,
+          "statuses": {
+            "booked": 0,
+            "checked_in": 0,
+            "checked_out": 0
+          },
+          "deposits": {
+            "none": 0,
+            "paid": 0,
+            "unpaid": 0
+          },
+          "daily": [
+            {
+              "date": "2030-01-01",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-02",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-03",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-04",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-05",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-06",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-07",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-08",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-09",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-10",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-11",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-12",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-13",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-14",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-15",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-16",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-17",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-18",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-19",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-20",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-21",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-22",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-23",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-24",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-25",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-26",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-27",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-28",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-29",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-30",
+              "occupied": 0,
+              "revenue_satang": 0
+            },
+            {
+              "date": "2030-01-31",
+              "occupied": 0,
+              "revenue_satang": 0
+            }
+          ]
+        },
+        "today": "2026-10-30"
+      },
+      "message": "โหลดข้อมูลแล้ว",
+      "errors": {}
+    }
+  }
+}

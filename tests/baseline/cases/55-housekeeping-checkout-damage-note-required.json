@@ -1,0 +1,37 @@
+{
+  "name": "housekeeping-checkout-damage-note-required",
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/checkout",
+    "json": {
+      "key_returned": true,
+      "room_clean": true,
+      "equipment_complete": true,
+      "no_damage": false,
+      "minibar_checked": true
+    },
+    "csrf": true,
+    "multipart": false
+  },
+  "status": 422,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "json",
+    "json": {
+      "success": false,
+      "data": null,
+      "message": "ข้อมูลไม่ถูกต้อง",
+      "errors": {
+        "inspection_note": "กรุณาระบุรายละเอียดความเสียหาย"
+      }
+    }
+  }
+}

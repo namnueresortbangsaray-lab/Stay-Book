@@ -1,0 +1,24 @@
+{
+  "name": "housekeeping-csv-export",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/reports/bookings.csv?start=2030-01-01&end=2030-01-31",
+    "csrf": false,
+    "multipart": false
+  },
+  "status": 200,
+  "headers": {
+    "content-type": "text/csv; charset=utf-8",
+    "content-disposition": "attachment; filename=\"stay-book-report-2026-10-30.csv\"",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "csv",
+    "text": "﻿\"Booking ID\",ชื่อลูกค้า,โทรศัพท์,ห้อง,เช็กอิน,เช็กเอาต์,สถานะ,\"ยอดสุทธิ (บาท)\"\n9031dca6-a1e9-41fb-aabb-0942505f6025,\"ทดสอบ Baseline\",081-234-5678,1,2030-01-10,2030-01-13,2,1950.00\n4365e88d-e1a2-4f43-a0eb-1c936cb0b04a,\"Pet Owner\",0811111111,3,2030-01-10,2030-01-12,1,1550.00\n"
+  }
+}

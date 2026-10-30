@@ -1,0 +1,32 @@
+{
+  "name": "logout",
+  "request": {
+    "method": "POST",
+    "path": "/logout",
+    "form": [
+      "_token"
+    ],
+    "csrf": true,
+    "multipart": false
+  },
+  "status": 302,
+  "headers": {
+    "content-type": "text/html; charset=UTF-8",
+    "location": "/login",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+    "set-cookie": "PHPSESSID=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; HttpOnly"
+  },
+  "body": {
+    "kind": "html",
+    "title": null,
+    "ids": [],
+    "forms": [],
+    "text": [],
+    "bytes": 0
+  }
+}

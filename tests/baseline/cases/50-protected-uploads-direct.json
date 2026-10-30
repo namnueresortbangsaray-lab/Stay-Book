@@ -1,0 +1,28 @@
+{
+  "name": "protected-uploads-direct",
+  "request": {
+    "method": "GET",
+    "path": "/_protected_uploads/ca1a6b5c213d179bdb425e6d10c122d4bc2652592e0aff71.webp",
+    "csrf": false,
+    "multipart": false
+  },
+  "status": 404,
+  "headers": {
+    "content-type": "text/html; charset=utf-8",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "html",
+    "title": "404 Not Found",
+    "ids": [],
+    "forms": [],
+    "text": [
+      "404 Not Found"
+    ],
+    "bytes": 153
+  }
+}

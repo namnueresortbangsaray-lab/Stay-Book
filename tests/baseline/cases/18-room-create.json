@@ -1,0 +1,54 @@
+{
+  "name": "room-create",
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/rooms",
+    "json": {
+      "name": "B-101",
+      "zone": "โซน C",
+      "type": "วิลล่า",
+      "price": "650.50",
+      "base_guests": 2,
+      "max_guests": 4,
+      "extra_guest_fee": 150,
+      "sort_order": 9,
+      "is_pet_friendly": true
+    },
+    "csrf": true,
+    "multipart": false
+  },
+  "status": 200,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "json",
+    "json": {
+      "success": true,
+      "data": {
+        "id": "d575d42d-e2f9-42b7-8728-98c101e1e38e",
+        "name": "B-101",
+        "zone": "โซน C",
+        "type": "วิลล่า",
+        "price_satang": 65050,
+        "base_guests": 2,
+        "max_guests": 4,
+        "extra_guest_fee_satang": 15000,
+        "sort_order": 9,
+        "status": 0,
+        "is_pet_friendly": true,
+        "created_at": "2026-10-30T14:37:41+00:00",
+        "updated_at": "2026-10-30T14:37:41+00:00",
+        "deleted_at": null
+      },
+      "message": "บันทึกเรียบร้อย",
+      "errors": {}
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "guest-update-invalid",
+  "request": {
+    "method": "PUT",
+    "path": "/api/v1/guests/e959c221-dad2-4aa3-ae1a-07b06b726bad",
+    "json": {
+      "name": "x",
+      "phone": "1"
+    },
+    "csrf": true,
+    "multipart": false
+  },
+  "status": 422,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "json",
+    "json": {
+      "success": false,
+      "data": null,
+      "message": "ข้อมูลไม่ถูกต้อง",
+      "errors": {
+        "name": "กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร",
+        "phone": "เบอร์โทรต้องมีอย่างน้อย 9 หลัก"
+      }
+    }
+  }
+}

@@ -1,0 +1,446 @@
+[
+  {
+    "name": "login-page",
+    "method": "GET",
+    "path": "/login",
+    "status": 200
+  },
+  {
+    "name": "api-unauthenticated",
+    "method": "GET",
+    "path": "/api/v1/snapshot",
+    "status": 401
+  },
+  {
+    "name": "dashboard-unauthenticated-redirect",
+    "method": "GET",
+    "path": "/",
+    "status": 302
+  },
+  {
+    "name": "unknown-route-404-html",
+    "method": "GET",
+    "path": "/does-not-exist",
+    "status": 404
+  },
+  {
+    "name": "unknown-api-404",
+    "method": "GET",
+    "path": "/api/v1/nope",
+    "status": 404
+  },
+  {
+    "name": "login-missing-csrf-419",
+    "method": "POST",
+    "path": "/login",
+    "status": 419
+  },
+  {
+    "name": "login-wrong-password",
+    "method": "POST",
+    "path": "/login",
+    "status": 200
+  },
+  {
+    "name": "login-success",
+    "method": "POST",
+    "path": "/login",
+    "status": 302
+  },
+  {
+    "name": "login-page-when-authenticated",
+    "method": "GET",
+    "path": "/login",
+    "status": 302
+  },
+  {
+    "name": "dashboard",
+    "method": "GET",
+    "path": "/",
+    "status": 200
+  },
+  {
+    "name": "snapshot",
+    "method": "GET",
+    "path": "/api/v1/snapshot?start=2030-01-01&end=2030-01-31",
+    "status": 200
+  },
+  {
+    "name": "snapshot-default-range",
+    "method": "GET",
+    "path": "/api/v1/snapshot",
+    "status": 200
+  },
+  {
+    "name": "snapshot-invalid-start",
+    "method": "GET",
+    "path": "/api/v1/snapshot?start=2030-02-30&end=2030-03-01",
+    "status": 422
+  },
+  {
+    "name": "snapshot-end-before-start",
+    "method": "GET",
+    "path": "/api/v1/snapshot?start=2030-03-01&end=2030-02-01",
+    "status": 422
+  },
+  {
+    "name": "snapshot-range-too-long",
+    "method": "GET",
+    "path": "/api/v1/snapshot?start=2030-01-01&end=2031-02-01",
+    "status": 422
+  },
+  {
+    "name": "room-create-missing-csrf-419",
+    "method": "POST",
+    "path": "/api/v1/rooms",
+    "status": 419
+  },
+  {
+    "name": "room-create-invalid",
+    "method": "POST",
+    "path": "/api/v1/rooms",
+    "status": 422
+  },
+  {
+    "name": "room-create",
+    "method": "POST",
+    "path": "/api/v1/rooms",
+    "status": 200
+  },
+  {
+    "name": "room-create-duplicate-409",
+    "method": "POST",
+    "path": "/api/v1/rooms",
+    "status": 409
+  },
+  {
+    "name": "room-update",
+    "method": "PUT",
+    "path": "/api/v1/rooms/d575d42d-e2f9-42b7-8728-98c101e1e38e",
+    "status": 200
+  },
+  {
+    "name": "room-update-not-found",
+    "method": "PUT",
+    "path": "/api/v1/rooms/00000000-0000-4000-8000-000000000000",
+    "status": 404
+  },
+  {
+    "name": "stay-create-invalid",
+    "method": "POST",
+    "path": "/api/v1/stays",
+    "status": 422
+  },
+  {
+    "name": "stay-create-checked-out-rejected",
+    "method": "POST",
+    "path": "/api/v1/stays",
+    "status": 422
+  },
+  {
+    "name": "stay-create-over-capacity",
+    "method": "POST",
+    "path": "/api/v1/stays",
+    "status": 422
+  },
+  {
+    "name": "stay-create-pet-not-allowed",
+    "method": "POST",
+    "path": "/api/v1/stays",
+    "status": 422
+  },
+  {
+    "name": "stay-create",
+    "method": "POST",
+    "path": "/api/v1/stays",
+    "status": 200
+  },
+  {
+    "name": "stay-create-overlap",
+    "method": "POST",
+    "path": "/api/v1/stays",
+    "status": 422
+  },
+  {
+    "name": "stay-create-pet",
+    "method": "POST",
+    "path": "/api/v1/stays",
+    "status": 200
+  },
+  {
+    "name": "stay-update",
+    "method": "PUT",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025",
+    "status": 200
+  },
+  {
+    "name": "stay-update-unknown-422",
+    "method": "PUT",
+    "path": "/api/v1/stays/00000000-0000-4000-8000-000000000000",
+    "status": 422
+  },
+  {
+    "name": "stays-search-thai-mixed-case",
+    "method": "GET",
+    "path": "/api/v1/stays?search=baseline%20note&status=0",
+    "status": 200
+  },
+  {
+    "name": "stays-search-thai",
+    "method": "GET",
+    "path": "/api/v1/stays?search=%E0%B8%97%E0%B8%94%E0%B8%AA%E0%B8%AD%E0%B8%9A",
+    "status": 200
+  },
+  {
+    "name": "stays-invalid-status",
+    "method": "GET",
+    "path": "/api/v1/stays?status=7",
+    "status": 422
+  },
+  {
+    "name": "guest-update-invalid",
+    "method": "PUT",
+    "path": "/api/v1/guests/e959c221-dad2-4aa3-ae1a-07b06b726bad",
+    "status": 422
+  },
+  {
+    "name": "guest-update",
+    "method": "PUT",
+    "path": "/api/v1/guests/e959c221-dad2-4aa3-ae1a-07b06b726bad",
+    "status": 200
+  },
+  {
+    "name": "guest-update-not-found",
+    "method": "PUT",
+    "path": "/api/v1/guests/00000000-0000-4000-8000-000000000000",
+    "status": 404
+  },
+  {
+    "name": "checkout-before-check-in",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/checkout",
+    "status": 422
+  },
+  {
+    "name": "feedback-before-checkout",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/feedback",
+    "status": 422
+  },
+  {
+    "name": "check-in",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/check-in",
+    "status": 200
+  },
+  {
+    "name": "check-in-again",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/check-in",
+    "status": 422
+  },
+  {
+    "name": "stay-move-room-while-checked-in",
+    "method": "PUT",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025",
+    "status": 422
+  },
+  {
+    "name": "check-in-not-found",
+    "method": "POST",
+    "path": "/api/v1/stays/00000000-0000-4000-8000-000000000000/check-in",
+    "status": 404
+  },
+  {
+    "name": "upload",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/attachments",
+    "status": 200
+  },
+  {
+    "name": "upload-disallowed-type",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/attachments",
+    "status": 500
+  },
+  {
+    "name": "upload-missing-file",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/attachments",
+    "status": 500
+  },
+  {
+    "name": "upload-unknown-stay",
+    "method": "POST",
+    "path": "/api/v1/stays/00000000-0000-4000-8000-000000000000/attachments",
+    "status": 404
+  },
+  {
+    "name": "file-download",
+    "method": "GET",
+    "path": "/files/66dd05b9-3105-49d6-9dde-4841ee501115",
+    "status": 200
+  },
+  {
+    "name": "file-download-unknown",
+    "method": "GET",
+    "path": "/files/00000000-0000-4000-8000-000000000000",
+    "status": 404
+  },
+  {
+    "name": "file-download-unauthenticated",
+    "method": "GET",
+    "path": "/files/66dd05b9-3105-49d6-9dde-4841ee501115",
+    "status": 302
+  },
+  {
+    "name": "protected-uploads-direct",
+    "method": "GET",
+    "path": "/_protected_uploads/ca1a6b5c213d179bdb425e6d10c122d4bc2652592e0aff71.webp",
+    "status": 404
+  },
+  {
+    "name": "housekeeping-snapshot",
+    "method": "GET",
+    "path": "/api/v1/snapshot?start=2030-01-01&end=2030-01-31",
+    "status": 200
+  },
+  {
+    "name": "housekeeping-room-create-403",
+    "method": "POST",
+    "path": "/api/v1/rooms",
+    "status": 403
+  },
+  {
+    "name": "housekeeping-stay-create-403",
+    "method": "POST",
+    "path": "/api/v1/stays",
+    "status": 403
+  },
+  {
+    "name": "housekeeping-guest-update-403",
+    "method": "PUT",
+    "path": "/api/v1/guests/e959c221-dad2-4aa3-ae1a-07b06b726bad",
+    "status": 403
+  },
+  {
+    "name": "housekeeping-checkout-damage-note-required",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/checkout",
+    "status": 422
+  },
+  {
+    "name": "housekeeping-checkout",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/checkout",
+    "status": 200
+  },
+  {
+    "name": "housekeeping-upload",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/attachments",
+    "status": 200
+  },
+  {
+    "name": "housekeeping-feedback-403",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/feedback",
+    "status": 403
+  },
+  {
+    "name": "stay-update-after-checkout",
+    "method": "PUT",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025",
+    "status": 422
+  },
+  {
+    "name": "feedback-invalid-rating",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/feedback",
+    "status": 422
+  },
+  {
+    "name": "feedback",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/feedback",
+    "status": 200
+  },
+  {
+    "name": "feedback-update",
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/feedback",
+    "status": 200
+  },
+  {
+    "name": "snapshot-after-lifecycle",
+    "method": "GET",
+    "path": "/api/v1/snapshot?start=2030-01-01&end=2030-01-31",
+    "status": 200
+  },
+  {
+    "name": "csv-export",
+    "method": "GET",
+    "path": "/api/v1/reports/bookings.csv?start=2030-01-01&end=2030-01-31",
+    "status": 200
+  },
+  {
+    "name": "csv-export-invalid-range",
+    "method": "GET",
+    "path": "/api/v1/reports/bookings.csv?start=bad&end=2030-01-31",
+    "status": 422
+  },
+  {
+    "name": "housekeeping-csv-export",
+    "method": "GET",
+    "path": "/api/v1/reports/bookings.csv?start=2030-01-01&end=2030-01-31",
+    "status": 200
+  },
+  {
+    "name": "stay-delete",
+    "method": "DELETE",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025",
+    "status": 200
+  },
+  {
+    "name": "stay-delete-again-404",
+    "method": "DELETE",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025",
+    "status": 404
+  },
+  {
+    "name": "room-delete",
+    "method": "DELETE",
+    "path": "/api/v1/rooms/d575d42d-e2f9-42b7-8728-98c101e1e38e",
+    "status": 200
+  },
+  {
+    "name": "room-delete-not-found",
+    "method": "DELETE",
+    "path": "/api/v1/rooms/d575d42d-e2f9-42b7-8728-98c101e1e38e",
+    "status": 404
+  },
+  {
+    "name": "method-override-form",
+    "method": "POST",
+    "path": "/api/v1/rooms/d575d42d-e2f9-42b7-8728-98c101e1e38e",
+    "status": 404
+  },
+  {
+    "name": "logout",
+    "method": "POST",
+    "path": "/logout",
+    "status": 302
+  },
+  {
+    "name": "api-after-logout-401",
+    "method": "GET",
+    "path": "/api/v1/snapshot",
+    "status": 401
+  },
+  {
+    "name": "login-throttled-429",
+    "method": "POST",
+    "path": "/login",
+    "status": 429
+  }
+]

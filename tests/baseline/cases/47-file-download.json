@@ -1,0 +1,25 @@
+{
+  "name": "file-download",
+  "request": {
+    "method": "GET",
+    "path": "/files/66dd05b9-3105-49d6-9dde-4841ee501115",
+    "csrf": false,
+    "multipart": false
+  },
+  "status": 200,
+  "headers": {
+    "content-type": "image/webp",
+    "content-disposition": "attachment; filename=\"logo square.webp\"",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+    "content-length": "15530"
+  },
+  "body": {
+    "kind": "binary",
+    "bytes": 15530
+  }
+}

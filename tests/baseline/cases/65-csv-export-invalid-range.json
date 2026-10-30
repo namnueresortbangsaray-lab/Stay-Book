@@ -1,0 +1,30 @@
+{
+  "name": "csv-export-invalid-range",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/reports/bookings.csv?start=bad&end=2030-01-31",
+    "csrf": false,
+    "multipart": false
+  },
+  "status": 422,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "json",
+    "json": {
+      "success": false,
+      "data": null,
+      "message": "ข้อมูลไม่ถูกต้อง",
+      "errors": {
+        "start": "วันที่เริ่มต้นไม่ถูกต้อง"
+      }
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "name": "stay-create-pet",
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/stays",
+    "json": {
+      "guest_name": "Pet Owner",
+      "phone": "0811111111",
+      "room_id": "4cf54bf2-5f12-4fef-93e0-198d4f3fc0e9",
+      "check_in_date": "2030-01-10",
+      "check_out_date": "2030-01-12",
+      "guests": 2,
+      "extra_bed": true,
+      "status": 1,
+      "deposit_amount": "300",
+      "deposit_paid": true,
+      "id_verified": true,
+      "pet_count": 2,
+      "discount_amount": 50,
+      "note": "Baseline NOTE",
+      "pet_type": "แมว"
+    },
+    "csrf": true,
+    "multipart": false
+  },
+  "status": 200,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "json",
+    "json": {
+      "success": true,
+      "data": {
+        "id": "4365e88d-e1a2-4f43-a0eb-1c936cb0b04a",
+        "guest_id": "2343e550-4c2d-4ca1-8d94-3f65643a9ec9",
+        "room_id": "4cf54bf2-5f12-4fef-93e0-198d4f3fc0e9",
+        "guest_name": "Pet Owner",
+        "phone": "0811111111",
+        "check_in_date": "2030-01-10",
+        "check_out_date": "2030-01-12",
+        "guests": 2,
+        "extra_bed": true,
+        "total_amount_satang": 155000,
+        "status": 1,
+        "note": "Baseline NOTE",
+        "deposit_amount_satang": 30000,
+        "deposit_paid": true,
+        "id_verified": true,
+        "pet_type": "แมว",
+        "pet_count": 2,
+        "pet_fee_satang": 40000,
+        "discount_amount_satang": 5000,
+        "created_at": "2026-10-30T14:37:41+00:00",
+        "updated_at": "2026-10-30T14:37:41+00:00",
+        "deleted_at": null,
+        "room_name": "3",
+        "zone": "อาคารหลัก",
+        "room_type": "เตียงคู่",
+        "room_rate_satang": 50000,
+        "base_guests": 2,
+        "max_guests": 3,
+        "extra_guest_fee_satang": 10000,
+        "is_pet_friendly": true,
+        "customer_type": "ลูกค้าทั่วไป",
+        "is_regular": false,
+        "feedback_rating": null,
+        "price_breakdown": {
+          "nights": 2,
+          "room_total_satang": 100000,
+          "extra_guest_total_satang": 0,
+          "extra_bed_total_satang": 20000,
+          "pet_total_satang": 40000,
+          "gross_total_satang": 160000,
+          "total_amount_satang": 155000,
+          "balance_due_satang": 125000
+        }
+      },
+      "message": "บันทึกเรียบร้อย",
+      "errors": {}
+    }
+  }
+}

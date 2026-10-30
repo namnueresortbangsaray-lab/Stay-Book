@@ -1,0 +1,31 @@
+{
+  "name": "unknown-route-404-html",
+  "request": {
+    "method": "GET",
+    "path": "/does-not-exist",
+    "csrf": false,
+    "multipart": false
+  },
+  "status": 404,
+  "headers": {
+    "content-type": "text/html; charset=UTF-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "html",
+    "title": "Stay Book · น้ำเหนือรีสอร์ท บางเสร่",
+    "ids": [],
+    "forms": [],
+    "text": [
+      "404",
+      "ไม่พบหน้าที่ต้องการ",
+      "หากพบปัญหาต่อเนื่อง กรุณาติดต่อผู้ดูแลระบบ"
+    ],
+    "bytes": 1766
+  }
+}

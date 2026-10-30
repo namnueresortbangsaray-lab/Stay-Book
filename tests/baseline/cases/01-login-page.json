@@ -1,0 +1,40 @@
+{
+  "name": "login-page",
+  "request": {
+    "method": "GET",
+    "path": "/login",
+    "csrf": false,
+    "multipart": false
+  },
+  "status": 200,
+  "headers": {
+    "content-type": "text/html; charset=UTF-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+    "set-cookie": "PHPSESSID=88997fcef1ddbdaf52742ebd950cb05c; expires=Fri, 30 Oct 2026 16:37:41 GMT; Max-Age=7200; path=/; HttpOnly; SameSite=Lax"
+  },
+  "body": {
+    "kind": "html",
+    "title": "เข้าสู่ระบบ · Stay Book · น้ำเหนือรีสอร์ท",
+    "ids": [
+      "email",
+      "password"
+    ],
+    "forms": [
+      "/login"
+    ],
+    "text": [
+      "เข้าสู่ระบบพนักงาน",
+      "ระบบบริหารห้องพักและสมุดบันทึกผู้เข้าพัก · บางเสร่",
+      "อีเมลเข้าใช้งาน",
+      "รหัสผ่าน",
+      "เข้าสู่ระบบ",
+      "น้ำเหนือรีสอร์ท บางเสร่ · ที่พักหลักร้อย สะดวก สะอาด ปลอดภัย"
+    ],
+    "bytes": 3015
+  }
+}

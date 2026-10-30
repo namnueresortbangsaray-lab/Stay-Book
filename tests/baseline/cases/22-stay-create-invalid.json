@@ -1,0 +1,50 @@
+{
+  "name": "stay-create-invalid",
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/stays",
+    "json": {
+      "guest_name": "ก",
+      "phone": "12",
+      "check_in_date": "2030-02-29",
+      "check_out_date": "2030-01-01",
+      "guests": 0,
+      "pet_count": 1,
+      "deposit_amount": -1,
+      "discount_amount": "abc",
+      "status": 1
+    },
+    "csrf": true,
+    "multipart": false
+  },
+  "status": 422,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "json",
+    "json": {
+      "success": false,
+      "data": null,
+      "message": "ข้อมูลไม่ถูกต้อง",
+      "errors": {
+        "guest_name": "ชื่อลูกค้าต้องมีอย่างน้อย 2 ตัวอักษร",
+        "phone": "เบอร์โทรต้องมีอย่างน้อย 9 หลัก",
+        "check_in_date": "วันที่เช็กอินไม่ถูกต้อง",
+        "check_out_date": "วันที่เช็กเอาต์ต้องอยู่หลังวันเช็กอิน",
+        "room_id": "กรุณาเลือกห้อง",
+        "guests": "จำนวนผู้เข้าพักต้องอย่างน้อย 1",
+        "pet_type": "กรุณาระบุประเภทสัตว์เลี้ยง",
+        "deposit_amount": "เงินมัดจำต้องเป็นตัวเลขที่ไม่ติดลบ",
+        "discount_amount": "ส่วนลดต้องเป็นตัวเลขที่ไม่ติดลบ",
+        "id_verified": "ต้องตรวจสอบบัตรประชาชนก่อนเช็กอิน"
+      }
+    }
+  }
+}

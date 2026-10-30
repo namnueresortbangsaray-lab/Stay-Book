@@ -1,0 +1,46 @@
+{
+  "name": "stay-create-checked-out-rejected",
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/stays",
+    "json": {
+      "guest_name": "ทดสอบ Baseline",
+      "phone": "081-234-5678",
+      "room_id": "af4b1ffd-d3fe-4272-8d9a-76e25562e9fb",
+      "check_in_date": "2030-01-10",
+      "check_out_date": "2030-01-12",
+      "guests": 3,
+      "extra_bed": true,
+      "status": 2,
+      "deposit_amount": "300",
+      "deposit_paid": true,
+      "id_verified": false,
+      "pet_count": 0,
+      "discount_amount": 50,
+      "note": "Baseline NOTE"
+    },
+    "csrf": true,
+    "multipart": false
+  },
+  "status": 422,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "json",
+    "json": {
+      "success": false,
+      "data": null,
+      "message": "ข้อมูลไม่ถูกต้อง",
+      "errors": {
+        "status": "ต้องเช็กอินและตรวจห้องก่อนเช็กเอาต์"
+      }
+    }
+  }
+}

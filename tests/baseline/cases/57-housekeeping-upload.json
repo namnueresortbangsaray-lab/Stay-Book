@@ -1,0 +1,37 @@
+{
+  "name": "housekeeping-upload",
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/stays/9031dca6-a1e9-41fb-aabb-0942505f6025/attachments",
+    "csrf": true,
+    "multipart": true
+  },
+  "status": 200,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(self), geolocation=(), microphone=()",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "body": {
+    "kind": "json",
+    "json": {
+      "success": true,
+      "data": {
+        "id": "6a984889-d057-4fae-b2bf-644966632f3d",
+        "stay_id": "9031dca6-a1e9-41fb-aabb-0942505f6025",
+        "uploaded_by": "79670995-34b4-4479-aa26-1a5ab7f03518",
+        "original_name": "logo square.webp",
+        "stored_name": "21737bebc202f93a4d77dec1d63d728d29eddeacc8212b06.webp",
+        "mime_type": "image/webp",
+        "size_bytes": 15530,
+        "created_at": "2026-10-30T14:37:42+00:00"
+      },
+      "message": "บันทึกเรียบร้อย",
+      "errors": {}
+    }
+  }
+}
