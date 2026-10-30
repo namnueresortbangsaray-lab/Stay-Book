@@ -1,41 +1,46 @@
 name: CI
 on: [push, pull_request]
+
 jobs:
-  quality:
+  build-test:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:15-alpine
-        env: {POSTGRES_DB: staybook, POSTGRES_USER: postgres, POSTGRES_PASSWORD: postgres}
-        ports: ["5432:5432"]
-        options: >-
-          --health-cmd="pg_isready -U postgres -d staybook" --health-interval=5s --health-timeout=5s --health-retries=10
-    strategy:
-      matrix: {db: [sqlite, pgsql]}
     steps:
       - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
-        with: {php-version: '8.3', extensions: 'pdo_sqlite,pdo_pgsql,intl,mbstring,gd', coverage: none}
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
       - uses: actions/setup-node@v4
-        with: {node-version: '22', cache: npm}
-      - run: composer install --no-interaction --prefer-dist
-      - run: npm ci && npm run lint && npm run build
-      - run: vendor/bin/php-cs-fixer fix --dry-run --diff
-      - run: vendor/bin/phpstan analyse
-      - run: php bin/console migrate && php bin/console seed && vendor/bin/phpunit
-        env:
-          DB_DRIVER: ${{ matrix.db }}
-          TEST_DB_DRIVER: ${{ matrix.db }}
-          SQLITE_PATH: ${{ github.workspace }}/storage/database/ci.sqlite
-          SUPABASE_DB_HOST: 127.0.0.1
-          SUPABASE_DB_PORT: 5432
-          SUPABASE_DB_NAME: staybook
-          SUPABASE_DB_USER: postgres
-          SUPABASE_DB_PASSWORD: postgres
-          PGSQL_SSLMODE: disable
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: src/ResortGuestbook.Web/package-lock.json
+      - name: Front-end build
+        working-directory: src/ResortGuestbook.Web
+        run: npm ci && npm run lint && npm run build
+      - run: dotnet tool restore
+      - run: dotnet restore ResortGuestbook.sln
+      - name: Build (warnings as errors)
+        run: dotnet build ResortGuestbook.sln -c Release --no-restore
+      - name: Format check
+        run: dotnet format ResortGuestbook.sln --verify-no-changes --no-restore
+      - name: Tests (SQLite + PostgreSQL via Testcontainers + baseline contract)
+        run: dotnet test ResortGuestbook.sln -c Release --no-build --logger "console;verbosity=normal"
+
   docker:
     runs-on: ubuntu-latest
+    needs: build-test
     steps:
       - uses: actions/checkout@v4
       - run: cp .env.example .env
-      - run: docker compose build
+      - run: docker compose build web
+      - name: Start and wait for health
+        run: |
+          docker compose up -d web
+          for i in $(seq 1 30); do
+            [ "$(docker inspect -f '{{.State.Health.Status}}' stay-book-web-1)" = healthy ] && break
+            sleep 3
+          done
+          docker compose ps
+          curl -fsS http://localhost:8080/health
+      - name: Smoke test
+        run: sudo apt-get install -y jq && sh tests/smoke/smoke-test.sh

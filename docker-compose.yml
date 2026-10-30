@@ -1,38 +1,48 @@
+# Stay Book: ASP.NET Core on Kestrel with SQLite in named volumes.
+#   cp .env.example .env && docker compose up -d --build   ->  http://localhost:8080
+# The project name and volume names are the ones the PHP version used, so its database and uploads are reused.
+name: stay-book
+
 services:
-  php:
+  # Existing volumes may belong to the PHP image's www-data (uid 82); the app runs as uid 1654.
+  storage-init:
+    image: busybox:1.37
+    command:
+      - sh
+      - -c
+      - mkdir -p /storage/database /storage/uploads /storage/backups /storage/logs /storage/keys && chown -R 1654:1654 /storage
+    volumes:
+      - staybook_database:/storage/database
+      - staybook_uploads:/storage/uploads
+      - staybook_backups:/storage/backups
+      - staybook_logs:/storage/logs
+      - staybook_keys:/storage/keys
+
+  web:
     build:
       context: .
-      dockerfile: docker/php/Dockerfile
+      dockerfile: docker/Dockerfile
+    image: staybook-web:latest
     env_file: .env
     environment:
-      SQLITE_PATH: /var/www/html/storage/database/stay_book.sqlite
-    volumes:
-      - staybook_database:/var/www/html/storage/database
-      - staybook_uploads:/var/www/html/storage/app/uploads
-      - staybook_backups:/var/www/html/storage/backups
-      - staybook_sessions:/var/www/html/storage/sessions
-      - staybook_logs:/var/www/html/storage/logs
-    healthcheck:
-      test: ["CMD", "php-fpm", "-t"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-  nginx:
-    build:
-      context: .
-      dockerfile: docker/nginx/Dockerfile
+      ConnectionStrings__Sqlite: Data Source=/app/storage/database/staybook.db
+      Storage__UploadsPath: /app/storage/uploads
+      Storage__BackupsPath: /app/storage/backups
+      Storage__LogsPath: /app/storage/logs
+      Storage__KeysPath: /app/storage/keys
     ports:
-      - "${APP_PORT:-8080}:80"
+      - "${APP_PORT:-8080}:8080"
     volumes:
-      - staybook_uploads:/var/www/html/storage/app/uploads:ro
+      - staybook_database:/app/storage/database
+      - staybook_uploads:/app/storage/uploads
+      - staybook_backups:/app/storage/backups
+      - staybook_logs:/app/storage/logs
+      - staybook_keys:/app/storage/keys
     depends_on:
-      php:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      storage-init:
+        condition: service_completed_successfully
+
+  # Local PostgreSQL 15 for testing the Supabase provider: docker compose --profile pgtest up -d postgres
   postgres:
     image: postgres:15-alpine
     profiles: ["pgtest"]
@@ -40,6 +50,8 @@ services:
       POSTGRES_DB: ${SUPABASE_DB_NAME:-postgres}
       POSTGRES_USER: ${SUPABASE_DB_USER:-postgres}
       POSTGRES_PASSWORD: ${SUPABASE_DB_PASSWORD:-postgres}
+    ports:
+      - "127.0.0.1:${PG_PORT:-5432}:5432"
     volumes:
       - staybook_postgres:/var/lib/postgresql/data
     healthcheck:
@@ -47,10 +59,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
 volumes:
   staybook_database:
   staybook_uploads:
   staybook_backups:
-  staybook_sessions:
   staybook_logs:
+  staybook_keys:
   staybook_postgres:

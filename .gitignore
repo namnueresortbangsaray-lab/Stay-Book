@@ -37,3 +37,7 @@ storage/
 /public/build/
 /.phpunit.cache/
 /.php-cs-fixer.cache
+
+# Local backups of previous env files
+.env.*
+!.env.example

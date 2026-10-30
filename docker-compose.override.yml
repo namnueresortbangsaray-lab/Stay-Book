@@ -1,25 +1,45 @@
+# Development helpers (loaded automatically, all opt-in through profiles so `docker compose up` stays production-like):
+#   docker compose --profile dev up web-dev assets-dev   ->  hot reload on http://localhost:8082
+#   docker compose --profile tools up sqlite-browser      ->  read-only SQLite browser on http://localhost:8081
 services:
-  php:
-    volumes:
-      - .:/var/www/html
-      - /var/www/html/vendor
-  nginx:
-    volumes:
-      - .:/var/www/html:ro
-  node:
-    build:
-      context: .
-      dockerfile: docker/node/Dockerfile
+  web-dev:
+    image: mcr.microsoft.com/dotnet/sdk:10.0
     profiles: ["dev"]
+    working_dir: /src
+    command: ["dotnet", "watch", "--project", "src/ResortGuestbook.Web", "run", "--no-launch-profile"]
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      ConnectionStrings__Sqlite: Data Source=/src/storage/database/staybook.db
+    ports:
+      - "8082:8080"
     volumes:
-      - ./resources:/app/resources
-      - ./public/build:/app/public/build
-      - ./tailwind.config.js:/app/tailwind.config.js:ro
-      - ./scripts:/app/scripts:ro
+      - .:/src
+      - /src/src/ResortGuestbook.Web/bin
+      - /src/src/ResortGuestbook.Web/obj
+      - /src/src/ResortGuestbook.Data/bin
+      - /src/src/ResortGuestbook.Data/obj
+      - /src/src/ResortGuestbook.Migrations.Sqlite/bin
+      - /src/src/ResortGuestbook.Migrations.Sqlite/obj
+      - /src/src/ResortGuestbook.Migrations.Postgres/bin
+      - /src/src/ResortGuestbook.Migrations.Postgres/obj
+
+  # Tailwind and esbuild watchers writing into the bind-mounted wwwroot
+  assets-dev:
+    image: node:22-bookworm-slim
+    profiles: ["dev"]
+    working_dir: /src/src/ResortGuestbook.Web
+    command: ["sh", "-c", "npm ci --no-audit --no-fund && npm run dev"]
+    volumes:
+      - .:/src
+      - /src/src/ResortGuestbook.Web/node_modules
+
   sqlite-browser:
     image: coleifer/sqlite-web:latest
     profiles: ["tools"]
-    command: ["sqlite_web", "-H", "0.0.0.0", "-p", "8080", "/data/stay_book.sqlite", "--read-only"]
-    ports: ["8081:8080"]
+    command: ["sqlite_web", "-H", "0.0.0.0", "-p", "8080", "/data/staybook.db", "--read-only"]
+    ports:
+      - "8081:8080"
     volumes:
       - staybook_database:/data:ro

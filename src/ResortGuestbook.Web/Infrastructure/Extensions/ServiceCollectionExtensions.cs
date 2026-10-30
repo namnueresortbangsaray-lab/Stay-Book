@@ -39,7 +39,6 @@ public static class ServiceCollectionExtensions
         var storage = configuration.GetSection("Storage").Get<StorageOptions>() ?? new StorageOptions();
         var auth = new AuthOptions { SessionLifetimeMinutes = configuration.GetValue("SESSION_LIFETIME", 120) };
         var uploads = new UploadOptions { MaxBytes = configuration.GetValue("UPLOAD_MAX_BYTES", 5_242_880L) };
-        var production = builder.Environment.IsProduction();
 
         builder.Host.UseSerilog((context, logger) => logger
             .ReadFrom.Configuration(context.Configuration)
@@ -72,7 +71,7 @@ public static class ServiceCollectionExtensions
             AppDbContextOptions.Configure(options, database.Provider, database.ConnectionString(database.Provider), sp.GetRequiredService<TimeProvider>()));
         services.AddHealthChecks().AddDbContextCheck<AppDbContext>();
 
-        AddIdentity(services, auth, production);
+        AddIdentity(services, auth);
         AddAuthorization(services);
         AddRateLimiting(services);
 
@@ -81,7 +80,7 @@ public static class ServiceCollectionExtensions
             o.HeaderName = "X-CSRF-Token";
             o.FormFieldName = "_token";
             o.Cookie.Name = ".StayBook.Antiforgery";
-            o.Cookie.SecurePolicy = production ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
+            o.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         });
         services.AddLocalization();
         services.Configure<WebEncoderOptions>(o => o.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
@@ -138,7 +137,7 @@ public static class ServiceCollectionExtensions
         return builder;
     }
 
-    private static void AddIdentity(IServiceCollection services, AuthOptions auth, bool production)
+    private static void AddIdentity(IServiceCollection services, AuthOptions auth)
     {
         services.AddSingleton<LoginThrottle>();
         services.AddScoped<IPasswordHasher<AppUser>, LegacyBcryptPasswordHasher>();
@@ -155,7 +154,7 @@ public static class ServiceCollectionExtensions
             o.Cookie.Name = ".StayBook.Auth";
             o.Cookie.HttpOnly = true;
             o.Cookie.SameSite = SameSiteMode.Lax;
-            o.Cookie.SecurePolicy = production ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
+            o.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             o.ExpireTimeSpan = TimeSpan.FromMinutes(auth.SessionLifetimeMinutes);
             o.SlidingExpiration = true;
             o.LoginPath = "/login";

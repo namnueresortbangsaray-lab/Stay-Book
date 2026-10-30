@@ -1,9 +1,28 @@
+# Production: Nginx in front of Kestrel.
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+# For Supabase set in .env: Database__Provider=Postgres and SUPABASE_DB_HOST/PORT/NAME/USER/PASSWORD (see docs/SUPABASE.md).
 services:
-  php:
+  web:
     restart: unless-stopped
+    ports: !reset []
+    expose:
+      - "8080"
     environment:
-      APP_ENV: production
-      APP_DEBUG: "false"
-      PHP_OPCACHE_VALIDATE_TIMESTAMPS: "0"
+      ASPNETCORE_ENVIRONMENT: Production
+      App__TrustForwardedHeaders: "true"
+
   nginx:
+    image: nginx:1.27-alpine
     restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      web:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
