@@ -1,6 +1,6 @@
 namespace ResortGuestbook.Web.Infrastructure.Cli;
 
-/// <summary><c>--key=value</c> options and <c>--flag</c> switches (PHP <c>bin/console</c> syntax).</summary>
+/// <summary><c>--key=value</c> options and <c>--flag</c> switches (v1 <c>bin/console</c> syntax).</summary>
 public sealed class CliArguments
 {
     private readonly Dictionary<string, string> options = new(StringComparer.Ordinal);

@@ -4,7 +4,7 @@ using ResortGuestbook.Web.Services;
 
 namespace ResortGuestbook.Tests.Unit;
 
-/// <summary>Ported from the PHP <c>CsvTest</c>, plus the <c>fputcsv</c> format.</summary>
+/// <summary>Ported from the v1 <c>CsvTest</c>, plus the <c>fputcsv</c> format.</summary>
 public sealed class CsvWriterTests
 {
     [Fact]
@@ -16,7 +16,7 @@ public sealed class CsvWriterTests
     }
 
     [Fact]
-    public void WritesBomHeaderAndPhpQuoting()
+    public void WritesBomHeaderAndV1Quoting()
     {
         var bytes = CsvWriter.Bookings([Stay("ทดสอบ Baseline", "081-234-5678", 195_000)]);
         Assert.Equal(Encoding.UTF8.GetPreamble(), bytes[..3]);

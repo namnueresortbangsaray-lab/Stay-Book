@@ -20,18 +20,18 @@ public sealed class SnapshotService(ResortQueries queries, AppClock clock)
         return new SnapshotDto(rooms, stays, guests, attachments, Analytics(rooms.Count, stays, from, to), clock.Today);
     }
 
-    /// <summary>Defaults to the current month (Bangkok) and validates like PHP <c>validateRange</c>.</summary>
+    /// <summary>Defaults to the current month (Bangkok) and validates like v1 <c>validateRange</c>.</summary>
     public (DateOnly Start, DateOnly End) ResolveRange(string? start, string? end)
     {
         var today = clock.Today;
         start = string.IsNullOrEmpty(start) ? new DateOnly(today.Year, today.Month, 1).ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) : start;
         end = string.IsNullOrEmpty(end) ? new DateOnly(today.Year, today.Month, DateTime.DaysInMonth(today.Year, today.Month)).ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) : end;
-        if (!Php.TryParseDate(start, out var from))
+        if (!Coerce.TryParseDate(start, out var from))
         {
             throw new ValidationException("start", "วันที่เริ่มต้นไม่ถูกต้อง");
         }
 
-        if (!Php.TryParseDate(end, out var to))
+        if (!Coerce.TryParseDate(end, out var to))
         {
             throw new ValidationException("end", "วันที่สิ้นสุดไม่ถูกต้อง");
         }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ResortGuestbook.Web.Infrastructure.Http;
 
-/// <summary>Turns a failed antiforgery check (MVC's 400) into PHP's 419 "session expired" response.</summary>
+/// <summary>Turns a failed antiforgery check (MVC's 400) into v1's 419 "session expired" response.</summary>
 public sealed class AntiforgeryFailureFilter : IAlwaysRunResultFilter
 {
     public const string Message = "เซสชันหมดอายุ กรุณาลองใหม่";

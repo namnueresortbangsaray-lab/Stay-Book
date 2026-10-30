@@ -98,7 +98,7 @@ public static class ServiceCollectionExtensions
             o.DefaultRequestCulture = new RequestCulture(thai);
             o.SupportedCultures = o.SupportedUICultures = [thai, new CultureInfo("en")];
 
-            // Thai unless chosen explicitly (?culture=en or the culture cookie); the browser language is ignored, as in PHP.
+            // Thai unless chosen explicitly (?culture=en or the culture cookie); the browser language is ignored, as in v1.
             o.RequestCultureProviders = [new QueryStringRequestCultureProvider(), new CookieRequestCultureProvider()];
         });
         services.AddResponseCompression();

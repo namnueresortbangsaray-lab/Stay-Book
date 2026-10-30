@@ -6,7 +6,7 @@ using ResortGuestbook.Data.Entities;
 namespace ResortGuestbook.Tests.Integration;
 
 /// <summary>
-/// Replays the recorded PHP behaviour (<c>tests/baseline</c>) against the app on a real Kestrel port and fails on any
+/// Replays the recorded v1 behaviour (<c>tests/baseline</c>) against the app on a real Kestrel port and fails on any
 /// difference that is not listed in <c>tests/baseline/deviations.json</c>. Requires Node.js on the PATH.
 /// </summary>
 [Collection(WebCollection.Name)]
@@ -15,7 +15,7 @@ public sealed class BaselineContractTests : IDisposable
     private readonly StayBookFactory app = new();
 
     [Fact]
-    public async Task ApiAndPagesMatchThePhpBaseline()
+    public async Task ApiAndPagesMatchTheV1Baseline()
     {
         var port = FreePort();
         app.UseKestrel(port);

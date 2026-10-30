@@ -1,10 +1,10 @@
 # Stay Book: ASP.NET Core on Kestrel with SQLite in named volumes.
 #   cp .env.example .env && docker compose up -d --build   ->  http://localhost:8080
-# The project name and volume names are the ones the PHP version used, so its database and uploads are reused.
+# The project and volume names are those of v1, so an existing installation keeps its database and uploads.
 name: stay-book
 
 services:
-  # Existing volumes may belong to the PHP image's www-data (uid 82); the app runs as uid 1654.
+  # Existing volumes may belong to the v1 image's www-data (uid 82); the app runs as uid 1654.
   storage-init:
     image: busybox:1.37
     command:

@@ -5,7 +5,7 @@ using ResortGuestbook.Web.Models;
 
 namespace ResortGuestbook.Web.Infrastructure.Http;
 
-/// <summary>The HTML error page (PHP <c>errors/error</c> in the base layout) with a given status code.</summary>
+/// <summary>The HTML error page (v1 <c>errors/error</c> in the base layout) with a given status code.</summary>
 public static class ErrorPages
 {
     public const string NotFound = "ไม่พบหน้าที่ต้องการ";
@@ -21,7 +21,7 @@ public static class ErrorPages
         },
     };
 
-    /// <summary>Message for a bare status code, as PHP produced or as the closest Thai equivalent.</summary>
+    /// <summary>Message for a bare status code, as v1 produced or as the closest Thai equivalent.</summary>
     public static (int Status, string Message) Describe(int status) => status switch
     {
         StatusCodes.Status404NotFound or StatusCodes.Status405MethodNotAllowed => (StatusCodes.Status404NotFound, NotFound),

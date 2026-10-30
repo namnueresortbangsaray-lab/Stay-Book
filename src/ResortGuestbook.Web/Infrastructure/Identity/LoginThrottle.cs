@@ -5,7 +5,7 @@ using ResortGuestbook.Web.Infrastructure.Options;
 namespace ResortGuestbook.Web.Infrastructure.Identity;
 
 /// <summary>
-/// Per-IP failed-login window (PHP: 5 failures in 900 s blocks further attempts; a success clears the counter).
+/// Per-IP failed-login window (v1: 5 failures in 900 s blocks further attempts; a success clears the counter).
 /// Only failures count, which a request-rate limiter cannot express.
 /// </summary>
 public sealed class LoginThrottle(TimeProvider time, IOptions<AuthOptions> options)

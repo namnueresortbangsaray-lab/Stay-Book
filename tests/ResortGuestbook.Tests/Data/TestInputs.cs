@@ -2,7 +2,7 @@ using ResortGuestbook.Web.Infrastructure.Http;
 
 namespace ResortGuestbook.Tests.Data;
 
-/// <summary>Request input builders mirroring the PHP test fixtures.</summary>
+/// <summary>Request input builders mirroring the v1 test fixtures.</summary>
 public static class TestInputs
 {
     public static RequestInput Input(params (string Key, object? Value)[] values) =>

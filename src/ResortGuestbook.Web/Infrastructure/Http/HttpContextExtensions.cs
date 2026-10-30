@@ -6,7 +6,7 @@ namespace ResortGuestbook.Web.Infrastructure.Http;
 
 public static class HttpContextExtensions
 {
-    /// <summary>The client IP as recorded by PHP's <c>REMOTE_ADDR</c> (after trusted forwarded headers).</summary>
+    /// <summary>The client IP as recorded by v1's <c>REMOTE_ADDR</c> (after trusted forwarded headers).</summary>
     public static string ClientIp(this HttpContext context)
     {
         var address = context.Connection.RemoteIpAddress;

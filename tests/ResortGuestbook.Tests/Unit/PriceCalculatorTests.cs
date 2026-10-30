@@ -3,7 +3,7 @@ using ResortGuestbook.Web.Services;
 
 namespace ResortGuestbook.Tests.Unit;
 
-/// <summary>Ported from the PHP <c>PriceCalculatorTest</c>.</summary>
+/// <summary>Ported from the v1 <c>PriceCalculatorTest</c>.</summary>
 public sealed class PriceCalculatorTests
 {
     private static readonly Room Room = new() { PriceSatang = 50_000, BaseGuests = 2, ExtraGuestFeeSatang = 10_000 };

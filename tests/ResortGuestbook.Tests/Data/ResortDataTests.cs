@@ -6,7 +6,7 @@ using ResortGuestbook.Web.Services.Errors;
 namespace ResortGuestbook.Tests.Data;
 
 /// <summary>
-/// Business rules and queries run against a real database, once per provider (ported from the PHP
+/// Business rules and queries run against a real database, once per provider (ported from the v1
 /// <c>ResortServiceTest</c>, <c>SqliteRepositoryTest</c> and <c>MigrationParityTest</c>).
 /// </summary>
 public abstract class ResortDataTests(IDatabaseFactory factory)

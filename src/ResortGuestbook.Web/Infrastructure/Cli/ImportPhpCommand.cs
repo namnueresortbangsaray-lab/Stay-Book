@@ -9,7 +9,7 @@ using ResortGuestbook.Web.Infrastructure.Options;
 namespace ResortGuestbook.Web.Infrastructure.Cli;
 
 /// <summary>
-/// Imports a PHP installation: every row of <c>stay_book.sqlite</c> (ids, bcrypt hashes and timestamps preserved) plus the
+/// Imports a v1 installation: every row of <c>stay_book.sqlite</c> (ids, bcrypt hashes and timestamps preserved) plus the
 /// uploaded files, into the configured database. Idempotent; use <c>--truncate</c> on a freshly seeded database.
 /// </summary>
 public sealed class ImportPhpCommand(DatabaseSettings settings, IOptions<StorageOptions> storage) : ICliCommand
@@ -27,7 +27,7 @@ public sealed class ImportPhpCommand(DatabaseSettings settings, IOptions<Storage
             return 1;
         }
 
-        var data = await PhpDatabaseReader.ReadAsync(sqlite, cancellationToken);
+        var data = await LegacyDatabaseReader.ReadAsync(sqlite, cancellationToken);
         var dryRun = arguments.Flag("dry-run");
         await using var target = new AppDbContext(AppDbContextOptions.Create(settings.Provider, settings.ConnectionString(settings.Provider), clock: null));
         if (!dryRun)

@@ -1,4 +1,4 @@
 namespace ResortGuestbook.Web.Resources;
 
-/// <summary>Marker type for <c>SharedResource.*.resx</c> (ported from <c>resources/lang/*/messages.php</c>).</summary>
+/// <summary>Marker type for <c>SharedResource.*.resx</c> (ported from the v1 translation files).</summary>
 public sealed class SharedResource;

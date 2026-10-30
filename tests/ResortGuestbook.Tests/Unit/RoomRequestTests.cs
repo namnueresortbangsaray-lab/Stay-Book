@@ -27,7 +27,7 @@ public sealed class RoomRequestTests
     }
 
     [Fact]
-    public void InvalidRoomReportsEveryFieldWithPhpMessages()
+    public void InvalidRoomReportsEveryFieldWithV1Messages()
     {
         var error = Assert.Throws<ValidationException>(() => RoomRequest.Validate(new RequestInput(new Dictionary<string, object?>
         {

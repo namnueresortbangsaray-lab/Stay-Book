@@ -4,7 +4,7 @@ using ResortGuestbook.Data.Entities;
 
 namespace ResortGuestbook.Data.Interceptors;
 
-/// <summary>Sets <c>created_at</c> on insert and <c>updated_at</c> on insert/update, in UTC truncated to seconds like PHP.</summary>
+/// <summary>Sets <c>created_at</c> on insert and <c>updated_at</c> on insert/update, in UTC truncated to seconds like v1.</summary>
 public sealed class TimestampInterceptor(TimeProvider clock) : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)

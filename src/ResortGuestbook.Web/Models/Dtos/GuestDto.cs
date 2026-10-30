@@ -1,6 +1,6 @@
 namespace ResortGuestbook.Web.Models.Dtos;
 
-/// <summary>A <c>guests</c> row as the PHP API returned it.</summary>
+/// <summary>A <c>guests</c> row as the v1 API returned it.</summary>
 public class GuestDto
 {
     public required Guid Id { get; init; }

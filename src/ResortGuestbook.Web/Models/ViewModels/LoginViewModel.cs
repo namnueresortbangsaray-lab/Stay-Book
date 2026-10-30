@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ResortGuestbook.Web.Models.ViewModels;
 
-/// <summary>Login form. Invalid input is answered like wrong credentials (as in PHP), so annotations only shape the form.</summary>
+/// <summary>Login form. Invalid input is answered like wrong credentials (as in v1), so annotations only shape the form.</summary>
 public sealed record LoginViewModel
 {
     [EmailAddress]

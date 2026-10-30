@@ -6,7 +6,7 @@ using ResortGuestbook.Web.Models.Dtos;
 
 namespace ResortGuestbook.Web.Services;
 
-/// <summary>Read models with the same shape and ordering as the PHP repository queries.</summary>
+/// <summary>Read models with the same shape and ordering as the v1 repository queries.</summary>
 public sealed class ResortQueries(AppDbContext db)
 {
     public async Task<List<RoomDto>> RoomsAsync(CancellationToken cancellationToken = default)

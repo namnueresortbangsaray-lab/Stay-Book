@@ -43,7 +43,7 @@ public class StayBookFactory : WebApplicationFactory<Program>
 
     public HttpClient CreateBrowser() => CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = true });
 
-    /// <summary>Adds a user directly; a <paramref name="passwordHash"/> may be a PHP bcrypt hash.</summary>
+    /// <summary>Adds a user directly; a <paramref name="passwordHash"/> may be a v1 bcrypt hash.</summary>
     public async Task<AppUser> AddUserAsync(string email, string role, string? password = null, string? passwordHash = null)
     {
         using var scope = Services.CreateScope();

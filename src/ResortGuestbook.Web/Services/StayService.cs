@@ -147,12 +147,12 @@ public sealed class StayService(AppDbContext db, ResortQueries queries, AuditSer
         {
             Id = Guid.NewGuid(),
             StayId = stay.Id,
-            KeyReturned = Php.ToBool(input.Get("key_returned", false)),
-            RoomClean = Php.ToBool(input.Get("room_clean", false)),
-            EquipmentComplete = Php.ToBool(input.Get("equipment_complete", false)),
-            NoDamage = Php.ToBool(input.Get("no_damage", false)),
-            MinibarChecked = Php.ToBool(input.Get("minibar_checked", false)),
-            InspectionNote = Php.Clean(input["inspection_note"]),
+            KeyReturned = Coerce.ToBool(input.Get("key_returned", false)),
+            RoomClean = Coerce.ToBool(input.Get("room_clean", false)),
+            EquipmentComplete = Coerce.ToBool(input.Get("equipment_complete", false)),
+            NoDamage = Coerce.ToBool(input.Get("no_damage", false)),
+            MinibarChecked = Coerce.ToBool(input.Get("minibar_checked", false)),
+            InspectionNote = Coerce.Clean(input["inspection_note"]),
             InspectedBy = actor.Id,
             InspectedAt = TruncatedNow(),
         };
@@ -177,7 +177,7 @@ public sealed class StayService(AppDbContext db, ResortQueries queries, AuditSer
         var ratings = new Dictionary<string, int>();
         foreach (var key in new[] { "cleanliness_rating", "service_rating", "facility_rating", "overall_rating" })
         {
-            var value = Php.ToInt(input.Get(key, 0L));
+            var value = Coerce.ToInt(input.Get(key, 0L));
             if (value is < 1 or > 5)
             {
                 throw new ValidationException(key, "คะแนนต้องอยู่ระหว่าง 1–5");
@@ -197,8 +197,8 @@ public sealed class StayService(AppDbContext db, ResortQueries queries, AuditSer
         feedback.ServiceRating = ratings["service_rating"];
         feedback.FacilityRating = ratings["facility_rating"];
         feedback.OverallRating = ratings["overall_rating"];
-        feedback.WouldReturn = Php.ToBool(input.Get("would_return", true));
-        feedback.Comment = Php.Clean(input["comment"]);
+        feedback.WouldReturn = Coerce.ToBool(input.Get("would_return", true));
+        feedback.Comment = Coerce.Clean(input["comment"]);
         await db.SaveChangesAsync(cancellationToken);
 
         var after = ResortQueries.ToDto(feedback);
@@ -257,7 +257,7 @@ public sealed class StayService(AppDbContext db, ResortQueries queries, AuditSer
 
     private async Task<Guest> FindOrCreateGuestAsync(StayInput data, CancellationToken cancellationToken)
     {
-        var normalized = Php.Digits(data.Phone);
+        var normalized = Coerce.Digits(data.Phone);
         var guest = await db.Guests.FirstOrDefaultAsync(g => g.NormalizedPhone == normalized, cancellationToken);
         if (guest is not null)
         {

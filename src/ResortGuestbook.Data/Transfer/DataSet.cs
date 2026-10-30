@@ -18,7 +18,7 @@ public sealed record DataSet(
         await db.Users.IgnoreQueryFilters().AsNoTracking().ToListAsync(cancellationToken),
         await ReadRestAsync(db, cancellationToken));
 
-    /// <summary>Builds a data set from users read separately (e.g. from the PHP schema) and the other tables via EF.</summary>
+    /// <summary>Builds a data set from users read separately (e.g. from the v1 schema) and the other tables via EF.</summary>
     public DataSet(IReadOnlyList<AppUser> users, DataSet rest)
         : this(users, rest.Rooms, rest.Guests, rest.Stays, rest.CheckoutInspections, rest.Feedbacks, rest.Attachments, rest.AuditLogs)
     {

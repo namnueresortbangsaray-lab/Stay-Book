@@ -7,7 +7,7 @@ namespace ResortGuestbook.Web.Services;
 
 /// <summary>
 /// Writes <c>audit_logs</c> rows after a successful change, with the API representation of the entity before and after
-/// (same semantics as the PHP <c>ResortRepository::audit</c>).
+/// (same semantics as the v1 <c>ResortRepository::audit</c>).
 /// </summary>
 public sealed class AuditService(AppDbContext db)
 {

@@ -4,7 +4,7 @@ using ResortGuestbook.Web.Models.Dtos;
 
 namespace ResortGuestbook.Web.Services;
 
-/// <summary>The bookings CSV exactly as PHP produced it: UTF-8 BOM, <c>fputcsv</c> quoting, LF line endings.</summary>
+/// <summary>The bookings CSV exactly as v1 produced it: UTF-8 BOM, <c>fputcsv</c> quoting, LF line endings.</summary>
 public static class CsvWriter
 {
     private static readonly string[] Header = ["Booking ID", "ชื่อลูกค้า", "โทรศัพท์", "ห้อง", "เช็กอิน", "เช็กเอาต์", "สถานะ", "ยอดสุทธิ (บาท)"];
@@ -41,7 +41,7 @@ public static class CsvWriter
         builder.Append('\n');
     }
 
-    /// <summary>PHP <c>fputcsv</c>: enclose when the field contains a delimiter, quote, backslash, whitespace or newline.</summary>
+    /// <summary>v1 <c>fputcsv</c>: enclose when the field contains a delimiter, quote, backslash, whitespace or newline.</summary>
     private static string Quote(string field) =>
         field.AsSpan().IndexOfAny(",\"\\ \t\r\n") >= 0 ? "\"" + field.Replace("\"", "\"\"", StringComparison.Ordinal) + "\"" : field;
 }

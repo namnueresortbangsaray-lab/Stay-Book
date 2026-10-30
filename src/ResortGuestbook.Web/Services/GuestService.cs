@@ -12,11 +12,11 @@ public sealed class GuestService(AppDbContext db, ResortQueries queries, AuditSe
     /// <summary>Updates the permanent guest profile (<c>PUT /api/v1/guests/{id}</c>).</summary>
     public async Task<GuestDto> UpdateAsync(RequestInput input, string id, Actor actor, CancellationToken cancellationToken)
     {
-        var name = Php.TrimStr(input["name"]);
-        var phone = Php.TrimStr(input["phone"]);
-        var normalized = Php.Digits(phone);
+        var name = Coerce.TrimStr(input["name"]);
+        var phone = Coerce.TrimStr(input["phone"]);
+        var normalized = Coerce.Digits(phone);
         var errors = new Dictionary<string, string>();
-        if (Php.MbStrlen(name) < 2)
+        if (Coerce.MbStrlen(name) < 2)
         {
             errors["name"] = "กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร";
         }
@@ -42,10 +42,10 @@ public sealed class GuestService(AppDbContext db, ResortQueries queries, AuditSe
         guest.Name = name;
         guest.Phone = phone;
         guest.NormalizedPhone = normalized;
-        guest.CustomerType = Php.TrimStr(input.Get("customer_type", Guest.DefaultCustomerType));
-        guest.IsRegular = Php.ToBool(input.Get("is_regular", false));
-        guest.CustomerNote = Php.Clean(input["customer_note"]);
-        guest.Preferences = Php.Clean(input["preferences"]);
+        guest.CustomerType = Coerce.TrimStr(input.Get("customer_type", Guest.DefaultCustomerType));
+        guest.IsRegular = Coerce.ToBool(input.Get("is_regular", false));
+        guest.CustomerNote = Coerce.Clean(input["customer_note"]);
+        guest.Preferences = Coerce.Clean(input["preferences"]);
         await db.SaveChangesAsync(cancellationToken);
 
         var after = ResortQueries.ToDto(guest);

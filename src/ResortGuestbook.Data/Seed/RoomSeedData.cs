@@ -2,7 +2,7 @@ using ResortGuestbook.Data.Entities;
 
 namespace ResortGuestbook.Data.Seed;
 
-/// <summary>The five rooms of the resort (from the PHP <c>database/seeders/rooms.php</c>).</summary>
+/// <summary>The five rooms of the resort (the v1 seed data).</summary>
 public static class RoomSeedData
 {
     public static IReadOnlyList<Room> Create() =>

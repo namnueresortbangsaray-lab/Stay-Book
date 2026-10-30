@@ -32,7 +32,7 @@ backup:
 	$(CLI) db:backup
 db-transfer:   ## SQLite -> PostgreSQL/Supabase (SUPABASE_DB_* must be set in .env)
 	$(CLI) db:transfer --from=sqlite --to=postgres
-import-php:    ## Import the PHP database and uploads from the reused volumes
+import-php:    ## Import the v1 database and uploads from the reused volumes
 	$(CLI) import:php --sqlite=/app/storage/database/stay_book.sqlite --uploads=/app/storage/uploads --truncate
 
 assets:

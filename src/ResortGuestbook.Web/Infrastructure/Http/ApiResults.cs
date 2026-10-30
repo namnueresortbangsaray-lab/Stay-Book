@@ -3,7 +3,7 @@ using ResortGuestbook.Web.Models.Dtos;
 
 namespace ResortGuestbook.Web.Infrastructure.Http;
 
-/// <summary>Builds the PHP-compatible JSON envelope; <c>success</c> is <c>status &lt; 400</c>.</summary>
+/// <summary>Builds the v1-compatible JSON envelope; <c>success</c> is <c>status &lt; 400</c>.</summary>
 public static class ApiResults
 {
     public const string ContentType = "application/json; charset=utf-8";

@@ -30,7 +30,7 @@ public sealed partial class FilesController(AppDbContext db, IFileStorage storag
         return File(stream, attachment.MimeType);
     }
 
-    /// <summary>PHP: <c>preg_replace('/[^\pL\pN._ -]+/u', '_', $name)</c>.</summary>
+    /// <summary>v1: <c>preg_replace('/[^\pL\pN._ -]+/u', '_', $name)</c>.</summary>
     [GeneratedRegex(@"[^\p{L}\p{N}._ -]+")]
     private static partial Regex UnsafeFileNameCharacters();
 }

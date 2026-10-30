@@ -4,7 +4,7 @@ using System.Text.Json;
 namespace ResortGuestbook.Web.Infrastructure.Http;
 
 /// <summary>
-/// JSON settings matching PHP <c>json_encode(..., JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)</c> with snake_case keys.
+/// JSON settings matching v1 <c>json_encode(..., JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)</c> with snake_case keys.
 /// </summary>
 public static class ApiJson
 {
@@ -15,7 +15,7 @@ public static class ApiJson
         options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
         options.DictionaryKeyPolicy = null;
         options.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
-        options.Converters.Add(new PhpTimestampJsonConverter());
+        options.Converters.Add(new UtcTimestampJsonConverter());
         return options;
     }
 }

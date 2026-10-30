@@ -5,9 +5,9 @@ using ResortGuestbook.Data.Entities;
 namespace ResortGuestbook.Data.Providers;
 
 /// <summary>
-/// Case-insensitive substring search over guest name, phone, room name, zone and note, reproducing the PHP
+/// Case-insensitive substring search over guest name, phone, room name, zone and note, reproducing the v1
 /// <c>Dialect::search</c>: <c>LOWER(col) LIKE LOWER(:p)</c> on SQLite and <c>col ILIKE :p</c> on PostgreSQL.
-/// The pattern is used as given (<c>%</c>/<c>_</c> are wildcards, as in PHP).
+/// The pattern is used as given (<c>%</c>/<c>_</c> are wildcards, as in v1).
 /// </summary>
 public static class StaySearchExtensions
 {

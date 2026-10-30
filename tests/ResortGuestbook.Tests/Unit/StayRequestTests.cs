@@ -4,7 +4,7 @@ using ResortGuestbook.Web.Services.Validation;
 
 namespace ResortGuestbook.Tests.Unit;
 
-/// <summary>Ported from the PHP <c>StayRequestTest</c>, plus coercion cases.</summary>
+/// <summary>Ported from the v1 <c>StayRequestTest</c>, plus coercion cases.</summary>
 public sealed class StayRequestTests
 {
     [Theory]
@@ -30,7 +30,7 @@ public sealed class StayRequestTests
     }
 
     [Fact]
-    public void CoercesLooseInputLikePhp()
+    public void CoercesLooseInputLikeV1()
     {
         var data = StayRequest.Validate(Input(("guests", "2"), ("deposit_amount", "300.5"), ("deposit_paid", "on"), ("pet_count", "1"), ("pet_type", " แมว ")));
         Assert.Equal(2, data.Guests);
@@ -40,7 +40,7 @@ public sealed class StayRequestTests
     }
 
     [Fact]
-    public void ReportsErrorsInPhpOrder()
+    public void ReportsErrorsInV1Order()
     {
         var error = Assert.Throws<ValidationException>(() => StayRequest.Validate(RequestInput.Empty));
         Assert.Equal(["guest_name", "phone", "check_in_date", "check_out_date", "room_id", "guests"], error.Errors.Keys);

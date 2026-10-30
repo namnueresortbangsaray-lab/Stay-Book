@@ -2,7 +2,7 @@ using ResortGuestbook.Data.Entities;
 
 namespace ResortGuestbook.Web.Authorization;
 
-/// <summary>Abilities from the PHP <c>ResortPolicy</c>; each one is also an authorization policy name.</summary>
+/// <summary>Abilities from the v1 <c>ResortPolicy</c>; each one is also an authorization policy name.</summary>
 public static class Abilities
 {
     public const string View = "view";

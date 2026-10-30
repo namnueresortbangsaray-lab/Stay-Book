@@ -6,7 +6,7 @@ namespace ResortGuestbook.Web.Authorization;
 
 /// <summary>
 /// Checks an ability policy as an action filter, i.e. after authentication (401) and antiforgery (419), matching the
-/// PHP order in which the policy check happened inside the handler. Failure is a 403 envelope.
+/// v1 order in which the policy check happened inside the handler. Failure is a 403 envelope.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class RequireAbilityAttribute(string ability) : Attribute, IAsyncActionFilter

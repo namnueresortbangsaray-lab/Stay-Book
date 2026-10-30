@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace ResortGuestbook.Web.Models.Dtos;
 
 /// <summary>
-/// Guest list row: the guest columns, the columns of the first joined stay (a side effect of the PHP LEFT JOIN, kept for
+/// Guest list row: the guest columns, the columns of the first joined stay (a side effect of the v1 LEFT JOIN, kept for
 /// parity) and the lifetime summary.
 /// </summary>
 public class GuestSummaryDto : GuestDto

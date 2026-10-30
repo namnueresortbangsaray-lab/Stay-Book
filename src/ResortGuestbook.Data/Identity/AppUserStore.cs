@@ -5,7 +5,7 @@ using ResortGuestbook.Data.Entities;
 namespace ResortGuestbook.Data.Identity;
 
 /// <summary>
-/// Identity store over the PHP-compatible <c>users</c> table. The user name is the (lowercase) email; roles live in
+/// Identity store over the v1-compatible <c>users</c> table. The user name is the (lowercase) email; roles live in
 /// <c>users.role</c>, so no claim, login, token or role tables are needed.
 /// </summary>
 public sealed class AppUserStore(AppDbContext db) :
@@ -129,6 +129,6 @@ public sealed class AppUserStore(AppDbContext db) :
 
     public Task SetLockoutEnabledAsync(AppUser user, bool enabled, CancellationToken cancellationToken) => Task.CompletedTask;
 
-    /// <summary>PHP stored and looked up emails with <c>strtolower(trim())</c>.</summary>
+    /// <summary>v1 stored and looked up emails with <c>strtolower(trim())</c>.</summary>
     public static string Normalize(string? email) => (email ?? string.Empty).Trim().ToLowerInvariant();
 }

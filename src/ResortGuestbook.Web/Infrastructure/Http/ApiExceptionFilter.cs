@@ -6,7 +6,7 @@ using ResortGuestbook.Web.Services.Errors;
 namespace ResortGuestbook.Web.Infrastructure.Http;
 
 /// <summary>
-/// Maps service exceptions to envelopes like the PHP <c>mutate()</c> helper: 422 validation, 404 not found,
+/// Maps service exceptions to envelopes like the v1 <c>mutate()</c> helper: 422 validation, 404 not found,
 /// 409 duplicate, 500 otherwise (with the "cannot save" message for writes).
 /// </summary>
 public sealed class ApiExceptionFilter(ILogger<ApiExceptionFilter> logger) : IExceptionFilter

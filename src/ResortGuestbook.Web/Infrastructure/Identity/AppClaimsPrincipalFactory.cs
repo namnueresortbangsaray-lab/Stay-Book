@@ -5,7 +5,7 @@ using ResortGuestbook.Data.Entities;
 
 namespace ResortGuestbook.Web.Infrastructure.Identity;
 
-/// <summary>Adds the display name and the <c>users.role</c> value as claims (the PHP session held id, name, email, role).</summary>
+/// <summary>Adds the display name and the <c>users.role</c> value as claims (the v1 session held id, name, email, role).</summary>
 public sealed class AppClaimsPrincipalFactory(UserManager<AppUser> userManager, IOptions<IdentityOptions> options)
     : UserClaimsPrincipalFactory<AppUser>(userManager, options)
 {

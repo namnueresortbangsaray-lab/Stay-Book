@@ -3,7 +3,7 @@ using System.Text.Json;
 namespace ResortGuestbook.Web.Infrastructure.Http;
 
 /// <summary>
-/// The PHP <c>Request::input()</c>: the JSON object body when the content type is JSON, otherwise the form fields.
+/// The v1 <c>Request::input()</c>: the JSON object body when the content type is JSON, otherwise the form fields.
 /// Invalid or non-object JSON yields an empty input (validation then reports the missing fields).
 /// </summary>
 public sealed class RequestInput
@@ -17,7 +17,7 @@ public sealed class RequestInput
     /// <summary><c>$input[$key] ?? null</c>.</summary>
     public object? this[string key] => values.GetValueOrDefault(key);
 
-    /// <summary><c>$input[$key] ?? $fallback</c> (null counts as missing, like PHP's <c>??</c>).</summary>
+    /// <summary><c>$input[$key] ?? $fallback</c> (null counts as missing, like v1's <c>??</c>).</summary>
     public object? Get(string key, object? fallback) => values.GetValueOrDefault(key) ?? fallback;
 
     public static async Task<RequestInput> ReadAsync(HttpRequest request, CancellationToken cancellationToken)

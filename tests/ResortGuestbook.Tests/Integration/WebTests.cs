@@ -55,7 +55,7 @@ public sealed class WebTests : IClassFixture<StayBookFactory>
     public async Task UnknownPathsAre404ForEveryone()
     {
         using var client = app.CreateBrowser();
-        var html = await client.GetAsync("/does-not-exist.php");
+        var html = await client.GetAsync("/does-not-exist.html");
         Assert.Equal(HttpStatusCode.NotFound, html.StatusCode);
         Assert.Contains("ไม่พบหน้าที่ต้องการ", await html.Content.ReadAsStringAsync(), StringComparison.Ordinal);
 
@@ -103,17 +103,17 @@ public sealed class WebTests : IClassFixture<StayBookFactory>
     }
 
     [Fact]
-    public async Task PhpBcryptPasswordStillWorksAndIsUpgraded()
+    public async Task LegacyBcryptPasswordStillWorksAndIsUpgraded()
     {
-        var phpHash = BCrypt.Net.BCrypt.HashPassword("PhpPassword123!", 10).Replace("$2a$", "$2y$", StringComparison.Ordinal);
-        var user = await app.AddUserAsync("php-user@staybook.local", Roles.FrontDesk, passwordHash: phpHash);
+        var legacyHash = BCrypt.Net.BCrypt.HashPassword("LegacyPassword123!", 10).Replace("$2a$", "$2y$", StringComparison.Ordinal);
+        var user = await app.AddUserAsync("legacy-user@staybook.local", Roles.FrontDesk, passwordHash: legacyHash);
         using var client = app.CreateBrowser();
-        await Browser.SignInAsync(client, "php-user@staybook.local", "PhpPassword123!");
+        await Browser.SignInAsync(client, "legacy-user@staybook.local", "LegacyPassword123!");
         var stored = await app.QueryAsync(db => db.Users.Where(u => u.Id == user.Id).Select(u => u.PasswordHash).SingleAsync());
         Assert.False(LegacyBcryptPasswordHasher.IsBcrypt(stored));
 
         using var again = app.CreateBrowser();
-        await Browser.SignInAsync(again, "php-user@staybook.local", "PhpPassword123!");
+        await Browser.SignInAsync(again, "legacy-user@staybook.local", "LegacyPassword123!");
     }
 
     [Fact]

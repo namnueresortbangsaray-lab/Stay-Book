@@ -1,6 +1,6 @@
 namespace ResortGuestbook.Web.Models.Dtos;
 
-/// <summary>A <c>stays</c> row joined with its room, guest and feedback rating, as the PHP API returned it.</summary>
+/// <summary>A <c>stays</c> row joined with its room, guest and feedback rating, as the v1 API returned it.</summary>
 public class StayDto
 {
     public required Guid Id { get; init; }

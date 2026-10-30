@@ -55,7 +55,7 @@ public static class ApplicationBuilderExtensions
         }).AllowAnonymous().DisableHttpMetrics();
         app.MapControllers();
 
-        // Unknown paths and wrong methods are 404 for everyone (PHP matched routes before checking the session);
+        // Unknown paths and wrong methods are 404 for everyone (v1 matched routes before checking the session);
         // the status code page then renders the HTML page or the JSON envelope.
         app.MapFallback("{*path}", context =>
         {

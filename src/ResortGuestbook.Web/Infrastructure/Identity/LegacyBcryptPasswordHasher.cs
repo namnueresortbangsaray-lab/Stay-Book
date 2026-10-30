@@ -4,7 +4,7 @@ using ResortGuestbook.Data.Entities;
 namespace ResortGuestbook.Web.Infrastructure.Identity;
 
 /// <summary>
-/// Verifies bcrypt hashes written by PHP <c>password_hash()</c> (<c>$2y$</c>, <c>$2a$</c>, <c>$2b$</c>) and asks Identity to
+/// Verifies bcrypt hashes written by v1 <c>password_hash()</c> (<c>$2y$</c>, <c>$2a$</c>, <c>$2b$</c>) and asks Identity to
 /// re-hash them on the next successful sign-in; everything else uses the standard Identity hasher.
 /// </summary>
 public sealed class LegacyBcryptPasswordHasher : IPasswordHasher<AppUser>

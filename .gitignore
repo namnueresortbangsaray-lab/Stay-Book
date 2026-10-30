@@ -32,11 +32,6 @@ storage/
 .vscode/
 .DS_Store
 
-# PHP version (removed in Phase 7)
-/vendor/
-/public/build/
-/.phpunit.cache/
-/.php-cs-fixer.cache
 
 # Local backups of previous env files
 .env.*

@@ -3,7 +3,7 @@ using Microsoft.Data.Sqlite;
 
 namespace ResortGuestbook.Data.Maintenance;
 
-/// <summary>Online SQLite backup with <c>VACUUM INTO</c>, keeping the newest <c>keep</c> files (PHP <c>db:backup</c>).</summary>
+/// <summary>Online SQLite backup with <c>VACUUM INTO</c>, keeping the newest <c>keep</c> files (v1 <c>db:backup</c>).</summary>
 public static class SqliteBackup
 {
     public static async Task<string> CreateAsync(string connectionString, string folder, int keep, TimeProvider time, CancellationToken cancellationToken)

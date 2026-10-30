@@ -3,7 +3,7 @@ using ResortGuestbook.Web.Services.Errors;
 
 namespace ResortGuestbook.Web.Services.Validation;
 
-/// <summary>Port of the PHP <c>RoomRequest</c>: same rules, coercion, messages and error order.</summary>
+/// <summary>Port of the v1 <c>RoomRequest</c>: same rules, coercion, messages and error order.</summary>
 public static class RoomRequest
 {
     public static RoomInput Validate(RequestInput input)
@@ -11,7 +11,7 @@ public static class RoomRequest
         var errors = new Dictionary<string, string>();
         foreach (var (key, label) in new[] { ("name", "ชื่อห้อง"), ("zone", "โซน"), ("type", "ประเภทห้อง") })
         {
-            if (Php.TrimStr(input[key]).Length == 0)
+            if (Coerce.TrimStr(input[key]).Length == 0)
             {
                 errors[key] = $"กรุณากรอก{label}";
             }
@@ -19,8 +19,8 @@ public static class RoomRequest
 
         var price = Money(input["price"]);
         var extraGuestFee = Money(input.Get("extra_guest_fee", 0L));
-        var baseGuests = (int)Php.ToInt(input.Get("base_guests", 0L));
-        var maxGuests = (int)Php.ToInt(input.Get("max_guests", 0L));
+        var baseGuests = (int)Coerce.ToInt(input.Get("base_guests", 0L));
+        var maxGuests = (int)Coerce.ToInt(input.Get("max_guests", 0L));
         if (price < 1)
         {
             errors["price"] = "ราคาต้องมากกว่า 0";
@@ -52,21 +52,21 @@ public static class RoomRequest
         }
 
         return new RoomInput(
-            Php.TrimStr(input["name"]),
-            Php.TrimStr(input["zone"]),
-            Php.TrimStr(input["type"]),
+            Coerce.TrimStr(input["name"]),
+            Coerce.TrimStr(input["zone"]),
+            Coerce.TrimStr(input["type"]),
             price,
             baseGuests,
             maxGuests,
             extraGuestFee,
-            (int)Math.Max(0, Php.ToInt(input.Get("sort_order", 0L))),
-            Php.ToBool(input.Get("is_pet_friendly", false)));
+            (int)Math.Max(0, Coerce.ToInt(input.Get("sort_order", 0L))),
+            Coerce.ToBool(input.Get("is_pet_friendly", false)));
     }
 
     /// <summary>Decimal baht to satang: <c>(int) round(max(0, (float) $value) * 100)</c>.</summary>
     public static long Money(object? value) =>
-        (long)Math.Round(Math.Max(0, Php.ToFloat(value)) * 100, MidpointRounding.AwayFromZero);
+        (long)Math.Round(Math.Max(0, Coerce.ToFloat(value)) * 100, MidpointRounding.AwayFromZero);
 
     public static bool ValidMoney(object? value, bool allowZero = true) =>
-        Php.IsNumeric(value) && (allowZero ? Php.ToFloat(value) >= 0 : Php.ToFloat(value) > 0);
+        Coerce.IsNumeric(value) && (allowZero ? Coerce.ToFloat(value) >= 0 : Coerce.ToFloat(value) > 0);
 }

@@ -3,8 +3,8 @@ using Microsoft.Net.Http.Headers;
 namespace ResortGuestbook.Web.Infrastructure.Middleware;
 
 /// <summary>
-/// The headers the PHP stack set in Nginx, with a nonce added to <c>script-src</c>. Dynamic responses are marked
-/// <c>no-store</c> (as PHP sessions did); static files keep the caching set by the static file middleware.
+/// The headers the v1 stack set in Nginx, with a nonce added to <c>script-src</c>. Dynamic responses are marked
+/// <c>no-store</c> (as v1 sessions did); static files keep the caching set by the static file middleware.
 /// </summary>
 public sealed class SecurityHeadersMiddleware(RequestDelegate next)
 {

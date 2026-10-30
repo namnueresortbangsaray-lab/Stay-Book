@@ -1,4 +1,4 @@
-// Compares a replay (BASELINE_OUT=replay node capture.mjs) with the recorded PHP baseline.
+// Compares a replay (BASELINE_OUT=replay node capture.mjs) with the recorded v1 baseline.
 // Usage: node tests/baseline/compare.mjs [replayDir]   — exits 1 when an unexpected difference is found.
 import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -69,7 +69,7 @@ for (const file of readdirSync(baselineDir).filter(f => f !== '_index.json').sor
 
 for (const [name, what, expected, actual] of differences) {
   console.log(`✗ ${name} — ${what}`);
-  if (expected !== undefined) console.log(`    PHP : ${String(expected).slice(0, 600)}`);
+  if (expected !== undefined) console.log(`    v1  : ${String(expected).slice(0, 600)}`);
   if (actual !== undefined) console.log(`    .NET: ${String(actual).slice(0, 600)}`);
 }
 console.log(differences.length ? `${differences.length} unexpected difference(s)` : 'No unexpected differences');

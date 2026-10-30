@@ -3,7 +3,7 @@ using ResortGuestbook.Web.Models.Dtos;
 
 namespace ResortGuestbook.Web.Services;
 
-/// <summary>Pricing rules carried over from the Flutter app via PHP. All amounts are satang.</summary>
+/// <summary>Pricing rules of v1. All amounts are satang.</summary>
 public static class PriceCalculator
 {
     public const long ExtraBedFeeSatang = 20_000;

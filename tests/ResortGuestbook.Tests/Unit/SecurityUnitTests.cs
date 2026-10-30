@@ -11,12 +11,12 @@ public sealed class SecurityUnitTests
     private static readonly AppUser User = new() { Id = Guid.NewGuid(), Email = "a@b.c" };
 
     [Fact]
-    public void PhpBcryptHashVerifiesAndRequestsRehash()
+    public void LegacyBcryptHashVerifiesAndRequestsRehash()
     {
         var hasher = new LegacyBcryptPasswordHasher();
-        var php = BCrypt.Net.BCrypt.HashPassword("Secret123!", 10).Replace("$2a$", "$2y$", StringComparison.Ordinal);
-        Assert.Equal(PasswordVerificationResult.SuccessRehashNeeded, hasher.VerifyHashedPassword(User, php, "Secret123!"));
-        Assert.Equal(PasswordVerificationResult.Failed, hasher.VerifyHashedPassword(User, php, "wrong"));
+        var legacy = BCrypt.Net.BCrypt.HashPassword("Secret123!", 10).Replace("$2a$", "$2y$", StringComparison.Ordinal);
+        Assert.Equal(PasswordVerificationResult.SuccessRehashNeeded, hasher.VerifyHashedPassword(User, legacy, "Secret123!"));
+        Assert.Equal(PasswordVerificationResult.Failed, hasher.VerifyHashedPassword(User, legacy, "wrong"));
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public sealed class SecurityUnitTests
     [InlineData(Roles.Housekeeping, Abilities.Booking, false)]
     [InlineData(Roles.Housekeeping, Abilities.EditGuest, false)]
     [InlineData(null, Abilities.View, false)]
-    public void AbilityMatrixMatchesPhpPolicy(string? role, string ability, bool allowed) =>
+    public void AbilityMatrixMatchesV1Policy(string? role, string ability, bool allowed) =>
         Assert.Equal(allowed, Abilities.Allows(role, ability));
 
     [Fact]

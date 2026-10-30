@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ResortGuestbook.Data.Conversions;
 
 /// <summary>
-/// Stores timestamps on SQLite as UTC TEXT in the PHP <c>gmdate('c')</c> format (<c>2026-01-31T08:15:00+00:00</c>),
-/// which sorts correctly as text and keeps data written by the PHP version readable.
+/// Stores timestamps on SQLite as UTC TEXT in the v1 <c>gmdate('c')</c> format (<c>2026-01-31T08:15:00+00:00</c>),
+/// which sorts correctly as text and keeps data written by v1 readable.
 /// </summary>
 public sealed class UtcTimestampConverter() : ValueConverter<DateTimeOffset, string>(
     value => Format(value),

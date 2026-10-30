@@ -6,7 +6,7 @@ namespace ResortGuestbook.Web.Controllers.Api.V1;
 
 public sealed class ReportsController(SnapshotService snapshots, ResortQueries queries, AppClock clock) : ApiControllerBase
 {
-    /// <summary>All bookings as CSV (UTF-8 with BOM). The range is validated like the snapshot, as in PHP.</summary>
+    /// <summary>All bookings as CSV (UTF-8 with BOM). The range is validated like the snapshot, as in v1.</summary>
     [HttpGet("reports/bookings.csv")]
     [HttpHead("reports/bookings.csv")]
     [Produces("text/csv")]

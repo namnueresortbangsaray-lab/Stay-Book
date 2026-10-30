@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace ResortGuestbook.Data.Interceptors;
 
-/// <summary>Applies the same per-connection pragmas as the PHP connection: foreign keys, WAL, and a 5 s busy timeout.</summary>
+/// <summary>Applies the same per-connection pragmas as the v1 connection: foreign keys, WAL, and a 5 s busy timeout.</summary>
 public sealed class SqlitePragmaInterceptor : DbConnectionInterceptor
 {
     private const string Pragmas = "PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;";

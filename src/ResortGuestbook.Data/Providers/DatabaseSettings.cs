@@ -26,7 +26,7 @@ public sealed record DatabaseSettings(
         configuration.GetValue("Database:AutoMigrate", true),
         configuration.GetValue("Database:Seed", false));
 
-    /// <summary>Accepts <c>Sqlite</c>/<c>sqlite</c> and <c>Postgres</c>/<c>postgresql</c>/<c>pgsql</c> (the PHP driver name).</summary>
+    /// <summary>Accepts <c>Sqlite</c>/<c>sqlite</c> and <c>Postgres</c>/<c>postgresql</c>/<c>pgsql</c> (the v1 driver name).</summary>
     public static DatabaseProvider ParseProvider(string? value) => value?.Trim().ToLowerInvariant() switch
     {
         null or "" or "sqlite" => DatabaseProvider.Sqlite,
