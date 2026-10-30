@@ -58,52 +58,52 @@ The solution keeps the requested name `ResortGuestbook`; the product shown to us
 - Loose input coercion reproduced (string numbers, `"on"`/`"yes"` booleans, `(int)` truncation) so the existing JS and any scripts keep working.
 - CSRF header stays `X-CSRF-Token` (Antiforgery `HeaderName`), so `Scripts/core/api.js` is unchanged except asset paths.
 - Antiforgery tokens are bound to the signed-in user: clients must read a fresh token after login (the dashboard does so).
-- Contract tests replay the baseline flow in-process (`WebApplicationFactory`) and compare status, message, errors, and JSON key sets/values with volatile fields masked.
+- The contract test starts the app on Kestrel (`WebApplicationFactory.UseKestrel`), replays `tests/baseline/capture.mjs` and compares status, headers, messages, errors and full JSON bodies (volatile ids and timestamps masked) with `compare.mjs`; allowed differences are listed in `tests/baseline/deviations.json`.
 
 ## 4. Parity checklist
 
-Status: ☐ todo · ☑ done and verified · ⚠ deviation (see §5)
+Status: ☑ done and verified (unit, integration and contract tests; Docker smoke test on SQLite and PostgreSQL) · ⚠ deviation (see §5)
 
 | ID | Item | Target | Status |
 |---|---|---|---|
-| W1 | GET /login (redirect if signed in) | `AuthController.Login` | ☐ |
-| W2 | POST /login (throttle 429, error 200, success 302) | `AuthController.Login(POST)` + `LoginThrottle` | ☐ |
-| W3 | POST /logout | `AuthController.Logout` | ☐ |
-| W4 | GET / dashboard shell | `DashboardController.Index` | ☐ |
-| W5 | GET /files/{id} | `FilesController.Download` | ☐ |
-| A1 | GET /api/v1/snapshot | `Api/V1/SnapshotController` | ☐ |
-| A2 | GET /api/v1/stays | `Api/V1/StaysController.Search` | ☐ |
-| A3–A5 | rooms POST/PUT/DELETE | `Api/V1/RoomsController` | ☐ |
-| A6 | PUT /api/v1/guests/{id} | `Api/V1/GuestsController` | ☐ |
-| A7–A9 | stays POST/PUT/DELETE | `Api/V1/StaysController` | ☐ |
-| A10–A12 | check-in, checkout, feedback | `Api/V1/StaysController` | ☐ |
-| A13 | attachments upload | `Api/V1/StaysController.Upload` | ☐ |
-| A14 | bookings.csv | `Api/V1/ReportsController` | ☐ |
-| N1 | /health | HealthChecks | ☐ |
-| E1 | 404 html/json, 419, 500, 401 handling | `ErrorsController`, filters | ☐ |
-| F1 | Price calculator | `Services/PriceCalculator` | ☐ |
-| F2 | Overlap rule, same-day turnover | `StayService` | ☐ |
-| F3 | Analytics/snapshot | `SnapshotService` | ☐ |
-| F4 | Guest summaries | `GuestService` | ☐ |
-| F5 | Audit log entries | `AuditService` | ☐ |
-| F6 | Role/ability matrix | `Authorization/` | ☐ |
-| F7 | Upload sniffing/limits/random names | `UploadService` | ☐ |
-| F8 | CSV format (BOM, quoting, formula guard) | `CsvWriter` | ☐ |
-| F9 | Security headers / CSP | middleware + nginx | ☐ |
-| F10 | Session lifetime, cookie flags | Identity cookie | ☐ |
-| C1 | migrate | CLI | ☐ |
-| C2 | seed | CLI | ☐ |
-| C3 | user:create | CLI | ☐ |
-| C4 | db:backup | CLI | ☐ |
-| C5 | db:transfer | CLI | ☐ |
+| W1 | GET /login (redirect if signed in) | `AuthController.Login` | ☑ |
+| W2 | POST /login (throttle 429, error 200, success 302) | `AuthController.Login(POST)` + `LoginThrottle` | ☑ |
+| W3 | POST /logout | `AuthController.Logout` | ☑ |
+| W4 | GET / dashboard shell | `DashboardController.Index` | ☑ |
+| W5 | GET /files/{id} | `FilesController.Download` | ☑ |
+| A1 | GET /api/v1/snapshot | `Api/V1/SnapshotController` | ☑ |
+| A2 | GET /api/v1/stays | `Api/V1/StaysController.Search` | ☑ |
+| A3–A5 | rooms POST/PUT/DELETE | `Api/V1/RoomsController` | ☑ |
+| A6 | PUT /api/v1/guests/{id} | `Api/V1/GuestsController` | ☑ |
+| A7–A9 | stays POST/PUT/DELETE | `Api/V1/StaysController` | ☑ |
+| A10–A12 | check-in, checkout, feedback | `Api/V1/StaysController` | ☑ |
+| A13 | attachments upload | `Api/V1/StaysController.Upload` | ☑ |
+| A14 | bookings.csv | `Api/V1/ReportsController` | ☑ |
+| N1 | /health | HealthChecks | ☑ |
+| E1 | 404 html/json, 419, 500, 401 handling | `ErrorsController`, filters | ☑ |
+| F1 | Price calculator | `Services/PriceCalculator` | ☑ |
+| F2 | Overlap rule, same-day turnover | `StayService` | ☑ |
+| F3 | Analytics/snapshot | `SnapshotService` | ☑ |
+| F4 | Guest summaries | `GuestService` | ☑ |
+| F5 | Audit log entries | `AuditService` | ☑ |
+| F6 | Role/ability matrix | `Authorization/` | ☑ |
+| F7 | Upload sniffing/limits/random names | `UploadService` | ☑ |
+| F8 | CSV format (BOM, quoting, formula guard) | `CsvWriter` | ☑ |
+| F9 | Security headers / CSP | middleware + nginx | ☑ |
+| F10 | Session lifetime, cookie flags | Identity cookie | ☑ |
+| C1 | migrate | CLI | ☑ |
+| C2 | seed | CLI | ☑ |
+| C3 | user:create | CLI | ☑ |
+| C4 | db:backup | CLI | ☑ |
+| C5 | db:transfer | CLI | ☑ |
 | C6 | import:flutter | dropped → import:php | ⚠ |
-| C7 | import:php (new) | CLI | ☐ |
-| V1 | Login view, dashboard view, error view, layouts | Razor | ☐ |
-| V2 | JS modules app/api/dom/icons/ui | `Scripts/` | ☐ |
-| V3 | Tailwind theme, fonts, images, robots | `Styles/`, `wwwroot/` | ☐ |
-| V4 | Translations app_name/location/login | `.resx` | ☐ |
-| T1 | Port PHP tests (Csv, Price, Router HEAD, StayRequest, migration parity, service lifecycle, sqlite repo) | xUnit | ☐ |
-| T2 | Smoke test | `tests/smoke/smoke-test.sh` | ☐ |
+| C7 | import:php (new) | CLI | ☑ |
+| V1 | Login view, dashboard view, error view, layouts | Razor | ☑ |
+| V2 | JS modules app/api/dom/icons/ui | `Scripts/` | ☑ |
+| V3 | Tailwind theme, fonts, images, robots | `Styles/`, `wwwroot/` | ☑ |
+| V4 | Translations app_name/location/login | `.resx` | ☑ |
+| T1 | Port PHP tests (Csv, Price, Router HEAD, StayRequest, migration parity, service lifecycle, sqlite repo) | xUnit | ☑ |
+| T2 | Smoke test | `tests/smoke/smoke-test.sh` | ☑ |
 
 ## 5. Intentional deviations
 
@@ -122,6 +122,14 @@ Status: ☐ todo · ☑ done and verified · ⚠ deviation (see §5)
 | D-11 | guest list rows leak first joined stay columns | kept (`stay_id`, `stay_status`, …) | parity — documented as quirk |
 | D-12 | no concurrency control | none added | API carries no version field; adding tokens would change the contract |
 | D-13 | audit in repository calls | `AuditService` called by services (not a SaveChanges interceptor) | actions like `check_in`/`feedback` and API-shaped JSON cannot be inferred by an interceptor |
+| D-14 | – | data layer in `src/ResortGuestbook.Data` instead of `Web/Data` | the migrations projects must reference the DbContext and the host must load them; inside Web that is a project-reference cycle |
+| D-15 | cookie `Secure` when APP_ENV=production | `Secure` follows the request scheme | the resort LAN may use plain HTTP; behind TLS (forwarded proto) cookies are Secure |
+| D-16 | error page also loaded `app.js` (which then threw) | scripts only on the dashboard | the bundle expects the dashboard markup |
+| D-17 | always Thai | Thai unless `?culture=en` or the culture cookie | the English `.resx` is available on request; the browser language is ignored, as before |
+| D-18 | unnamed inline UNIQUE/CHECK constraints | named constraints (`ck_*`, `ux_*`) plus EF FK indexes (`IX_*`) | EF requires names; the extra indexes only speed up deletes |
+| D-19 | `user:create` crashed on a duplicate email | prints an error and exits 1 | clearer CLI; other CLI failures also print one line instead of a stack trace |
+| D-20 | prompt suggested header `RequestVerificationToken` | header stays `X-CSRF-Token` | API compatibility; the JavaScript is unchanged |
+| D-21 | no Thai normalizer existed | search reproduces `LOWER() LIKE` / `ILIKE` without a normalized column | nothing to port; Thai has no letter case |
 
 ## 6. Assumptions
 
@@ -132,3 +140,7 @@ Status: ☐ todo · ☑ done and verified · ⚠ deviation (see §5)
 - A5: Existing volumes are owned by Alpine `www-data` (uid 82); a one-shot `storage-init` service chowns them for the non-root .NET user (uid 1654).
 - A6: Swagger UI (Development only) reads the built-in OpenAPI document.
 - A7: Environment variable names switch to ASP.NET Core style (`Database__Provider`, …); `SUPABASE_DB_*`, `DEMO_ADMIN_*`, `UPLOAD_MAX_BYTES`, `BACKUP_KEEP`, `SESSION_LIFETIME` keep their PHP names for easy upgrade.
+- A8: The Thai worksheet `docs/ใบงานปฏิบัติงาน_Stay_Book.docx` and its generator `tools/build_staybook_worksheet.py` are kept unchanged as a historical record of the PHP phase; regenerating them needs Python + python-docx, which are not installed here.
+- A9: The local installation was upgraded in place: the old `.env` is saved as `.env.php.bak` (git-ignored) and `.env` was regenerated from `.env.example` with the admin, Supabase and limit values carried over; the PHP containers were stopped (not removed); the PHP database was copied to the backups volume as `php-stay_book-before-dotnet-20261030.sqlite` and imported with `import:php --truncate`. The unused `stay-book_staybook_sessions` volume was left in place.
+- A10: `MapStaticAssets` is not used because the front end is built by npm outside MSBuild; `UseStaticFiles` + `asp-append-version` provide fingerprinting.
+- A11: In comments and test names the previous implementation is called "v1"; only these two history documents, the `import:php` command and the `php-original` tag name it.

@@ -5,7 +5,7 @@
 namespace ResortGuestbook.Migrations.Postgres.Migrations
 {
     /// <summary>
-    /// Enables row level security on every table with no policies, as the PHP pgsql schema did. Only the server-side
+    /// Enables row level security on every table with no policies, as the v1 PostgreSQL schema did. Only the server-side
     /// database role (table owner) can read or write; Supabase's anon/authenticated roles see nothing.
     /// </summary>
     public partial class EnableRowLevelSecurity : Migration

@@ -10,6 +10,7 @@ namespace ResortGuestbook.Web.Controllers.Api.V1;
 [Route("api/v1")]
 [TypeFilter<ApiExceptionFilter>]
 [Produces("application/json")]
+[ApiExplorerSettings(IgnoreApi = false)]
 public abstract class ApiControllerBase : ControllerBase
 {
     public const string Saved = "บันทึกเรียบร้อย";

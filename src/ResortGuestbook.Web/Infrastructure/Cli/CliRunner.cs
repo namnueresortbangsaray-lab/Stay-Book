@@ -26,6 +26,14 @@ public static class CliRunner
             return 0;
         }
 
-        return await command.RunAsync(new CliArguments(args.Skip(1)), output, error, cancellationToken);
+        try
+        {
+            return await command.RunAsync(new CliArguments(args.Skip(1)), output, error, cancellationToken);
+        }
+        catch (Exception exception) when (exception is IOException or InvalidOperationException or ArgumentException or Microsoft.Data.Sqlite.SqliteException or Npgsql.NpgsqlException)
+        {
+            await error.WriteLineAsync($"{command.Name} failed: {exception.Message}");
+            return 1;
+        }
     }
 }

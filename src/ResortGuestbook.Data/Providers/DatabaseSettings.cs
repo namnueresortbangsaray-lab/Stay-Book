@@ -45,6 +45,9 @@ public sealed record DatabaseSettings(
             Username = configuration["SUPABASE_DB_USER"] is { Length: > 0 } user ? user : "postgres",
             Password = configuration["SUPABASE_DB_PASSWORD"] ?? string.Empty,
             SslMode = Enum.Parse<SslMode>(configuration["PGSQL_SSLMODE"] is { Length: > 0 } ssl ? ssl : nameof(SslMode.Require), ignoreCase: true),
+
+            // Supabase does not use Kerberos; skipping GSS also avoids loading libgssapi in the container.
+            GssEncryptionMode = GssEncryptionMode.Disable,
         };
 
         // Supabase's transaction pooler (port 6543) cannot keep prepared statements between transactions.

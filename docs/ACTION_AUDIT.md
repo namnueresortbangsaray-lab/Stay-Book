@@ -122,4 +122,3 @@
 - ระบบปัจจุบันไม่มี route/ข้อมูลสำหรับหน้า Payments, Housekeeping, Settings และ Notifications แบบแยกหน้า จึงไม่สร้าง navigation หรือ behavior ใหม่โดยพลการ
 - Housekeeping ยังคงใช้หน้า “งานวันนี้” และ Checkout checklist ตามสิทธิ์เดิม
 - การยกเลิก Booking ปัจจุบันใช้ endpoint ลบเดิมและไม่มี API สำหรับ Undo/Restore จึงใช้ confirmation ที่ชัดเจนแทน เพื่อไม่เปลี่ยน business logic
-- โค้ด Flutter ใน `stay_book_app/` เป็น legacy client แยกจาก Web application และไม่ได้รวมใน audit รอบนี้

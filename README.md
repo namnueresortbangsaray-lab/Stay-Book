@@ -1,556 +1,142 @@
-<<<<<<< HEAD
-# Stay Book · น้ำเหนือรีสอร์ทบางเสร่
+# Stay Book · น้ำเหนือรีสอร์ท บางเสร่
 
-Production-ready web edition of the resort’s Thai guest logbook. It covers the room board, bookings, check-in/out, guest history, pricing, inspections, feedback, analytics, CSV export, attachments, staff sessions, roles, and audit history. SQLite is the default; the same application and repository layer supports PostgreSQL/Supabase.
+Staff web app for the resort's guest logbook: room board, bookings, check-in/out with room inspection, guest history and
+lifetime stats, pricing, feedback, attachments, analytics, CSV export, roles and an audit trail. The UI is Thai.
 
-คู่มือสำหรับผู้ใช้งานและผู้ดูแลระบบภาษาไทย: [docs/USAGE_TH.md](docs/USAGE_TH.md)
+Built with ASP.NET Core MVC (.NET 10), EF Core (SQLite by default, PostgreSQL/Supabase ready), ASP.NET Core Identity,
+Razor, Tailwind CSS and vanilla JavaScript, packaged for Docker.
+
+คู่มือผู้ใช้ภาษาไทย: [docs/USAGE_TH.md](docs/USAGE_TH.md)
 
 ## Quick start
 
-Requirements: Docker Desktop or Docker Engine with Compose.
+Requirements: Docker Desktop or Docker Engine with Compose v2.24+.
 
 ```bash
 cp .env.example .env
 docker compose up -d --build
 ```
 
-Open <http://localhost:8080>. The seeded development account is:
+Open <http://localhost:8080> and sign in with the seeded demo account:
 
 - Email: `admin@staybook.local`
 - Password: `ChangeMe123!`
 
-Change both values in `.env` before first production startup. If a user was already seeded, create a replacement with `php bin/console user:create`, verify it, then disable the demo user in the database.
+> **Change the demo password.** Set `DEMO_ADMIN_EMAIL`/`DEMO_ADMIN_PASSWORD` in `.env` before the first start, or create
+> a real admin with `make user-create` and deactivate the demo account. The seeder only creates the admin when it is missing.
 
-## Useful commands
+## Configuration (`.env`)
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `APP_PORT` | `8080` | Host port |
+| `ASPNETCORE_ENVIRONMENT` | `Production` | `Development` enables Swagger UI at `/swagger` and detailed logs |
+| `App__Timezone` | `Asia/Bangkok` | Display timezone ("today", default report month); data is stored in UTC |
+| `Database__Provider` | `Sqlite` | `Sqlite` or `Postgres` |
+| `Database__AutoMigrate` | `true` | Apply EF Core migrations at startup |
+| `Database__Seed` | `true` | Create the demo admin and the five rooms when missing |
+| `ConnectionStrings__Sqlite` | `Data Source=/app/storage/database/staybook.db` | SQLite file (in the `staybook_database` volume) |
+| `SUPABASE_DB_HOST/PORT/NAME/USER/PASSWORD` | empty / 5432 / postgres / postgres / empty | PostgreSQL / Supabase connection |
+| `PGSQL_SSLMODE` | `Require` | Npgsql SSL mode |
+| `SUPABASE_DB_TRANSACTION_POOLER` | `false` | Disable prepared statements (automatic on port 6543) |
+| `DEMO_ADMIN_EMAIL`, `DEMO_ADMIN_PASSWORD` | demo values | Seeded administrator |
+| `Storage__Provider` | `Local` | File storage (`storage/uploads`, never public) |
+| `UPLOAD_MAX_BYTES` | `5242880` | Attachment limit (JPEG, PNG, WebP, PDF) |
+| `SESSION_LIFETIME` | `120` | Sign-in lifetime in minutes (sliding) |
+| `BACKUP_KEEP` | `7` | SQLite backups kept by `db:backup` |
+
+## Make commands
+
+| Command | What it does |
+|---|---|
+| `make up` / `make down` / `make logs` | Start (build), stop, follow logs |
+| `make prod-up` | Production stack with Nginx in front |
+| `make dev` | `dotnet watch` + Tailwind watcher on <http://localhost:8082> |
+| `make migrate` / `make seed` | Apply migrations / seed |
+| `make user-create NAME_ARG="ชื่อ" EMAIL=a@b.c PASSWORD=... ROLE=front_desk` | Create a staff account (`admin`, `front_desk`, `housekeeping`) |
+| `make backup` | SQLite online backup into the `staybook_backups` volume |
+| `make db-transfer` | Copy all data SQLite → PostgreSQL/Supabase |
+| `make import-php` | Import an existing v1 installation (see below) |
+| `make test` / `make format-check` / `make smoke` | Tests, formatting, end-to-end smoke test |
+| `make migrations-add NAME=AddX` | Create a migration for both providers |
+
+Inside the container the CLI is `dotnet ResortGuestbook.Web.dll <command>`:
+`migrate`, `seed`, `user:create`, `db:backup`, `db:transfer --from=sqlite --to=postgres [--truncate] [--dry-run]`,
+`import:php --sqlite=<file> [--uploads=<dir>] [--truncate] [--dry-run]`.
+
+## Development without Docker
+
+Requirements: .NET 10 SDK, Node 22.
 
 ```bash
-make up                 # build and start
-make down               # stop
-make logs               # follow logs
-make migrate            # apply active-driver migrations
-make seed               # idempotent demo seed
-make test               # PHPUnit
-make lint               # PSR-12 + PHPStan
-make backup             # SQLite online backup
-make db-transfer        # SQLite -> configured PostgreSQL
+npm --prefix src/ResortGuestbook.Web ci
+npm --prefix src/ResortGuestbook.Web run build      # or run dev for watchers
+dotnet run --project src/ResortGuestbook.Web         # http://localhost:8080, Development, seeds automatically
 ```
 
-Direct equivalents are available through `docker compose exec php php bin/console ...`.
+The SQLite file and uploads go to `storage/` under the working directory.
 
-## Configuration
+### EF Core migrations
 
-All configuration comes from `.env`. Important values are `APP_ENV`, `APP_KEY`, `APP_URL`, `APP_PORT`, `DB_DRIVER`, `SQLITE_PATH`, `DB_SEED`, `SESSION_LIFETIME`, and `UPLOAD_MAX_BYTES`. PostgreSQL/Supabase uses the `SUPABASE_DB_*`, `PGSQL_SSLMODE`, and `PGSQL_EMULATE_PREPARES` values. Timestamps are stored in UTC and presented in `Asia/Bangkok`.
+One model, one migrations project per provider (`dotnet tool restore` installs `dotnet-ef`):
 
-## Data and backups
+```bash
+dotnet ef migrations add <Name> -p src/ResortGuestbook.Migrations.Sqlite -s src/ResortGuestbook.Migrations.Sqlite
+dotnet ef migrations add <Name> -p src/ResortGuestbook.Migrations.Postgres -s src/ResortGuestbook.Migrations.Postgres
+```
 
-SQLite, uploads, sessions, backups, and logs use separate named Docker volumes. Create an online SQLite backup with `make backup`; the command uses `VACUUM INTO`, writes a timestamped file to the backups volume, and retains `BACKUP_KEEP` copies. Back up the uploads volume alongside the database. To restore, stop the stack, replace the SQLite file in the database volume and restore the matching uploads snapshot, then start the stack.
+The app applies pending migrations on startup (`Database__AutoMigrate=true`) or with `make migrate`. A test fails if the
+model has changes without a migration for either provider.
 
-## Tests and quality
+## Tests
 
-`vendor/bin/phpunit`, `vendor/bin/phpstan analyse`, `vendor/bin/php-cs-fixer fix --dry-run --diff`, `npm run lint`, and `npm run build` are the local checks. CI runs quality checks against SQLite and PostgreSQL 15, then builds the Docker images. `tests/Smoke/smoke-test.sh` exercises the HTTP workflow against a running stack.
+```bash
+dotnet test
+```
+
+Runs unit tests, data tests on SQLite **and** PostgreSQL 15 (Testcontainers, needs Docker), `WebApplicationFactory`
+integration tests, and a contract test that replays the recorded HTTP behaviour of v1 (`tests/baseline/`, needs Node).
+Set `STAYBOOK_TEST_POSTGRES` to an admin connection string to use an existing PostgreSQL instead of a container.
+
+`tests/smoke/smoke-test.sh` (curl + jq) checks a running instance end to end.
+
+## Backup and restore
+
+- `make backup` writes `stay-book-YYYYmmdd-HHMMSS.sqlite` into the `staybook_backups` volume and keeps `BACKUP_KEEP` files.
+- Back up the `staybook_uploads` volume together with the database; files and rows belong together.
+- Restore: stop the stack, copy a backup over `/app/storage/database/staybook.db` in the `staybook_database` volume
+  (delete `staybook.db-wal`/`-shm`), start again.
+- `staybook_keys` holds the Data Protection keys; losing it only signs everyone out.
+
+## Upgrading an existing v1 installation
+
+The Compose project (`stay-book`), port and volume names are unchanged, so the old database (`stay_book.sqlite`) and
+uploads are already mounted. The new app uses its own file (`staybook.db`) and never writes to the old one.
+
+1. Back up the old database, e.g.
+   `docker run --rm -v stay-book_staybook_database:/db:ro -v stay-book_staybook_backups:/b busybox cp /db/stay_book.sqlite /b/`
+2. Stop the old containers, regenerate `.env` from `.env.example` (carry over your admin, Supabase and limit values),
+   then `docker compose up -d --build`.
+3. `make import-php` — copies every row (ids, bcrypt password hashes, timestamps) and checks the uploaded files; it is
+   idempotent and `--dry-run` shows the counts first. `--truncate` replaces the freshly seeded demo data.
+4. Sign in: existing passwords keep working and are re-hashed to the Identity format on first sign-in.
+   Old sessions cannot carry over, so everyone signs in once. The unused `staybook_sessions` volume can be removed.
 
 ## Production
 
-Use `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build`. Set a long random `APP_KEY`, secure credentials, `APP_ENV=production`, `DB_SEED=false`, HTTPS at the load balancer/reverse proxy, and reliable volume backups. See [deployment](docs/DEPLOYMENT.md), [architecture](docs/ARCHITECTURE.md), [API](docs/API.md), and [Supabase migration](docs/SUPABASE.md).
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): `make prod-up` runs Nginx (gzip, security headers, upload limit, asset
+caching, forwarded headers) in front of the non-root Kestrel container. For Supabase see [docs/SUPABASE.md](docs/SUPABASE.md).
 
 ## Troubleshooting
 
-- `database is locked`: confirm the database directory—not just the file—is writable by the PHP container. The app enables WAL and a 5-second busy timeout.
-- Login fails after changing `.env`: seed values only create a missing account; use `user:create` for a new credential.
-- PostgreSQL cannot connect: verify host/port, TLS mode, pooler type, and whether transaction-pooler emulated prepares are enabled.
-- Assets are missing: rebuild the images; hashed CSS/JS and `manifest.json` are produced during the Docker build.
-=======
-# Stay Book — สมุดบันทึกผู้เข้าพัก น้ำเหนือรีสอร์ทบางเสร่
-
-แอปจัดการห้องพักรายวันสำหรับรีสอร์ทขนาดเล็ก 15 ห้อง สร้างด้วย Flutter และเก็บข้อมูลด้วย SQLite บนเครื่อง
-
----
-
-## 1. แอปนี้คืออะไร
-
-Stay Book คือสมุดบันทึกผู้เข้าพักแบบดิจิทัลของ **น้ำเหนือรีสอร์ทบางเสร่** ใช้แทนสมุดจดหน้าเคาน์เตอร์ ตอบคำถามที่พนักงานต้องตอบทุกวันได้ทันที
-
-- ตอนนี้ห้องไหนว่างบ้าง ห้องไหนมีคนอยู่
-- วันนี้ใครจองไว้แล้วแต่ยังไม่มาเช็คอิน
-- ห้องไหนต้องคืนห้องวันนี้ แม่บ้านต้องเข้าเก็บห้องไหนบ้าง
-- วันนี้และเดือนนี้มีรายรับเท่าไร
-
-**เหมาะกับใคร** — รีสอร์ท เกสต์เฮาส์ หรือโฮมสเตย์ขนาดเล็กที่มีห้องไม่เกินหลักสิบห้อง มีพนักงานหน้าเคาน์เตอร์ไม่กี่คน และไม่ต้องการระบบจองออนไลน์ที่ซับซ้อน
-
-**ทำงานบนเครื่องเดียว ไม่ต้องใช้อินเทอร์เน็ต** ข้อมูลทั้งหมดอยู่ในไฟล์ฐานข้อมูล `stay_book.db` บนอุปกรณ์ที่ติดตั้งแอป ปิดแอปแล้วเปิดใหม่ข้อมูลยังอยู่ครบ
-
----
-
-## 2. วิธีติดตั้งและรัน
-
-**สิ่งที่ต้องมีก่อน**
-
-| รายการ | เวอร์ชันที่ใช้พัฒนา | ขั้นต่ำ |
-|---|---|---|
-| Flutter SDK | 3.41.2 | 3.35 ขึ้นไป |
-| Dart SDK | 3.11.0 | 3.9 ขึ้นไป |
-| อุปกรณ์ทดสอบ | Android emulator หรือมือถือจริง | Android 5.0 ขึ้นไป |
-
-> หมายเหตุเรื่องเวอร์ชัน: โค้ดใช้พารามิเตอร์ `initialValue` ของ `DropdownButtonFormField` ซึ่งมีตั้งแต่ Flutter 3.35 ถ้าเครื่องที่นำไปเปิดมี Flutter เก่ากว่านี้ ให้เปลี่ยนคำว่า `initialValue:` เป็น `value:` ในไฟล์ `lib/screens/booking_form_screen.dart` เพียงจุดเดียว
-
-**ขั้นตอน**
-
-```bash
-# 1. เข้าไปที่โฟลเดอร์โปรเจกต์
-cd "Stay Book"
-
-# 2. ตรวจว่าเครื่องพร้อมใช้งาน Flutter หรือยัง
-flutter doctor
-
-# 3. ดาวน์โหลดแพ็กเกจที่โปรเจกต์ต้องใช้ (sqflite และ path)
-flutter pub get
-
-# 4. ตรวจสอบว่าไม่มี warning หรือ error ค้างอยู่
-flutter analyze
-
-# 5. รันชุดทดสอบสูตรคิดเงิน
-flutter test
-
-# 6. เปิดแอปบนอุปกรณ์ที่เชื่อมต่ออยู่
-flutter run
-```
-
-**แพ็กเกจที่ใช้มีเพียง 2 ตัว**
-
-- `sqflite` — ฐานข้อมูล SQLite บนเครื่อง
-- `path` — ต่อ path ของไฟล์ฐานข้อมูลให้ถูกต้องตามระบบปฏิบัติการ
-
-ฟังก์ชันแปลงวันที่ไทยและการใส่ลูกน้ำหลักพันเขียนขึ้นเองในไฟล์ `lib/utils/formatters.dart` โดยไม่ใช้แพ็กเกจ `intl` เพื่อลดปัญหาเวอร์ชันชนกันเวลานำไปติดตั้งบนเครื่องอื่น
-
----
-
-## 3. วิธีใช้งานทีละหน้า
-
-แอปมีแถบเมนูด้านล่าง 4 แท็บ และมีปุ่มลอยสีเขียว **เปิดรายการเข้าพัก** อยู่มุมขวาล่างในสามแท็บแรก
-
-### 3.0 หน้าเปิดแอป
-
-เปิดแอปครั้งแรกจะเห็นโลโก้ของรีสอร์ทบนพื้นเขียวไล่เฉดพร้อมข้อความ "กำลังเตรียมข้อมูลห้องพัก..." ประมาณหนึ่งวินาทีครึ่ง
-
-หน้านี้ไม่ได้ใส่ไว้เพื่อความสวยอย่างเดียว ระหว่างนั้นระบบกำลังเปิดไฟล์ฐานข้อมูล และถ้าเป็นการเปิดแอปครั้งแรกจริง ๆ ก็จะสร้างตารางกับใส่ข้อมูลห้อง 15 ห้องให้ด้วย ถ้าเข้าหน้าผังห้องทันทีผู้ใช้จะเห็นวงกลมหมุนบนจอเปล่า ซึ่งดูเหมือนแอปค้าง
-
-### 3.1 แท็บผังห้อง (หน้าแรก)
-
-หน้าที่ใช้บ่อยที่สุด แสดงห้องทั้งหมดเป็นตาราง 3 ช่องต่อแถว แบ่งกลุ่มตามโซน
-
-- **การ์ดหัวเรื่องสีเขียว** ด้านบนแสดงตราของรีสอร์ท ชื่อกิจการ วันที่ของวันนี้แบบไทย และป้ายสรุปจำนวนห้องว่าง (จุดเขียว) ห้องไม่ว่าง (จุดส้ม) พร้อมจำนวนห้องทั้งหมด
-- **หัวข้อแต่ละโซน** บอกว่าโซนนั้นว่างกี่ห้องจากทั้งหมดกี่ห้อง เช่น `ว่าง 7 / 10`
-- **การ์ดสีเขียว** คือห้องว่าง แสดงเลขห้อง คำว่า "ว่าง" และราคาต่อคืน
-- **การ์ดสีส้ม** คือห้องที่มีคนพัก แสดงเลขห้อง ชื่อผู้เข้าพัก และจำนวนคืนที่เหลือ
-  - `อีก 2 คืน` หมายถึงยังพักต่ออีก 2 คืน
-  - `ออกก่อน 12:00` หมายถึงวันนี้คือวันเช็คเอาท์ ต้องคืนห้องก่อนเที่ยง
-  - `เลยกำหนด N วัน` หมายถึงเลยวันเช็คเอาท์มาแล้วแต่ยังไม่ได้กดเช็คเอาท์ในระบบ
-
-**กดตรงไหนได้บ้าง**
-
-- แตะการ์ดห้องว่าง เปิดฟอร์มเปิดรายการเข้าพักโดยเลือกห้องนั้นไว้ให้แล้ว
-- แตะการ์ดห้องไม่ว่าง เปิดแผ่นข้อมูลด้านล่าง แสดงชื่อเต็ม เบอร์โทร วันเช็คอิน-เช็คเอาท์พร้อมเวลากำกับ จำนวนผู้เข้าพัก เตียงเสริม ยอดเงิน และมีปุ่ม **เช็คเอาท์ห้องนี้**
-
-### 3.2 แท็บตารางเข้าพัก
-
-ใช้ดูรายการเข้าพักของแต่ละวัน และเป็นที่ที่ใช้กดเช็คอิน เช็คเอาท์ และลบรายการ
-
-- **แถบเลือกวัน** ด้านบน กดลูกศรซ้ายขวาเพื่อเลื่อนทีละวัน หรือแตะตรงกลางเพื่อเปิดปฏิทินเลือกวันที่
-  - ถ้าตรงกับวันปัจจุบันจะเขียนว่า "วันนี้" ถัดไปเป็น "พรุ่งนี้" ย้อนกลับเป็น "เมื่อวาน" นอกจากนั้นแสดงวันที่ไทยเต็ม
-- **สวิตช์ดูประวัติทั้งหมด** เปิดแล้วจะแสดงทุกรายการรวมที่เช็คเอาท์ไปแล้ว และปิดการเลื่อนวันชั่วคราวเพราะไม่ได้กรองตามวันแล้ว
-- **การ์ดแต่ละใบ** แสดงเลขห้อง ชื่อ เบอร์โทร ป้ายสถานะ ช่วงวันที่ จำนวนคืน จำนวนคน ยอดเงิน และหมายเหตุ
-- **ปุ่มในการ์ดเปลี่ยนตามสถานะ**
-  - รอเช็คอิน มีปุ่ม **เช็คอิน**
-  - เช็คอินแล้ว มีปุ่ม **เช็คเอาท์**
-  - เช็คเอาท์แล้ว ไม่มีปุ่ม เพราะจบขั้นตอนแล้ว
-- **ลบรายการ** ปัดการ์ดไปทางซ้าย จะมีพื้นสีส้มขึ้นมา แล้วระบบจะถามยืนยันก่อนลบจริงเสมอ
-
-ทุกการกระทำจะมีข้อความแจ้งผลขึ้นมาด้านล่างจอ
-
-### 3.3 แท็บภาพรวม
-
-สรุปตัวเลขของวันปัจจุบัน
-
-- **การ์ดอัตราการเข้าพัก** เปอร์เซ็นต์ตัวใหญ่ พร้อมแถบความคืบหน้าและจำนวนห้องว่าง/ไม่ว่าง
-- **ตารางตัวเลข 4 ช่อง** เช็คอินแล้ววันนี้ / ยังไม่เช็คอิน / ครบกำหนดออกวันนี้ / รายรับวันนี้
-- **แถบรายรับสะสมเดือนนี้**
-- **รายชื่อรอเช็คอินวันนี้** แต่ละรายมีปุ่มเช็คอินกดได้จากหน้านี้เลย ถ้าเช็คอินครบทุกคนแล้วจะขึ้นข้อความว่าไม่มีคิวค้าง
-
-### 3.4 แท็บห้องพัก
-
-ใช้ตั้งค่าห้อง ทำนาน ๆ ครั้ง
-
-- แสดงห้องทั้งหมดเรียงตามลำดับที่ตั้งไว้ พร้อมราคา จำนวนคนพื้นฐาน จำนวนคนสูงสุด และค่าคนเพิ่ม
-- ปุ่มดินสอ = แก้ไขห้อง / ปุ่มถังขยะ = ลบห้อง
-- ปุ่มลอย **เพิ่มห้อง** เปิดกล่องฟอร์มให้กรอก ชื่อห้อง โซน ประเภท ราคา จำนวนคนพื้นฐาน จำนวนคนสูงสุด และค่าคนเพิ่ม
-- ก่อนลบห้อง ระบบจะนับว่าห้องนั้นมีประวัติการเข้าพักกี่รายการ แล้วเตือนว่าประวัติทั้งหมดจะถูกลบไปด้วย
-
-### 3.5 หน้าฟอร์มเปิดรายการเข้าพัก
-
-เปิดได้จากปุ่มลอยในสามแท็บแรก หรือจากการแตะการ์ดห้องว่างในผังห้อง
-
-ลำดับการกรอก
-
-1. **ชื่อผู้เข้าพัก** ต้องกรอก และต้องยาวอย่างน้อย 2 ตัวอักษร
-2. **เบอร์โทรศัพท์** พิมพ์ได้เฉพาะตัวเลขกับขีด ต้องมีตัวเลขอย่างน้อย 9 หลัก
-3. **ช่วงวันเข้าพัก** แตะกล่องวันที่เพื่อเปิดปฏิทินแบบเลือกช่วง เลือกวันเช็คอินถึงวันเช็คเอาท์ในครั้งเดียว ถ้าเลือกวันเดียวกันทั้งสองฝั่ง ระบบจะดันวันออกไปเป็นวันถัดไปให้ เพราะการเข้าพักอย่างน้อยต้องเป็นหนึ่งคืน
-4. ใต้ปฏิทินมีข้อความกำกับเวลาเช็คอินและเช็คเอาท์ ดึงมาจาก `ResortConfig`
-5. **เลือกห้อง** ดรอปดาวน์แสดง **เฉพาะห้องที่ว่างตลอดช่วงวันที่เลือก** ถ้าเปลี่ยนวันแล้วห้องที่เลือกไว้ไม่ว่าง ระบบจะล้างค่าที่เลือกและแจ้งเตือนทันที
-6. **จำนวนผู้เข้าพัก** ปุ่มลบและบวก กดเกินความจุสูงสุดของห้องไม่ได้
-7. **ขอเตียงเสริม** ติ๊กแล้วบวก 200 บาท คิดครั้งเดียว
-8. **หมายเหตุ** ไม่บังคับ
-9. **เช็คอินทันที** เปิด = แขกมาถึงแล้ว บันทึกเป็นเช็คอินและเปลี่ยนห้องเป็นไม่ว่างทันที / ปิด = จองล่วงหน้า ห้องยังว่างจนกว่าจะกดเช็คอิน
-
-**กล่องสรุปค่าใช้จ่าย** แสดงแยกบรรทัดให้เห็นที่มาของเงินทุกบาท และคำนวณใหม่ทันทีทุกครั้งที่เปลี่ยนห้อง วัน จำนวนคน หรือติ๊กเตียงเสริม
-
-```
-ค่าห้อง             500 x 2 คืน              1,000
-ผู้เข้าพักคนที่ 3    100 x 1 ท่าน x 2 คืน       200
-เตียงเสริม          คิดครั้งเดียว ไม่คูณคืน      200
---------------------------------------------------
-รวมทั้งสิ้น                                  1,400
-```
-
-บรรทัดค่าคนเพิ่มและเตียงเสริมจะถูกซ่อนเมื่อไม่มีค่าใช้จ่ายส่วนนั้น
-
----
-
-## 4. ขั้นตอนการทำงานทั่วไป
-
-### สถานการณ์ที่ 1 — ลูกค้าโทรมาจองล่วงหน้า
-
-1. กดปุ่มลอย **เปิดรายการเข้าพัก**
-2. กรอกชื่อและเบอร์โทรของผู้จอง
-3. แตะกล่องวันที่ เลือกวันเช็คอินและวันเช็คเอาท์ตามที่ลูกค้าแจ้ง
-4. เลือกห้องจากดรอปดาวน์ ห้องที่โผล่ในรายการคือห้องที่ว่างจริงตลอดช่วงนั้นแล้ว ไม่ต้องเปิดสมุดเช็คซ้ำ
-5. ใส่จำนวนคน ติ๊กเตียงเสริมถ้าลูกค้าขอ
-6. **ปิด** สวิตช์เช็คอินทันที เพราะลูกค้ายังไม่มา
-7. แจ้งยอดรวมให้ลูกค้าทราบจากกล่องสรุป แล้วกดบันทึก
-
-รายการจะไปอยู่ในตารางเข้าพักของวันนั้นด้วยสถานะ "รอเช็คอิน" และห้องยังคงแสดงเป็นว่างในผังห้อง แต่จะไม่มีใครจองทับช่วงวันนั้นได้อีก
-
-### สถานการณ์ที่ 2 — ลูกค้ามาถึงหน้าเคาน์เตอร์
-
-**กรณีจองไว้แล้ว**
-
-1. ไปแท็บ **ภาพรวม** ดูรายชื่อรอเช็คอินวันนี้ หรือไปแท็บ **ตารางเข้าพัก** ที่วันนี้
-2. หาชื่อลูกค้า แล้วกดปุ่ม **เช็คอิน**
-3. ห้องจะเปลี่ยนเป็นสีส้มในผังห้องทันที
-
-**กรณี walk-in ไม่ได้จองมาก่อน**
-
-1. ไปแท็บ **ผังห้อง** แตะการ์ดห้องว่างที่ต้องการ
-2. ฟอร์มจะเปิดขึ้นพร้อมเลือกห้องนั้นไว้ให้แล้ว
-3. กรอกข้อมูล แล้ว **เปิด** สวิตช์เช็คอินทันที
-4. กดบันทึก ห้องจะกลายเป็นไม่ว่างทันที
-
-### สถานการณ์ที่ 3 — ลูกค้าเช็คเอาท์
-
-1. ไปแท็บ **ผังห้อง** แตะการ์ดห้องสีส้มของลูกค้า
-2. ตรวจยอดเงินจากแผ่นข้อมูลที่เด้งขึ้นมา
-3. กด **เช็คเอาท์ห้องนี้**
-4. ห้องกลับเป็นสีเขียวพร้อมขายใหม่ทันที และรายการจะย้ายไปอยู่ในประวัติ
-
-หรือทำจากแท็บตารางเข้าพักโดยกดปุ่มเช็คเอาท์บนการ์ดก็ได้ผลเหมือนกัน
-
-### สถานการณ์ที่ 4 — ลูกค้ายกเลิกการจอง
-
-1. ไปแท็บ **ตารางเข้าพัก** เลื่อนไปวันที่ลูกค้าจองไว้
-2. ปัดการ์ดของลูกค้าไปทางซ้าย
-3. อ่านข้อความยืนยันแล้วกด **ลบรายการ**
-4. ช่วงวันนั้นจะว่างให้คนอื่นจองได้ทันที
-
----
-
-## 5. ตารางราคาห้อง
-
-| ห้อง | โซน | ประเภท | ราคา/คืน | คนพื้นฐาน | คนสูงสุด | ค่าคนเพิ่ม/คน/คืน |
-|---|---|---|---|---|---|---|
-| 1-5 | อาคารหลัก | เตียงคู่ | 500 | 2 | 3 | 100 |
-| 6-10 | อาคารหลัก | เตียงเดี่ยว | 400 | 2 | 2 | ไม่มี |
-| B1-B2 | โซน B | เตียงใหญ่ | 800 | 4 | 4 | ไม่มี |
-| C1-C3 | โซน C | มินิมอล | 600 | 2 | 2 | ไม่มี |
-
-**รวม 15 ห้อง**
-
-ห้องโซน B ตั้งจำนวนคนพื้นฐานไว้ที่ 4 คน เพื่อให้ราคาคงที่ 800 บาทไม่ว่าจะพัก 3 หรือ 4 ท่าน ซึ่งตรงกับวิธีขายจริงของห้องเตียงใหญ่
-
----
-
-## 6. กฎการคิดเงิน
-
-```
-จำนวนคืน  = วันเช็คเอาท์ ลบ วันเช็คอิน
-คนที่เกิน  = max(0, จำนวนผู้เข้าพัก ลบ คนพื้นฐานของห้อง)
-
-ยอดรวม = (ราคาห้อง + ค่าคนเพิ่ม x คนที่เกิน) x จำนวนคืน
-       + (ขอเตียงเสริม ? 200 : 0)
-```
-
-**จุดที่ต้องเข้าใจให้ตรงกัน**
-
-1. **ค่าเตียงเสริมอยู่นอกวงเล็บ จึงไม่คูณจำนวนคืน** เพราะเป็นค่าบริการยกเตียงเข้าห้องครั้งเดียวตลอดการเข้าพัก ถ้าเผลอเอาไปคูณจำนวนคืน ตัวอย่างข้างล่างจะกลายเป็น 1,600 บาทแทนที่จะเป็น 1,400 บาท
-2. **ค่าคนเพิ่มคูณจำนวนคืน** เพราะเป็นค่าที่พักของคนเพิ่มในแต่ละคืน
-3. **ต้องใช้ max(0, ...)** กันกรณีพนักงานกรอกจำนวนคนน้อยกว่าคนพื้นฐานของห้อง ถ้าไม่กัน ค่าคนเพิ่มจะติดลบแล้วไปหักยอดรวมจนเก็บเงินขาด
-
-**ตัวอย่างจริง — ห้อง 3 พัก 3 ท่าน 2 คืน ขอเตียงเสริม**
-
-| รายการ | วิธีคิด | จำนวนเงิน |
-|---|---|---|
-| ค่าห้อง | 500 x 2 คืน | 1,000 |
-| ผู้เข้าพักคนที่ 3 | 100 x 1 ท่าน x 2 คืน | 200 |
-| เตียงเสริม | 200 คิดครั้งเดียว | 200 |
-| **รวมทั้งสิ้น** | | **1,400** |
-
-ตัวอย่างนี้ถูกเขียนเป็นชุดทดสอบไว้ในไฟล์ `test/price_and_format_test.dart` รันตรวจได้ด้วยคำสั่ง `flutter test`
-
-**ตัวอย่างที่สอง — ห้อง B1 พัก 4 ท่าน 3 คืน ไม่เอาเตียงเสริม**
-
-คนพื้นฐานของห้อง B1 คือ 4 ท่าน จึงไม่มีคนเกิน ยอดรวมคือ 800 x 3 = 2,400 บาท
-
----
-
-## 7. โครงสร้างฐานข้อมูล
-
-ไฟล์ฐานข้อมูลชื่อ `stay_book.db` เปิด `PRAGMA foreign_keys = ON` ทุกครั้งที่เปิดฐานข้อมูล เพื่อไม่ให้มีรายการเข้าพักที่อ้างถึงห้องซึ่งไม่มีอยู่จริง
-
-### ตาราง rooms — ข้อมูลห้องพัก
-
-| คอลัมน์ | ชนิด | เก็บอะไร |
-|---|---|---|
-| `id` | INTEGER PK | เลขที่ระบุห้อง ฐานข้อมูลออกให้เอง |
-| `name` | TEXT | ชื่อหรือเลขห้องที่ใช้เรียก เช่น 1, B2 |
-| `zone` | TEXT | โซนของห้อง ใช้จัดกลุ่มในผังห้อง |
-| `type` | TEXT | ประเภทห้อง เช่น เตียงคู่ เตียงเดี่ยว |
-| `price` | REAL | ราคาต่อคืนสำหรับผู้เข้าพักไม่เกิน base_guests |
-| `base_guests` | INTEGER | จำนวนคนที่ราคาปกติครอบคลุมอยู่แล้ว |
-| `max_guests` | INTEGER | ความจุสูงสุดของห้อง ใช้จำกัดปุ่มเพิ่มจำนวนคน |
-| `extra_guest_fee` | REAL | ค่าคนเพิ่มต่อคนต่อคืน คิดเฉพาะส่วนที่เกิน base_guests |
-| `status` | INTEGER | 0 = ว่าง, 1 = มีผู้เข้าพัก |
-| `sort_order` | INTEGER | ลำดับการแสดงผลในผังห้อง |
-
-**ทำไมต้องมี sort_order** — ชื่อห้องเก็บเป็นข้อความ ถ้าเรียงตามชื่อแบบตัวอักษร ห้อง 10 จะไปแทรกอยู่ต่อจากห้อง 1 ทันที กลายเป็นลำดับ 1, 10, 2, 3 การมีคอลัมน์ลำดับแยกต่างหากจึงเป็นทางเดียวที่ทำให้ผังห้องเรียงตามที่คนใช้งานคาดหวัง และยังเปิดทางให้เจ้าของจัดลำดับห้องตามผังจริงของรีสอร์ทได้ในอนาคต
-
-### ตาราง stays — รายการเข้าพัก
-
-| คอลัมน์ | ชนิด | เก็บอะไร |
-|---|---|---|
-| `id` | INTEGER PK | เลขที่ระบุรายการ |
-| `guest_name` | TEXT | ชื่อผู้เข้าพัก |
-| `phone` | TEXT | เบอร์โทรติดต่อ |
-| `room_id` | INTEGER FK | อ้างถึง rooms.id |
-| `check_in_date` | TEXT | วันเช็คอิน รูปแบบ yyyy-MM-dd |
-| `check_out_date` | TEXT | วันเช็คเอาท์ รูปแบบ yyyy-MM-dd (วันที่ออก ไม่นับเป็นคืนที่พัก) |
-| `guests` | INTEGER | จำนวนผู้เข้าพัก |
-| `extra_bed` | INTEGER | 0 หรือ 1 เพราะ SQLite ไม่มีชนิดข้อมูลบูลีน |
-| `total_amount` | REAL | ยอดรวมที่คิดไว้ตอนเปิดรายการ |
-| `status` | INTEGER | 0 = รอเช็คอิน, 1 = เช็คอินแล้ว, 2 = เช็คเอาท์แล้ว |
-| `note` | TEXT | หมายเหตุ |
-| `created_at` | TEXT | เวลาที่สร้างรายการ แบบ ISO 8601 |
-
-**ทำไมเก็บวันที่เป็นข้อความ** — SQLite ไม่มีชนิดข้อมูลวันที่ในตัว รูปแบบ yyyy-MM-dd ถูกเลือกเพราะเรียงลำดับด้วยการเทียบข้อความแล้วได้ลำดับเวลาที่ถูกต้องเสมอ ใช้เครื่องหมายน้อยกว่ามากกว่าเปรียบเทียบช่วงวันได้ตรง ๆ และยังส่งให้ฟังก์ชัน `julianday()` กับ `substr()` ของ SQLite ใช้ต่อได้ทันที
-
-**ทำไมไม่เก็บจำนวนคืน** — จำนวนคืนคำนวณจากวันเช็คอินกับวันเช็คเอาท์ได้เสมอ ถ้าเก็บซ้ำไว้เป็นอีกคอลัมน์ วันใดที่มีการแก้วันที่แล้วลืมอัปเดตคอลัมน์นั้น ฐานข้อมูลจะมีข้อมูลสองชุดที่ขัดแย้งกันเองโดยไม่มีใครรู้ตัว การคำนวณสดทุกครั้งจึงปลอดภัยกว่า และต้นทุนการคำนวณแทบเป็นศูนย์
-
-**ทำไมเก็บ total_amount ทั้งที่คำนวณได้** — ต่างจากจำนวนคืน ตรงที่ยอดเงินขึ้นกับราคาห้อง ณ วันที่เปิดรายการ ถ้าเจ้าของขึ้นราคาห้องในภายหลัง ประวัติเก่าต้องยังแสดงยอดที่เก็บจริงในวันนั้น ไม่ใช่ยอดที่คิดจากราคาใหม่
-
----
-
-## 8. ตรรกะการทำงานของระบบ
-
-ส่วนนี้เขียนละเอียดเพราะเป็นหัวใจของการนำเสนอ
-
-### 8.1 วงจรสถานะ
-
-ระบบมีสถานะสองชุดที่ต้องเดินคู่กันเสมอ คือสถานะของ **ห้อง** กับสถานะของ **รายการเข้าพัก**
-
-```
-   [ ห้องว่าง status 0 ]
-            |
-            |  เปิดรายการ ปิดสวิตช์เช็คอินทันที (จองล่วงหน้า)
-            v
-   [ รายการ: รอเช็คอิน 0 ]     ห้องยังว่าง ขายวันอื่นได้ แต่ช่วงวันนี้ถูกกันไว้แล้ว
-            |
-            |  กดเช็คอิน           <-- หรือเปิดรายการโดยเปิดสวิตช์เช็คอินทันที
-            v
-   [ รายการ: เช็คอินแล้ว 1 ]  +  [ ห้อง status 1 ไม่ว่าง ]
-            |
-            |  กดเช็คเอาท์
-            v
-   [ รายการ: เช็คเอาท์แล้ว 2 ] +  [ ห้อง status 0 กลับมาว่าง ]
-```
-
-อธิบายเป็นคำพูด
-
-1. **ห้องว่าง (rooms.status = 0)** คือสถานะตั้งต้น ห้องขายได้
-2. **จองล่วงหน้า** สร้างแถวใน stays ด้วย status = 0 แต่ **ไม่แตะ** rooms.status เพราะแขกยังไม่มา ห้องยังใช้งานได้จนถึงวันเข้าพัก การจองทำหน้าที่เพียงกันช่วงวันไม่ให้คนอื่นจองทับ
-3. **เช็คอิน** เปลี่ยน stays.status เป็น 1 และ rooms.status เป็น 1 พร้อมกัน
-4. **เช็คเอาท์** เปลี่ยน stays.status เป็น 2 และคืน rooms.status เป็น 0 ห้องกลับมาขายได้
-5. **ลบรายการที่กำลังเช็คอินอยู่** ต้องคืน rooms.status เป็น 0 ด้วย ไม่งั้นห้องจะค้างสถานะไม่ว่างโดยไม่มีรายการไหนอ้างถึงอีกเลย และจะไม่มีทางปลดสถานะนั้นได้
-
-**ทำไมทุกขั้นตอนที่แตะสองตารางต้องอยู่ใน Transaction** — ขั้นตอนที่ 3, 4 และ 5 ต่างต้องเขียนสองตารางในงานเดียวกัน ถ้าคำสั่งแรกสำเร็จแล้วคำสั่งที่สองพลาด ข้อมูลจะขัดแย้งกันทันที เช่นแขกเช็คอินแล้วแต่ผังห้องยังขึ้นว่าง ทำให้มีคนจองซ้อนเข้าห้องเดียวกันได้ Transaction ทำให้ทั้งกลุ่มคำสั่งสำเร็จพร้อมกันหรือย้อนกลับทั้งหมด ไม่มีสภาพครึ่ง ๆ กลาง ๆ
-
-### 8.2 วิธีตรวจวันจองทับซ้อน
-
-หัวใจของระบบจองคือคำถามว่า "ช่วงวันที่ลูกค้าขอ ชนกับใครหรือเปล่า"
-
-```sql
-SELECT COUNT(*) FROM stays
-WHERE room_id = ?
-  AND status IN (0, 1)
-  AND check_in_date  < ?   -- วันเช็คเอาท์ที่กำลังจะจอง
-  AND check_out_date > ?   -- วันเช็คอินที่กำลังจะจอง
-```
-
-ถ้าผลลัพธ์มากกว่า 0 แปลว่าชนกัน ห้ามบันทึก
-
-**อ่านเงื่อนไขอย่างไร** — ช่วงเวลาสองช่วงทับกัน ก็ต่อเมื่อ *ช่วงเดิมเริ่มก่อนที่ช่วงใหม่จะจบ* และ *ช่วงเดิมจบหลังจากที่ช่วงใหม่เริ่ม* ถ้าเงื่อนไขใดเงื่อนไขหนึ่งไม่จริง แสดงว่าช่วงหนึ่งจบไปก่อนอีกช่วงจะเริ่ม จึงไม่ทับกัน
-
-ลองดูกรณีจริง สมมติห้อง 3 มีคนจองไว้ 10-13 ส.ค.
-
-| ช่วงที่ขอจองใหม่ | ผล | เหตุผล |
-|---|---|---|
-| 8-10 ส.ค. | จองได้ | คนใหม่ออกวันที่ 10 คนเก่าเข้าวันที่ 10 พอดี ไม่มีคืนไหนซ้อนกัน |
-| 13-15 ส.ค. | จองได้ | คนเก่าออกวันที่ 13 ตอนเที่ยง คนใหม่เข้าบ่ายโมงวันเดียวกัน |
-| 9-11 ส.ค. | **จองไม่ได้** | คืนวันที่ 10 ซ้อนกัน |
-| 12-14 ส.ค. | **จองไม่ได้** | คืนวันที่ 12 ซ้อนกัน |
-| 11-12 ส.ค. | **จองไม่ได้** | อยู่ในช่วงเดิมทั้งหมด |
-| 9-14 ส.ค. | **จองไม่ได้** | คร่อมช่วงเดิมทั้งช่วง |
-
-**ทำไมใช้เครื่องหมายน้อยกว่าและมากกว่า ไม่ใช่แบบเท่ากับด้วย** — เพราะแขกคนเก่าคืนห้องก่อนเที่ยง แขกคนใหม่เข้าได้ตั้งแต่บ่ายโมงของวันเดียวกัน วันที่ต่อกันพอดีจึงต้องจองได้ ถ้าใช้แบบเท่ากับด้วย ระบบจะปฏิเสธการจองแบบต่อวันซึ่งเป็นกรณีที่เกิดขึ้นทุกวันในธุรกิจจริง และจะทำให้รีสอร์ทเสียรายได้ไปเปล่า ๆ
-
-**ทำไมนับเฉพาะสถานะ 0 กับ 1** — รายการที่เช็คเอาท์ไปแล้ว (สถานะ 2) เป็นประวัติ ไม่ได้ครองห้องอยู่แล้ว ถ้านับด้วยจะกลายเป็นว่าห้องที่เคยมีคนพักจะจองซ้ำในช่วงวันเดิมไม่ได้ตลอดไป
-
-**ระบบตรวจสองจังหวะ** ตรรกะชุดเดียวกันนี้ถูกใช้สองที่
-
-1. **ตอนเติมดรอปดาวน์เลือกห้อง** (`getRoomsForBooking`) ใช้ `NOT EXISTS` กับเงื่อนไขเดียวกัน จึงกรองห้องที่จองไม่ได้ออกตั้งแต่แรก ผู้ใช้ไม่มีโอกาสเลือกผิด
-2. **ตอนกดบันทึก** (`hasOverlap`) ตรวจซ้ำอีกครั้ง เพราะระหว่างที่ฟอร์มเปิดค้างไว้ อาจมีการเปิดรายการอื่นทับช่วงวันเดียวกันไปแล้ว ด่านนี้คือด่านสุดท้ายที่กันข้อมูลชนกันจริง ๆ
-
-**ตอนแก้ไขรายการเดิม** ต้องเพิ่มเงื่อนไข `AND id != ?` เข้าไปด้วย ไม่งั้นรายการที่กำลังแก้จะถูกนับว่าชนกับตัวเอง แล้วจะบันทึกไม่ผ่านทั้งที่ไม่ได้เปลี่ยนวันเลย
-
-### 8.3 ทำไมหน้าผังห้องต้องใช้ LEFT JOIN
-
-```sql
-FROM rooms r
-LEFT JOIN stays s ON s.room_id = r.id AND s.status = 1
-```
-
-หน้าผังห้องต้องแสดงห้อง **ทุกห้อง** ทั้งว่างและไม่ว่าง แต่ห้องว่างไม่มีแถวคู่ในตาราง stays เลย ถ้าใช้ `INNER JOIN` ห้องว่างทั้งหมดจะหายไปจากผลลัพธ์ เหลือแต่ห้องที่มีคนพัก ซึ่งผิดวัตถุประสงค์ของหน้านี้ทั้งหมด
-
-อีกจุดที่พลาดกันบ่อยคือ **เงื่อนไข s.status = 1 ต้องอยู่ใน ON ไม่ใช่ WHERE** ถ้าย้ายไปไว้ใน WHERE แถวของห้องว่างที่ join ไม่ติดจะมีค่าเป็น NULL แล้วถูกเงื่อนไขนั้นกรองทิ้งไปด้วย ผลคือ LEFT JOIN จะทำงานเหมือน INNER JOIN ทุกประการ
-
-### 8.4 วิธีที่หน้าจอรู้ว่าข้อมูลเปลี่ยน
-
-โปรเจกต์นี้ไม่ใช้ Provider หรือ Riverpod เพราะสถานะร่วมของทั้งแอปมีเพียงเรื่องเดียว คือ "ข้อมูลในฐานข้อมูลเปลี่ยนไปแล้ว" จึงใช้กลไกที่ Flutter มีมาให้อยู่แล้ว
-
-```dart
-// lib/app_state.dart
-final ValueNotifier<int> dbRevision = ValueNotifier<int>(0);
-void notifyDbChanged() => dbRevision.value++;
-```
-
-- ทุกเมธอดของ `DatabaseHelper` ที่ **เพิ่ม แก้ หรือลบ** ข้อมูล จะเรียก `notifyDbChanged()` หลังทำงานเสร็จ การวางไว้ในชั้นฐานข้อมูลทำให้ไม่มีทางที่หน้าจอไหนจะลืมเรียก
-- ทุกหน้าจอที่แสดงข้อมูลถูกห่อด้วย `ValueListenableBuilder<int>` ที่ฟัง `dbRevision` ข้างในเป็น `FutureBuilder` ที่ดึงข้อมูลจากฐานข้อมูล
-- เมื่อค่าขยับ ทุกหน้าที่ฟังอยู่จะ build ใหม่ ได้ Future ตัวใหม่ แล้วไปอ่านข้อมูลรอบใหม่เอง
-
-ผลคือเช็คอินจากหน้าภาพรวม แล้วผังห้องกับตารางเข้าพักที่ค้างอยู่ในแท็บอื่นจะอัปเดตตามเองทันที โดยไม่ต้องส่งสัญญาณหากันเอง
-
----
-
-## 9. โครงสร้างไฟล์โปรเจกต์
-
-```
-lib/
-├── main.dart                     จุดเริ่มต้น ประกอบธีมเข้ากับหน้าจอแรก
-├── config.dart                   ค่าคงที่ของกิจการ ชื่อ เวลาเช็คอิน ค่าเตียงเสริม และที่อยู่ไฟล์รูป
-├── app_state.dart                ตัวแจ้งเตือนให้ทุกหน้าจอโหลดข้อมูลใหม่
-├── theme/
-│   └── app_theme.dart            AppColors ทุกสี และ ThemeData ของทั้งแอป
-├── utils/
-│   └── formatters.dart           วันที่ไทย จำนวนเงิน จำนวนคืน เขียนเองไม่ใช้ intl
-├── models/
-│   ├── room.dart                 Room และ RoomWithStay (ห้องพร้อมแขกคนปัจจุบัน)
-│   ├── stay.dart                 Stay, StayWithRoom และ PriceBreakdown สูตรคิดเงิน
-│   └── dashboard_data.dart       ตัวเลขสรุปทั้งหมดของหน้าภาพรวม
-├── db/
-│   └── database_helper.dart      คำสั่ง SQL ทั้งหมดของแอปอยู่ที่นี่ที่เดียว
-├── widgets/
-│   ├── room_tile.dart            การ์ดห้องหนึ่งใบในผังห้อง
-│   ├── stay_card.dart            การ์ดรายการเข้าพักหนึ่งใบ
-│   └── common_widgets.dart       SectionTitle, StatusChip, StatCard, EmptyState, AppCard, BrandMark
-└── screens/
-    ├── splash_screen.dart        หน้าเปิดแอป แสดงโลโก้ระหว่างเตรียมฐานข้อมูล
-    ├── home_shell.dart           โครงหลัก NavigationBar 4 แท็บ และปุ่มลอย
-    ├── room_map_screen.dart      ผังห้องพัก
-    ├── stay_list_screen.dart     ตารางเข้าพักรายวันและประวัติ
-    ├── dashboard_screen.dart     ภาพรวมของวันนี้
-    ├── manage_rooms_screen.dart  จัดการห้องพัก
-    └── booking_form_screen.dart  ฟอร์มเปิดรายการเข้าพัก
-
-assets/images/                    โลโก้ของรีสอร์ท ประกาศไว้ใน pubspec.yaml
-├── logo.webp                     โลโก้สีเขียว พื้นโปร่งใส ใช้บนพื้นอ่อน
-├── logo_white.webp               โลโก้สีขาว พื้นโปร่งใส ใช้บนพื้นเขียวเข้ม
-├── logo_square.webp              โลโก้จัตุรัสพื้นทึบ อ่านคำว่าบางเสร่ได้ชัด
-└── logo_banner.webp              ป้ายชื่อแนวนอนพร้อมสโลแกน
-
-test/
-└── price_and_format_test.dart    ทดสอบสูตรคิดเงินและฟังก์ชันแปลงข้อมูล
-```
-
-### เรื่องโลโก้และการวางแบรนด์
-
-ไฟล์โลโก้ต้นฉบับอยู่ในโฟลเดอร์ `img/` ส่วนที่แอปใช้จริงถูกคัดลอกมาไว้ที่ `assets/images/` และเปลี่ยนชื่อเป็นภาษาอังกฤษ เพราะชื่อไฟล์ภาษาไทยมีโอกาสมีปัญหาเวลาแพ็กลง APK
-
-โลโก้ถูกใช้สี่ที่
-
-1. **หน้าเปิดแอป** — โลโก้สีขาวขนาดใหญ่บนพื้นเขียวไล่เฉด แสดงชื่อรีสอร์ทในตัวโลโก้เต็ม ๆ
-2. **แถบหัวเรื่องทุกหน้า** — ตราเล็กมุมซ้ายคู่กับชื่อกิจการ
-3. **การ์ดหัวหน้าผังห้อง** — ตราคู่กับวันที่และยอดสรุปห้อง
-4. **หัวกล่องสรุปเงินในฟอร์มจอง** — ทำให้กล่องยอดเงินดูเป็นเอกสารของกิจการเวลาหันจอให้ลูกค้าดู
-
-วิดเจ็ต `BrandMark` เป็นคนเลือกไฟล์ให้เองตามพื้นหลังที่ไปวาง เพราะโลโก้สีเขียวจะจมหายไปกับพื้นเขียว ส่วนโลโก้สีขาวก็มองไม่เห็นบนพื้นขาว ผู้เรียกแค่บอกว่ากำลังวางบนพื้นสว่างหรือพื้นเขียว
-
-โดยค่าเริ่มต้น `BrandMark` จะครอบตัดเฉพาะส่วนภาพบ้านของโลโก้ ตัดบรรทัดชื่อที่อยู่ด้านล่างของไฟล์ทิ้ง เพราะทุกที่ที่ใช้ตรามีชื่อรีสอร์ทเป็นตัวหนังสือกำกับอยู่แล้ว และตัวหนังสือในภาพขนาดสามสิบกว่าพิกเซลก็เล็กเกินกว่าจะอ่านออก
-
-**ไอคอนแอปบนหน้าจอมือถือ** ถูกสร้างจาก `logo_square.webp` แปลงเป็น PNG ห้าขนาดวางไว้ในโฟลเดอร์ `android/app/src/main/res/mipmap-*/ic_launcher.png` และชื่อแอปที่แสดงใต้ไอคอนตั้งไว้ที่ `android:label` ในไฟล์ `AndroidManifest.xml`
-
-**กฎการวางโค้ดของโปรเจกต์นี้**
-
-1. **คำสั่ง SQL ทุกบรรทัดอยู่ใน database_helper.dart เท่านั้น** หน้าจอเรียกผ่านเมธอดของคลาสนี้เสมอ เวลาโครงสร้างตารางเปลี่ยนจะรู้ทันทีว่าต้องแก้ที่ไหน และเวลาไล่หาสาเหตุข้อมูลผิดก็มีที่ให้ดูแค่ไฟล์เดียว
-2. **ค่าสีทุกค่าอยู่ใน AppColors** ไม่มีการเขียนค่าสีดิบในไฟล์หน้าจอ ถ้าอยากเปลี่ยนโทนทั้งแอปจะแก้จุดเดียวจบ
-3. **สูตรคิดเงินอยู่ใน PriceBreakdown ที่เดียว** ทั้งกล่องสรุปบนจอและยอดที่บันทึกลงฐานข้อมูลใช้ตรรกะชุดเดียวกัน จึงไม่มีทางคิดเงินไม่ตรงกัน
-4. **คอมเมนต์บอกเหตุผล ไม่ใช่บอกสิ่งที่โค้ดเขียนไว้อยู่แล้ว**
-
-### Widget ที่ใช้ในโปรเจกต์นี้
-
-`Image.asset`, `GridView.builder`, `GridView.count`, `ListView.builder`, `ListView`, `Form` พร้อม validator ทุกช่อง, `TextFormField`, `DropdownButtonFormField`, `showDateRangePicker`, `showDatePicker`, `showModalBottomSheet`, `AlertDialog`, `SnackBar`, `Dismissible`, `LinearProgressIndicator`, `NavigationBar`, `IndexedStack`, `FloatingActionButton.extended`, `Switch`, `SwitchListTile`, `CheckboxListTile`, `FutureBuilder`, `ValueListenableBuilder`, `InkWell`, `Row`, `Column`, `Padding`, `Expanded`, `Spacer`, `ClipRect`, `FadeTransition`, `ScaleTransition`, `AnimationController`
-
----
-
-## 10. ข้อจำกัดที่รู้อยู่
-
-**1. ข้อมูลอยู่บนเครื่องเดียว ไม่ซิงก์ข้ามอุปกรณ์**
-ฐานข้อมูลเป็นไฟล์ในพื้นที่ส่วนตัวของแอป ถ้าติดตั้งบนแท็บเล็ตสองเครื่อง ข้อมูลจะแยกกันคนละชุดโดยสิ้นเชิง เหมาะกับรีสอร์ทที่ใช้เครื่องเดียวประจำเคาน์เตอร์
-
-**2. ถอนการติดตั้งแอปแล้วข้อมูลหาย**
-ระบบยังไม่มีฟังก์ชันสำรองหรือส่งออกข้อมูล ถ้าจะย้ายเครื่องต้องบันทึกข้อมูลใหม่เอง
-
-**3. ยังไม่มีระบบผู้ใช้และสิทธิ์**
-ใครเปิดแอปได้ก็ลบรายการได้ ยังไม่มีการบันทึกว่าใครเป็นคนทำรายการไหน
-
-**4. แก้ไขรายการเข้าพักที่บันทึกไปแล้วไม่ได้**
-ถ้าลูกค้าขอเปลี่ยนวันหรือเปลี่ยนห้อง ต้องลบรายการเดิมแล้วเปิดใหม่ อย่างไรก็ตามชั้นฐานข้อมูลเตรียมทางไว้แล้ว เมธอด `getRoomsForBooking` และ `hasOverlap` รับพารามิเตอร์ `excludeStayId` เพื่อไม่ให้รายการที่กำลังแก้ถูกนับว่าชนกับตัวเอง เหลือเพียงต่อหน้าจอเข้ากับเมธอดเหล่านี้
-
-**5. ยังไม่มีการพักห้องเพื่อซ่อมบำรุง**
-สถานะห้องมีแค่ว่างกับไม่ว่าง ถ้าห้องเสียต้องจดไว้ข้างนอกเอง
-
-**6. รายรับคิดตามวันเช็คอิน ไม่ได้เฉลี่ยรายคืน**
-รายการที่พักคร่อมเดือนจะถูกนับเป็นรายรับของเดือนที่เช็คอินทั้งก้อน ซึ่งเพียงพอสำหรับการดูภาพรวม แต่ยังไม่ใช่ตัวเลขทางบัญชี
-
-**ถ้าจะขยายต่อ ควรทำตามลำดับนี้**
-
-1. **เพิ่มการแก้ไขรายการเข้าพัก** งานเหลือน้อยที่สุดเพราะชั้นฐานข้อมูลรองรับไว้แล้ว
-2. **เพิ่มการสำรองข้อมูล** คัดลอกไฟล์ stay_book.db ออกไปเก็บ หรือส่งออกเป็น CSV
-3. **เพิ่มสถานะห้องปิดปรับปรุง** เพิ่มค่าสถานะที่ 2 ในตาราง rooms แล้วกรองออกจากดรอปดาวน์เลือกห้อง
-4. **ถ้าต้องใช้หลายเครื่องพร้อมกัน** ต้องย้ายจาก SQLite บนเครื่องไปเป็นฐานข้อมูลบนเซิร์ฟเวอร์ ข้อดีของโครงสร้างปัจจุบันคือคำสั่ง SQL ทั้งหมดถูกรวมไว้ในไฟล์เดียว การเปลี่ยนไปเรียก API แทนจึงกระทบเฉพาะ database_helper.dart โดยไม่ต้องแก้หน้าจอสักหน้า
->>>>>>> 83edc2fa1939f340b5ead9c09d648445d4402005
+- **Container not healthy:** `docker compose logs web`. `storage-init` fixes volume ownership before each start.
+- **Port in use:** set `APP_PORT` in `.env`.
+- **Cannot sign in:** five failed attempts from one address block sign-in for 15 minutes; the same limit locks an account.
+- **Upload rejected (422):** only JPEG, PNG, WebP and PDF up to `UPLOAD_MAX_BYTES`, detected from the file content.
+- **Styles missing when running locally:** run `npm --prefix src/ResortGuestbook.Web run build`.
+- **Supabase connection errors:** see the IPv6 and pooler notes in [docs/SUPABASE.md](docs/SUPABASE.md).
+
+## Documentation
+
+[API](docs/API.md) · [Architecture](docs/ARCHITECTURE.md) · [Deployment](docs/DEPLOYMENT.md) · [Supabase](docs/SUPABASE.md) ·
+[Project knowledge](docs/PROJECT_KNOWLEDGE.md) · [Migration plan and deviations](docs/DOTNET_MIGRATION_PLAN.md)

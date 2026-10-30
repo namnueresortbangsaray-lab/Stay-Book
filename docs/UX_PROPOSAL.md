@@ -141,5 +141,5 @@ Dedicated housekeeping states (`Dirty → Cleaning → Inspected → Ready`), pa
 - Role-aware controls so housekeeping sees inspection/upload work without dead-end administrative actions.
 - Hash-based navigation for Back/Forward and direct workspace links.
 - Responsive bottom navigation, scroll-safe dialogs, visible inline validation, retry states, and duplicate-submit protection.
-- Existing blue/white resort palette, typography, information density, PHP stack, and vanilla JavaScript architecture retained.
+- Existing blue/white resort palette, typography, information density, server-rendered stack, and vanilla JavaScript architecture retained.
 

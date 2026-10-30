@@ -1,26 +1,59 @@
 # Deployment
 
-## SQLite production
-
-1. Copy `.env.example` to `.env`; set `APP_ENV=production`, a long random `APP_KEY`, the public HTTPS `APP_URL`, secure admin credentials, and `DB_SEED=true` only for the first boot.
-2. Run `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build`.
-3. Confirm `docker compose ps` reports healthy PHP and Nginx, sign in, change/create production credentials, then set `DB_SEED=false`.
-4. Terminate TLS at a trusted reverse proxy and forward only the web port. Do not expose PHP-FPM, volumes, or the PostgreSQL test profile.
-5. Schedule `php bin/console db:backup` and an uploads-volume snapshot. Test restores regularly.
-
-The PHP container runs non-root workers. Its entrypoint repairs ownership on runtime volume directories, waits for PostgreSQL when selected, applies migrations, and conditionally seeds. SQLite WAL requires write access to both the database file and its directory.
-
-## PostgreSQL verification
-
-For a local PostgreSQL 15 verification environment:
+## Single host with Docker
 
 ```bash
-docker compose --profile pgtest up -d postgres
-docker compose run --rm -e DB_DRIVER=pgsql -e SUPABASE_DB_HOST=postgres -e PGSQL_SSLMODE=disable php php bin/console migrate
+cp .env.example .env          # set DEMO_ADMIN_PASSWORD, APP_PORT, Supabase values if used
+make prod-up                  # docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 ```
 
-Use an isolated database for tests. Return `DB_DRIVER=sqlite` after verification.
+Services:
 
-## Operations
+| Service | Image | Role |
+|---|---|---|
+| `storage-init` | busybox | One-shot: creates the storage folders and gives them to uid 1654 |
+| `web` | `docker/Dockerfile` | Kestrel on 8080, non-root `app` user, ICU + tzdata, healthcheck on `/health` (no curl needed) |
+| `nginx` | nginx 1.27 | Public port `${APP_PORT}`; gzip, security headers, 6 MB upload limit, dotfiles denied, long caching for versioned assets, `X-Forwarded-*` |
+| `postgres` | postgres 15 | Profile `pgtest` only |
 
-Inspect logs with `docker compose logs -f php nginx`. Deploy immutable rebuilt images when source or dependencies change. The application never relies on a source bind mount in production. Long-lived cache headers apply only to content-hashed assets. Review the audit table for mutations and keep application logs free of guest payloads.
+`web` publishes no port in production; Nginx forwards to it and `App__TrustForwardedHeaders=true` lets the app see the
+client IP (used by the login throttle and the audit log) and scheme.
+
+## TLS
+
+Terminate TLS in front of Nginx (a reverse proxy, Cloudflare Tunnel or a load balancer) or add a `listen 443 ssl`
+server block with your certificates to `docker/nginx/default.conf`. Cookies follow the request scheme, so they are
+`Secure` over HTTPS. HSTS is sent by the app in Production on HTTPS requests.
+
+## Volumes
+
+| Volume | Mount | Contents |
+|---|---|---|
+| `staybook_database` | `/app/storage/database` | `staybook.db` (+ `-wal`, `-shm`) |
+| `staybook_uploads` | `/app/storage/uploads` | Attachments (random names, served only through `/files/{id}`) |
+| `staybook_backups` | `/app/storage/backups` | `db:backup` output |
+| `staybook_logs` | `/app/storage/logs` | Serilog rolling files (14 days) |
+| `staybook_keys` | `/app/storage/keys` | Data Protection keys (cookies, antiforgery) |
+
+The keys are stored unencrypted on the volume; restrict host access to it. Back up `database` and `uploads` together.
+
+## Updating
+
+```bash
+git pull
+make prod-up
+```
+
+Migrations run at startup. Watch `docker compose logs web` until the container is healthy.
+
+## Health and logs
+
+- `GET /health` → `ok` (checks the database), used by both container healthchecks.
+- Request logs and errors go to stdout and `storage/logs/app-*.log`; bodies, passwords and guest data are not logged.
+
+## Security checklist
+
+- Change `DEMO_ADMIN_PASSWORD` or replace the demo admin.
+- Keep `.env` out of version control; it is in `.gitignore` and `.dockerignore`.
+- Use HTTPS when the system is reachable outside the resort network.
+- Give staff the least role they need: `housekeeping` can only view, check out and attach files.

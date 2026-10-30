@@ -1,26 +1,69 @@
 # Architecture
 
-## Request lifecycle
+## Solution
 
-Nginx exposes only `public/`, applies security headers, serves hashed assets, and forwards PHP requests to PHP-FPM. `public/index.php` boots configuration and dependency bindings, the router matches the request, then session authentication and CSRF checks run before a controller. Controllers validate/authorize, call a service, and return either a server-rendered response or the standard JSON envelope.
-
-```text
-Browser → Nginx → Router → Session/CSRF → Controller → Service → Repository → PDO
-                                                           ↘ Audit log
+```
+src/ResortGuestbook.Web                 ASP.NET Core MVC app, API, Razor views, CLI, front-end sources
+src/ResortGuestbook.Data                EF Core model, provider setup, Identity store, seed, transfer/import/backup
+src/ResortGuestbook.Migrations.Sqlite   EF Core migrations for SQLite
+src/ResortGuestbook.Migrations.Postgres EF Core migrations for PostgreSQL (+ row level security)
+tests/ResortGuestbook.Tests             unit, data (both providers), integration, baseline contract
+tests/baseline                          recorded HTTP behaviour of v1, replay + compare scripts
+tests/smoke                             curl/jq end-to-end test
 ```
 
-Controllers do not contain SQL. Domain decisions such as overlap checks, ID-verification gating, inspection validation, money calculations, and audit events live in services. Only `app/Repositories/Database` performs application queries. Migrations, transfer, seed, and backup are infrastructure operations under `app/Database`.
+The data layer is a separate library because each migrations project must reference the `DbContext` and the web app
+must load both migrations assemblies; with the context inside the web project those references would form a cycle.
 
-## Database portability
+## Request pipeline
 
-`DB_DRIVER` selects a PDO connection and dialect. Both migration folders have the same filenames and equivalent columns. UUIDs are generated in PHP, money is integer satang, timestamps are UTC, booleans and JSON are normalized at repository boundaries, and half-open stay ranges use `check_in < other_checkout AND check_out > other_checkin`. SQLite enables foreign keys, WAL, and a busy timeout on every connection.
+```
+Kestrel (behind Nginx in production)
+ → ForwardedHeaders → Serilog request log → ExceptionHandler → HSTS (prod) → SecurityHeaders (CSP nonce)
+ → StatusCodePages (re-execute /errors/{code}) → ResponseCompression → HttpMethodOverride (_method)
+ → StaticFiles → Routing → RequestLocalization (th-TH) → Authentication → Authorization (fallback: signed in)
+ → RateLimiter → MVC: AutoValidateAntiforgeryToken (419) → RequireAbility (403) → controller → service → DbContext
+```
 
-## Security boundaries
+Controllers are thin: they read the request (`RequestInput` keeps v1's loose JSON/form coercion), call one service and
+return the JSON envelope (`ApiResults`) or a view. `ApiExceptionFilter` maps `ValidationException` (422),
+`NotFoundException` (404) and duplicate-key `DbUpdateException` (409) to envelopes. Unknown routes fall back to a 404
+endpoint, so they never trigger a login redirect.
 
-PHP file sessions are HttpOnly and SameSite=Lax (Secure in production), regenerated at login, and expire by configuration. Login failures are throttled by IP. Every mutation requires a CSRF token, server-side validation, role policy, prepared statements, and audit entry. Uploads are MIME-sniffed, randomly named, stored outside `public/`, and only delivered after authentication using `X-Accel-Redirect` to an Nginx `internal` location.
+## Domain services
 
-PostgreSQL migrations enable RLS on every application table and define no public policy. The browser never receives Supabase credentials; the backend database role is the only database client.
+| Service | Responsibility |
+|---|---|
+| `ResortQueries` | Read models with v1 shape and ordering (rooms, joined stays, guest summaries, attachments) |
+| `StayService` | Create/edit with validation, capacity, pet and overlap rules, guest lookup by phone, pricing; check-in; checkout with inspection; feedback; delete |
+| `RoomService`, `GuestService` | Room CRUD with cascade delete; guest profile update |
+| `SnapshotService` | Date-range validation and analytics |
+| `PriceCalculator`, `CsvWriter` | Pricing rules; CSV with BOM, formula guard and v1 quoting |
+| `UploadService` + `IFileStorage` | Signature sniffing, size limit, random names, private storage |
+| `AuditService` | `audit_logs` rows with before/after JSON for create, update, delete, check_in, check_out, feedback |
+
+## Data
+
+One EF Core model, two providers, chosen by `Database:Provider`; only `ResortGuestbook.Data` and DI registration know
+which. Tables, columns, CHECK constraints and indexes keep the v1 schema. On SQLite, GUIDs are lowercase TEXT and
+timestamps UTC TEXT (`…+00:00`) via value converters; PostgreSQL uses `uuid`, `timestamptz`, `date`, `jsonb`.
+Interceptors set `created_at`/`updated_at` and SQLite pragmas (foreign keys, WAL, 5 s busy timeout). `deleted_at` is a
+global query filter; deletes are physical, as before. Search uses `lower(col) LIKE lower(@p)` on SQLite and `ILIKE` on
+PostgreSQL (`StaySearchExtensions`).
+
+## Security
+
+- Identity cookie auth (HttpOnly, SameSite=Lax, Secure over HTTPS, sliding 120 min) with a custom store over `users`;
+  roles come from `users.role`. bcrypt hashes from v1 verify and are re-hashed on sign-in.
+- Per-IP failed-login throttle (5 in 15 min) plus Identity lockout; rate limits on login and writes.
+- Antiforgery on every non-GET request (`X-CSRF-Token` header / `_token` field).
+- Ability policies: `admin` everything, `front_desk` everything but user management, `housekeeping` view/checkout/upload.
+- CSP with a per-request script nonce, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`.
+- Uploads outside `wwwroot`, delivered only by `FilesController` after authorization, with `nosniff`.
+- PostgreSQL: RLS enabled on all tables without policies.
 
 ## Front end
 
-Pages are server-rendered shells enhanced by one ES module bundle. The responsive five-section interface mirrors the Flutter navigation. Fetch uses a CSRF-aware wrapper; loading, empty, success, and failure states are visible. Native dialogs provide focus management and keyboard dismissal. Tailwind is compiled at build time, and views read `public/build/manifest.json` to resolve content-hashed assets.
+Razor renders the login page and the dashboard shell; `Scripts/app.js` (bundled by esbuild) loads `/api/v1/snapshot`
+and renders the six sections. Tailwind compiles `Styles/app.css` against `Views/**/*.cshtml` and `Scripts/**/*.js`.
+Assets are cache-busted with `asp-append-version`.

@@ -1,12 +1,10 @@
-# Baseline (characterization) of the PHP version
+# Baseline (characterization) of v1
 
-Captured on 2026-10-30 from tag `php-original`, run in an isolated Compose project
-(`docker compose -p staybook-baseline up -d --build`, `APP_PORT=8090`, empty volumes, `DB_SEED=true`),
-with two extra users created through the PHP CLI:
+Captured on 2026-10-30 from the v1 release (see `docs/PROJECT_KNOWLEDGE.md`), run in an isolated Compose project
+on port 8090 with empty volumes and the seed enabled, plus a `housekeeping@staybook.local` / `Housekeeping123!` user
+(role housekeeping). Recording command:
 
 ```bash
-docker compose -p staybook-baseline exec -T php su-exec www-data php bin/console user:create --name=แม่บ้าน --email=housekeeping@staybook.local --password=Housekeeping123! --role=housekeeping
-docker compose -p staybook-baseline exec -T php su-exec www-data php bin/console user:create --name=Front --email=front@staybook.local --password=FrontDesk12345! --role=front_desk
 BASE_URL=http://localhost:8090 node tests/baseline/capture.mjs
 ```
 
@@ -24,14 +22,14 @@ the two. Fields that legitimately differ between runs:
 | `created_at`, `updated_at`, `inspected_at` | wall clock (UTC, format `YYYY-MM-DDTHH:MM:SS+00:00`) |
 | `stored_name` | 48 random hex chars + extension |
 | `today`, `analytics.start/end` for the default range, CSV filename date | current Bangkok date |
-| `set-cookie` | session cookie name/value (`PHPSESSID` → ASP.NET Core cookie) |
+| `set-cookie` | session cookie name/value |
 | HTML `bytes` | markup is rebuilt in Razor |
 
 ## Observed behaviour worth knowing
 
 - Every mutation is answered with message `บันทึกเรียบร้อย` and HTTP 200 (no 201/204).
 - Upload errors (missing file, wrong type, too large) return **500** `ระบบไม่สามารถบันทึกข้อมูลได้`
-  because `UploadService` throws `RuntimeException` (see deviation D-07 in `docs/DOTNET_MIGRATION_PLAN.md`).
+  in v1 (see deviation D-07 in `docs/DOTNET_MIGRATION_PLAN.md`).
 - `PUT /api/v1/stays/{unknown}` returns **422** `{id: ไม่พบ Booking}`, unlike rooms/guests (404).
 - The CSV export validates `start`/`end` but lists **all** stays, not only the range.
 - `/files/{id}` without a session redirects (302 `/login`) because only `/api/*` paths get JSON 401.

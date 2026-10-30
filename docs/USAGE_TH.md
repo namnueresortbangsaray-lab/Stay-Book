@@ -134,10 +134,10 @@ docker compose up -d --build
 - **front_desk** — จัดการงานหน้าฟรอนต์ เช่น Booking ลูกค้า เช็กอิน เช็กเอาต์ และแบบประเมิน
 - **housekeeping** — ดูผังห้อง แนบหลักฐาน และบันทึกผลตรวจห้องตามสิทธิ์ที่กำหนด
 
-สร้างผู้ใช้ใหม่จากคอนเทนเนอร์ PHP:
+สร้างผู้ใช้ใหม่จากคอนเทนเนอร์ web:
 
 ```bash
-docker compose exec php php bin/console user:create --name="ชื่อพนักงาน" --email="staff@example.com" --password="รหัสผ่านที่ปลอดภัย" --role=front_desk
+docker compose exec web dotnet ResortGuestbook.Web.dll user:create --name="ชื่อพนักงาน" --email="staff@example.com" --password="รหัสผ่านที่ปลอดภัย" --role=front_desk
 ```
 
 ค่าของ `--role` ใช้ `admin`, `front_desk` หรือ `housekeeping`
@@ -147,7 +147,7 @@ docker compose exec php php bin/console user:create --name="ชื่อพน�
 สร้างสำเนาฐานข้อมูล SQLite แบบออนไลน์ด้วยคำสั่ง:
 
 ```bash
-docker compose exec php php bin/console db:backup
+docker compose exec web dotnet ResortGuestbook.Web.dll db:backup
 ```
 
 ระบบเก็บสำเนาล่าสุดตามจำนวน `BACKUP_KEEP` ใน `.env` ควรสำรอง Docker volume ของไฟล์แนบควบคู่กับฐานข้อมูลเสมอ เพราะฐานข้อมูลและไฟล์แนบอยู่คนละ volume
@@ -166,7 +166,7 @@ docker compose ps               # ดูสถานะคอนเทนเน�
 ## 15. แก้ปัญหาเบื้องต้น
 
 - **เปิดเว็บไม่ได้** — ตรวจสอบว่า Docker Desktop ทำงานอยู่ แล้วรัน `docker compose ps` และ `docker compose logs`
-- **คอนเทนเนอร์ `php` restart ตลอดหรือ Nginx ยังไม่เริ่ม** — รัน `docker compose logs php`; เวอร์ชันนี้ตั้ง PHP-FPM ให้เขียน log ลง `storage/logs` ซึ่งผู้ใช้ `www-data` เขียนได้แล้ว หากใช้ image เก่าให้รัน `docker compose up -d --build` อีกครั้ง
+- **คอนเทนเนอร์ `web` ไม่ขึ้นสถานะ healthy** — รัน `docker compose logs web`; บริการ `storage-init` จะปรับสิทธิ์ volume ให้ผู้ใช้ของแอป (uid 1654) ก่อนเริ่มทุกครั้ง หากเพิ่งอัปเกรดให้รัน `docker compose up -d --build` อีกครั้ง
 - **พอร์ต 8080 ถูกใช้งาน** — เปลี่ยน `APP_PORT` ใน `.env` เช่น `APP_PORT=8088` แล้วเปิดด้วยพอร์ตใหม่
 - **เข้าสู่ระบบไม่ได้** — ตรวจสอบอีเมล/รหัสผ่าน หากลองผิดครบ 5 ครั้ง ต้องรอ 15 นาที
 - **ไม่พบไฟล์ CSS/JavaScript** — รัน `docker compose up -d --build` เพื่อสร้าง assets ใหม่
