@@ -1197,7 +1197,7 @@ if ($('#app')) {
     }
   });
 
-  // Unsaved-changes guard on the form drawers (Esc goes through the same check).
+  // Unsaved-changes guard on the form dialogs (Esc goes through the same check).
   $$('form[data-guard]').forEach(form => form.addEventListener('input', () => { form.dataset.dirty = 'true'; }));
   $$('dialog').forEach(dialog => dialog.addEventListener('cancel', event => {
     if (dialog.id === 'confirm-dialog') return;

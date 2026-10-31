@@ -280,10 +280,14 @@
     .action-menu-item { @apply h-12; }
   }
 
-  /* ---------- Dialogs: centred modal for confirmations, side drawer for forms ---------- */
+  /* ---------- Dialogs: centred modal for forms and confirmations, side drawer for the guest profile and phone menu ---------- */
   dialog { @apply border border-line bg-raised p-0 text-ink; max-height: calc(100dvh - 2rem); }
   dialog::backdrop { background: rgb(var(--c-scrim) / 0.5); }
   dialog.modal { @apply m-auto rounded-lg shadow-pop; width: min(calc(100vw - 2rem), var(--dialog-w, 30rem)); }
+  /* Long forms keep their header and action bar in view; only the body scrolls. */
+  dialog[open].modal,
+  dialog[open].modal > form { @apply flex flex-col; }
+  dialog.modal > form { @apply min-h-0 flex-1; }
   dialog.drawer {
     @apply m-0 ml-auto rounded-none border-y-0 border-r-0 shadow-pop;
     height: 100dvh;
@@ -308,9 +312,6 @@
   /* Phones: confirmations and small forms rise as bottom sheets, drawers fill the screen; action bars stay in thumb reach. */
   @media (max-width: 639px) {
     dialog.modal { @apply mb-0 mt-auto rounded-b-none border-x-0 border-b-0; width: 100vw; max-width: 100vw; max-height: calc(100dvh - env(safe-area-inset-top) - 0.75rem); }
-    dialog[open].modal,
-    dialog[open].modal > form { @apply flex flex-col; }
-    dialog.modal > form { @apply min-h-0 flex-1; }
     dialog.drawer { width: 100vw; max-width: 100vw; }
     dialog.drawer .dialog-header { padding-top: calc(1rem + env(safe-area-inset-top)); }
     .dialog-actions > .btn { @apply flex-1; }

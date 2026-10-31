@@ -138,7 +138,7 @@ and disabled styles.
 | Figures | `.kpi-strip` + `.kpi` (Today); `.figure-list` (Reports) | Real numbers only |
 | Table | `.table-wrap` + `.data-table`, `.sort-btn`, `.cell-title`, `.cell-sub`, `.table-toolbar`, `.pagination`; `renderTable()` | Sticky header, sort, highlight, column menu, 25 rows per page, ↑/↓ row navigation; `.stack` turns rows into cards below 640px (`mobileHide` columns drop); `tabletHide` columns hide at 640–1279px |
 | Menu | `openDropdownMenu(trigger, items)` → `.action-menu`, `.action-menu-item` | Headings, separators, `menuitemradio`/`checkbox`; arrow keys, Escape returns focus |
-| Dialog | `dialog.modal` (confirm, room, action) and `dialog.drawer` (booking, guest) with `.dialog-header/-body/-actions` | Native `<dialog>`: focus trap, Escape, focus restore; `form[data-guard]` asks before discarding edits |
+| Dialog | `dialog.modal`, centred, for every form and confirmation (booking, room, zone, room type, stay action, confirm, command palette, file viewer); `dialog.drawer` only for the guest profile and the phone menu; `.dialog-header/-body/-actions` | Native `<dialog>`: focus trap, Escape, focus restore; header and action bar stay in view while the body scrolls; `form[data-guard]` asks before discarding edits |
 | Command palette | `#command-dialog` | Ctrl/⌘K |
 | Toast | `toast(message, tone)` → `.toast.tone-*` in `.toast-region` (`aria-live`) | Icon + short text + close button; 4 s (errors 6 s), paused while hovered or focused. Field errors never go into a toast |
 | Error summary | `errorSummary(form, errors)` in `app.js` → `.alert.tone-danger[role=alert]` at the top of the form | Shown and focused when a submit returns two or more field errors; each item focuses its field. Inline `.field-error` messages stay |
