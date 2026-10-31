@@ -46,6 +46,11 @@ Checks run in this order: 401 → 419 → 403 → 422/404/409.
 | POST | `/api/v1/room-types` | manage_rooms | Create type: `name` (`กรุณากรอกชื่อประเภทห้อง`) plus the room price and guest fields and rules |
 | PUT / DELETE | `/api/v1/room-types/{id}` | manage_rooms | Update or rename (rooms of the type follow; their prices do not change) / delete (422 while used) |
 | GET | `/files/{id}` | any (signed in) | Download an attachment |
+| GET | `/api/v1/users` | manage_users | Staff accounts: `id, name, email, role, active, locked_until, created_at, updated_at` (never hashes or stamps) |
+| POST | `/api/v1/users` | manage_users | Create: `name` (≥ 2), `email`, `role` (`admin`/`front_desk`/`housekeeping`), `password`, `confirm_password` |
+| PUT | `/api/v1/users/{id}` | manage_users | Update `name, email, role, active` (accounts are deactivated, never deleted) |
+| POST | `/api/v1/users/{id}/password` | manage_users | Set a new password (`password`, `confirm_password`); also lifts a sign-in lockout |
+| POST | `/api/v1/account/password` | any (signed in) | Change own password: `current_password`, `password`, `confirm_password` |
 
 Abilities: `admin` all; `front_desk` all except user management; `housekeeping` view, checkout, upload.
 
@@ -72,3 +77,12 @@ Rooms still store `zone` and `type` as text, so `/api/v1/rooms`, the snapshot an
 unchanged. The lists only define the choices: saving a room with a name that is not listed adds it; renaming an entry
 renames it on its rooms in the same transaction (each room audited); an entry in use cannot be deleted; a duplicate name
 is 409. Audit entity types: `room_zone`, `room_type`.
+
+## Staff accounts (added after v1)
+
+Passwords need at least `Auth__PasswordMinLength` characters (default 10) and no composition rules. Admins cannot
+change their own role or deactivate themselves (422), and the last active admin cannot be demoted or deactivated (422
+`ต้องมีผู้ดูแลระบบที่ใช้งานอยู่อย่างน้อย 1 คน`). A new password, role, email or status gets a new security stamp, so the
+user's other sessions end at the next check (every `Auth__SessionCheckSeconds`, default 60); changing your own
+password keeps the current session. Duplicate email: 409. Audit entity type `user` (`create`, `update`, `password`),
+without hashes.

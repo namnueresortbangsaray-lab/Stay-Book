@@ -37,6 +37,9 @@ Display TZ Asia/Bangkok, store UTC.
 - API contract (paths, statuses, Thai messages, snake_case JSON and field order, envelope) must keep matching `tests/baseline/`;
   intended differences go into `tests/baseline/deviations.json` and the deviation table.
 - Audit every create/update/delete/check_in/check_out; no personal data in logs.
+- Staff accounts (D-25): `UserService` only; never delete users (deactivate), keep the self-lockout and last-admin guards,
+  give a new security stamp on password/role/email/status changes, never put hashes or stamps in DTOs or audit rows.
+  Keep `OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync` in the cookie events.
 - Guest satisfaction feedback is not recorded by staff (D-24): no feedback endpoint or UI. The `feedbacks` table and
   existing rows stay (read as `feedback_rating` / `average_feedback`) for a future guest-facing form.
 - `TreatWarningsAsErrors`, code style enforced in build, `dotnet format` clean. One type per file, file-scoped namespaces.

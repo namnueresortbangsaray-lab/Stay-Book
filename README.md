@@ -43,6 +43,8 @@ Open <http://localhost:8080> and sign in with the seeded demo account:
 | `Storage__Provider` | `Local` | File storage (`storage/uploads`, never public) |
 | `UPLOAD_MAX_BYTES` | `5242880` | Attachment limit (JPEG, PNG, WebP, PDF) |
 | `SESSION_LIFETIME` | `120` | Sign-in lifetime in minutes (sliding) |
+| `Auth__PasswordMinLength` | `10` | Minimum password length (no symbol or case rules) |
+| `Auth__SessionCheckSeconds` | `60` | How soon a password, role or status change signs out the user's other sessions |
 | `BACKUP_KEEP` | `7` | SQLite backups kept by `db:backup` |
 
 ## Make commands
@@ -155,6 +157,9 @@ caching, forwarded headers) in front of the non-root Kestrel container. For Supa
 - **Container not healthy:** `docker compose logs web`. `storage-init` fixes volume ownership before each start.
 - **Port in use:** set `APP_PORT` in `.env`.
 - **Cannot sign in:** five failed attempts from one address block sign-in for 15 minutes; the same limit locks an account.
+  An admin can lift the lock at once with *ผู้ใช้งาน → ตั้งรหัสผ่านใหม่*.
+- **Staff accounts:** admins add, edit and deactivate accounts on the *ผู้ใช้งาน* page; everyone changes their own password
+  from the sidebar (or the phone menu). `user:create` is only needed for the first admin.
 - **Upload rejected (422):** only JPEG, PNG, WebP and PDF up to `UPLOAD_MAX_BYTES`, detected from the file content.
 - **Styles missing when running locally:** run `npm --prefix src/ResortGuestbook.Web run build`.
 - **Supabase connection errors:** see the IPv6 and pooler notes in [docs/SUPABASE.md](docs/SUPABASE.md).

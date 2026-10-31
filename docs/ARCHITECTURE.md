@@ -37,6 +37,7 @@ endpoint, so they never trigger a login redirect.
 | `ResortQueries` | Read models with v1 shape and ordering (rooms, joined stays, guest summaries, attachments) |
 | `StayService` | Create/edit with validation, capacity, pet and overlap rules, guest lookup by phone, pricing; check-in; checkout with inspection; delete |
 | `RoomService`, `GuestService` | Room CRUD with cascade delete; guest profile update |
+| `UserService` | Staff accounts: create/edit/deactivate (never delete), admin password reset (lifts lockout), own password change; self-lockout and last-admin guards; new security stamp on sign-in-relevant changes |
 | `RoomCategoryService` | Zone and room-type lists (`room_zones`, `room_types`): rename cascades to rooms, delete only when unused, room defaults per type; `RoomCategorySync` (Data) fills the lists from rooms after migrate, seed and `import:php` |
 | `SnapshotService` | Date-range validation and analytics |
 | `PriceCalculator`, `CsvWriter` | Pricing rules; CSV with BOM, formula guard and v1 quoting |
@@ -55,7 +56,10 @@ PostgreSQL (`StaySearchExtensions`).
 ## Security
 
 - Identity cookie auth (HttpOnly, SameSite=Lax, Secure over HTTPS, sliding 120 min) with a custom store over `users`;
-  roles come from `users.role`. bcrypt hashes from v1 verify and are re-hashed on sign-in.
+  roles come from `users.role`. bcrypt hashes from v1 verify and are re-hashed on sign-in. `SecurityStampValidator`
+  re-checks sessions every `Auth__SessionCheckSeconds`, so password, role, email or status changes end other sessions.
+- Staff accounts are managed in the app (`UserService`, `manage_users` = admin): create, edit, deactivate, reset password;
+  everyone changes their own password. Password rule: minimum length only (`Auth__PasswordMinLength`, default 10).
 - Per-IP failed-login throttle (5 in 15 min) plus Identity lockout; rate limits on login and writes.
 - Antiforgery on every non-GET request (`X-CSRF-Token` header / `_token` field).
 - Ability policies: `admin` everything, `front_desk` everything but user management, `housekeeping` view/checkout/upload.
