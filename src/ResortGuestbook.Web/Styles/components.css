@@ -165,7 +165,7 @@
   .card-body { @apply p-4 sm:p-5; }
   .section-head { @apply mb-4 flex flex-wrap items-end justify-between gap-3; }
   .eyebrow { @apply text-sm text-ink-muted; }
-  .page-heading { @apply font-serif text-2xl font-semibold text-ink; }
+  .page-heading { @apply text-2xl font-semibold text-ink; }
 
   .skeleton { @apply animate-pulse rounded bg-sunken; }
 

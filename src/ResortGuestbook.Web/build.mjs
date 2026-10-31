@@ -11,8 +11,7 @@ execFileSync(process.execPath, ['build/check-contrast.mjs'], { stdio: 'inherit' 
 
 mkdirSync('wwwroot/fonts', { recursive: true });
 const fonts = [
-  ...['thai', 'latin'].flatMap(subset => [400, 500, 600].map(weight => `@fontsource/ibm-plex-sans-thai/files/ibm-plex-sans-thai-${subset}-${weight}-normal.woff2`)),
-  ...['thai', 'latin'].map(subset => `@fontsource/noto-serif-thai/files/noto-serif-thai-${subset}-600-normal.woff2`),
+  ...['thai', 'latin'].flatMap(subset => [400, 500, 600].map(weight => `@fontsource/prompt/files/prompt-${subset}-${weight}-normal.woff2`)),
 ];
 for (const font of fonts) copyFileSync(`node_modules/${font}`, `wwwroot/fonts/${font.split('/').pop()}`);
 

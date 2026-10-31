@@ -142,7 +142,7 @@ density toggle sits next to the theme menu. Ctrl/⌘K opens search from anywhere
   themes at 390, 768, 1024 and 1440px, with loading, error and print states: `docs/design/after-skill/` (earlier:
   `docs/design/before-skill/`, `docs/design/before/`). UI review against the ui-ux-pro-max skill:
   [docs/design/SKILL_AUDIT.md](docs/design/SKILL_AUDIT.md).
-- Fonts (IBM Plex Sans Thai, Noto Serif Thai) and Lucide icons are self-hosted; `npm run build` copies the fonts,
+- Fonts (Prompt) and Lucide icons are self-hosted; `npm run build` copies the fonts,
   builds the icon sprite and fails if any colour pair misses WCAG AA in either theme.
 - UI checks against a running instance (`npm --prefix tests/ui ci && npx --prefix tests/ui playwright install chromium`):
 

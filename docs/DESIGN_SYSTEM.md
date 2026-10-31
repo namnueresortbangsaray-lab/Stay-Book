@@ -62,9 +62,10 @@ navy because white on `#5B9BFF` is only 2.8:1. Add a pair there whenever a compo
 
 ## Typography
 
-- **IBM Plex Sans Thai** 400/500/600 for everything; **Noto Serif Thai** 600 only for page titles, the login wordmark
-  and the error code. Both are self-hosted woff2 (`@fontsource` packages, copied to `wwwroot/fonts` by `build.mjs`)
-  with Thai and Latin `unicode-range` subsets; the Thai and Latin 400 files are preloaded. No font CDN.
+- **Prompt** 400/500/600 for everything, page titles and the login wordmark included (since 2026-11-01; it replaced
+  IBM Plex Sans Thai and Noto Serif Thai). Self-hosted woff2 (`@fontsource/prompt`, OFL, copied to `wwwroot/fonts` by
+  `build.mjs`) with Thai and Latin `unicode-range` subsets; the Thai and Latin 400 files are preloaded. No font CDN:
+  Google Fonts would break the CSP (`font-src` / `style-src 'self'`) and fails on a resort LAN without internet.
 - Scale (Tailwind `fontSize`, six steps): `xs` 12/20 · `sm` 14/22.4 · `base` 15/24.8 (16/26.4 below 640px) · `lg`
   18/28.8 · `xl` 22/35.2 · `2xl` 28/44.8 (px size / line height). `base` reads `--text-base` / `--text-base-leading`
   from `tokens.css`, so phones get 16px body text without per-page classes.

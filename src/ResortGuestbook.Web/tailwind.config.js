@@ -22,8 +22,7 @@ module.exports = {
       info: { DEFAULT: token('info'), subtle: token('info-subtle') },
     },
     fontFamily: {
-      sans: ['"IBM Plex Sans Thai"', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
-      serif: ['"Noto Serif Thai"', 'Georgia', 'serif'],
+      sans: ['Prompt', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
     },
     // Six steps; Thai needs at least 1.6 line height.
     fontSize: {

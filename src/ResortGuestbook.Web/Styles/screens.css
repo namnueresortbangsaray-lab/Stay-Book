@@ -8,7 +8,7 @@
   }
   .password-toggle[aria-pressed='true'] .password-show,
   .password-toggle:not([aria-pressed='true']) .password-hide { display: none; }
-  .brand-wordmark { @apply font-serif text-2xl font-semibold; }
+  .brand-wordmark { @apply text-2xl font-semibold; }
   @media screen {
     /* Dark theme: a deep blue panel instead of the bright dark-theme primary. */
     [data-theme='dark'] .brand-panel { @apply bg-primary-subtle text-ink; }
@@ -65,5 +65,5 @@
 
   /* ---------- Error page ---------- */
   .error-shell { @apply mx-auto flex min-h-[100dvh] max-w-xl flex-col justify-center px-6 py-12; }
-  .error-code { @apply font-serif text-2xl font-semibold tabular-nums text-accent-ink; }
+  .error-code { @apply text-2xl font-semibold tabular-nums text-accent-ink; }
 }
