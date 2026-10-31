@@ -25,6 +25,16 @@ const mask = value => {
 };
 const normalizeType = v => v?.toLowerCase().replace(/\s+/g, '');
 const today = /\d{4}-\d{2}-\d{2}/g;
+// The default snapshot range is the current month, so its dates depend on the day the replay runs (the baseline was
+// recorded in October 2026). Check that it is a whole calendar month, then compare it without the month itself.
+const wholeMonth = json => {
+  const a = json?.data?.analytics;
+  if (!a?.start) return json;
+  const days = new Date(Date.UTC(Number(a.start.slice(0, 4)), Number(a.start.slice(5, 7)), 0)).getUTCDate();
+  if (!a.start.endsWith('-01') || a.end !== `${a.start.slice(0, 8)}${days}` || a.day_count !== days || a.daily?.length !== days) return json;
+  const daily = a.daily.slice(0, 28).map(d => ({ ...d, date: '<date>' }));
+  return { ...json, data: { ...json.data, analytics: { ...a, start: '<month-start>', end: '<month-end>', day_count: '<days>', daily } } };
+};
 
 const differences = [];
 for (const file of readdirSync(baselineDir).filter(f => f !== '_index.json').sort()) {
@@ -51,8 +61,9 @@ for (const file of readdirSync(baselineDir).filter(f => f !== '_index.json').sor
   const r = replay.body;
   if (b.kind !== r.kind) { report('body:kind', b.kind, r.kind); continue; }
   if (b.kind === 'json') {
-    const expected = JSON.stringify(mask(b.json));
-    const actual = JSON.stringify(mask(r.json));
+    const month = name === 'snapshot-default-range' ? wholeMonth : json => json;
+    const expected = JSON.stringify(mask(month(b.json)));
+    const actual = JSON.stringify(mask(month(r.json)));
     if (expected !== actual) report('body:json', expected, actual);
   } else if (b.kind === 'html') {
     if (b.title !== r.title) report('body:title', b.title, r.title);
