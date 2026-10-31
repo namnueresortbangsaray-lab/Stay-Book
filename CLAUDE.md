@@ -38,7 +38,10 @@ Display TZ Asia/Bangkok, store UTC.
   intended differences go into `tests/baseline/deviations.json` and the deviation table.
 - Audit every create/update/delete/check_in/check_out/feedback; no personal data in logs.
 - `TreatWarningsAsErrors`, code style enforced in build, `dotnet format` clean. One type per file, file-scoped namespaces.
-- Every model change needs migrations for **both** providers (a test fails otherwise).
+- Every model change needs migrations for **both** providers (a test fails otherwise); new PostgreSQL tables also get
+  `ENABLE ROW LEVEL SECURITY` in their migration.
+- Rooms store zone/type names; `room_zones` / `room_types` only define the choices. Keep them in step through
+  `RoomCategoryService` (rename cascades, delete guard) and `RoomCategorySync`, never by editing rooms or lists alone.
 - Never commit secrets, `.env`, SQLite files, uploads.
 
 ## Gotchas
@@ -74,6 +77,8 @@ UI redesign + dark mode done 2026-10-31 on branch `ui-redesign`; blue/white them
 `ui-blue-responsive` (2026-10-31): contrast gate passes in both themes, axe-core 0 violations and responsive sweep 0
 issues. ui-ux-pro-max review (2026-10-31): 16 findings, 14 fixed, 2 deferred (`docs/design/SKILL_AUDIT.md`);
 screenshots in `docs/design/after-skill/`.
+Zones and room types (branch `room-categories`, 2026-10-31): managed lists with room defaults, room form selects;
+D-23 in the migration plan.
 
 ## Next steps
 - Optional: `SupabaseFileStorage` (see docs/SUPABASE.md), concurrency tokens if staff report conflicting edits.

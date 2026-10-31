@@ -49,7 +49,7 @@ The solution keeps the requested name `ResortGuestbook`; the product shown to us
   no AspNetRoles tables.
 - `deleted_at` filters become global query filters; deletes stay physical exactly like PHP.
 - `created_at`/`updated_at` set by `TimestampInterceptor`. SQLite connection interceptor: `foreign_keys=ON`, `journal_mode=WAL`, `busy_timeout=5000`.
-- PostgreSQL migration enables RLS on all 8 tables and `__EFMigrationsHistory`, no policies.
+- PostgreSQL migration enables RLS on all 8 tables and `__EFMigrationsHistory`, no policies (and on `room_zones` / `room_types`, added later).
 - Provider chosen by `Database:Provider` (`Sqlite`|`Postgres`); only `Data/` and DI registration branch on it.
 
 ## 3. API compatibility notes
@@ -131,6 +131,7 @@ Status: ☑ done and verified (unit, integration and contract tests; Docker smok
 | D-20 | prompt suggested header `RequestVerificationToken` | header stays `X-CSRF-Token` | API compatibility; the JavaScript is unchanged |
 | D-21 | no Thai normalizer existed | search reproduces `LOWER() LIKE` / `ILIKE` without a normalized column | nothing to port; Thai has no letter case |
 | D-22 | dashboard shell copy (section labels, dialog subtitles) | redesigned interface copy from the resx files; titles, element ids and login/error text unchanged | UI redesign (docs/DESIGN_SYSTEM.md); recorded in tests/baseline/deviations.json |
+| D-23 | free-text room zone and type | managed `room_zones` / `room_types` lists (migration `AddRoomCategories`, both providers); rooms keep the names, new endpoints `/api/v1/room-categories`, `/room-zones`, `/room-types` | feature added after the migration; v1 endpoints and contract unchanged |
 
 ## 6. Assumptions
 

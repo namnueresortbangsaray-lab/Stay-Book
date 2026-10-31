@@ -41,6 +41,11 @@ Checks run in this order: 401 → 419 → 403 → 422/404/409.
 | POST | `/api/v1/stays/{id}/feedback` | booking | Create or update the feedback (after checkout) |
 | POST | `/api/v1/stays/{id}/attachments` | upload | Multipart `file`: JPEG, PNG, WebP or PDF ≤ 5 MB |
 | GET | `/api/v1/reports/bookings.csv?start=&end=` | any | UTF-8 CSV with BOM (all bookings; the range is validated) |
+| GET | `/api/v1/room-categories` | any | `{zones, types}` in sort order, each with `room_count`; types carry room defaults (`price_satang`, `base_guests`, `max_guests`, `extra_guest_fee_satang`, `is_pet_friendly`) |
+| POST | `/api/v1/room-zones` | manage_rooms | Create zone: `name` (`กรุณากรอกชื่อโซน`), `sort_order` |
+| PUT / DELETE | `/api/v1/room-zones/{id}` | manage_rooms | Rename (rooms in the zone follow) / delete (422 `{name: มีห้องพักใช้โซนนี้อยู่ N ห้อง}` while used) |
+| POST | `/api/v1/room-types` | manage_rooms | Create type: `name` (`กรุณากรอกชื่อประเภทห้อง`) plus the room price and guest fields and rules |
+| PUT / DELETE | `/api/v1/room-types/{id}` | manage_rooms | Update or rename (rooms of the type follow; their prices do not change) / delete (422 while used) |
 | GET | `/files/{id}` | any (signed in) | Download an attachment |
 
 Abilities: `admin` all; `front_desk` all except user management; `housekeeping` view, checkout, upload.
@@ -57,3 +62,10 @@ and requires `inspection_note` when `no_damage` is false. Feedback takes four ra
 
 Timestamps are UTC `YYYY-MM-DDTHH:MM:SS+00:00`. Field names and order follow the recorded v1 responses in
 `tests/baseline/cases/`, which the contract test replays.
+
+## Zones and room types (added after v1)
+
+Rooms still store `zone` and `type` as text, so `/api/v1/rooms`, the snapshot and the recorded v1 contract are
+unchanged. The lists only define the choices: saving a room with a name that is not listed adds it; renaming an entry
+renames it on its rooms in the same transaction (each room audited); an entry in use cannot be deleted; a duplicate name
+is 409. Audit entity types: `room_zone`, `room_type`.

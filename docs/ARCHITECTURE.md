@@ -37,6 +37,7 @@ endpoint, so they never trigger a login redirect.
 | `ResortQueries` | Read models with v1 shape and ordering (rooms, joined stays, guest summaries, attachments) |
 | `StayService` | Create/edit with validation, capacity, pet and overlap rules, guest lookup by phone, pricing; check-in; checkout with inspection; feedback; delete |
 | `RoomService`, `GuestService` | Room CRUD with cascade delete; guest profile update |
+| `RoomCategoryService` | Zone and room-type lists (`room_zones`, `room_types`): rename cascades to rooms, delete only when unused, room defaults per type; `RoomCategorySync` (Data) fills the lists from rooms after migrate, seed and `import:php` |
 | `SnapshotService` | Date-range validation and analytics |
 | `PriceCalculator`, `CsvWriter` | Pricing rules; CSV with BOM, formula guard and v1 quoting |
 | `UploadService` + `IFileStorage` | Signature sniffing, size limit, random names, private storage |
