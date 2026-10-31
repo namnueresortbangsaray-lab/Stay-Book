@@ -3,7 +3,6 @@
 // mode, and syncs other tabs.
 const root = document.documentElement;
 const media = window.matchMedia('(prefers-color-scheme: dark)');
-const COLORS = { light: '#f6f3ee', dark: '#121513' };
 
 export const themePreference = () => root.dataset.themePref || 'system';
 
@@ -15,7 +14,8 @@ function apply(preference, animate) {
   }
   root.dataset.themePref = preference;
   root.dataset.theme = resolved;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', COLORS[resolved]);
+  const meta = document.querySelector('meta[name="theme-color"]');
+  meta?.setAttribute('content', meta.dataset[resolved]);
   document.querySelectorAll('[data-theme-option]').forEach(option => {
     const selected = option.dataset.themeOption === preference;
     option.setAttribute(option.getAttribute('role') === 'menuitemradio' ? 'aria-checked' : 'aria-pressed', String(selected));

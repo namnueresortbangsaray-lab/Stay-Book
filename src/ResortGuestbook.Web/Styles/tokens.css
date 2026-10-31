@@ -1,68 +1,68 @@
 /*
- * Design tokens — "a calm hospitality ledger".
+ * Design tokens — blue and white: white surfaces on a light blue-grey canvas, navy ink, one blue primary.
  * Colours are RGB channels so Tailwind opacity utilities work: rgb(var(--c-ink) / 0.6).
  * Light values apply everywhere (including print); dark values only on screens with data-theme="dark".
  * build/check-contrast.mjs verifies every text and UI pair against WCAG AA in both themes.
  */
 :root,
 [data-theme='light'] {
-  --c-canvas: 246 243 238;
-  --c-surface: 252 250 247;
+  --c-canvas: 244 247 251;
+  --c-surface: 255 255 255;
   --c-raised: 255 255 255;
-  --c-sunken: 239 235 228;
-  --c-line: 228 223 214;
-  --c-line-strong: 207 200 187;
-  --c-control: 133 126 114;
-  --c-ink: 31 36 33;
-  --c-ink-muted: 84 92 87;
-  --c-ink-subtle: 97 104 99;
-  --c-primary: 31 92 79;
-  --c-primary-hover: 23 74 64;
-  --c-primary-subtle: 227 239 234;
+  --c-sunken: 236 241 248;
+  --c-line: 220 228 239;
+  --c-line-strong: 195 207 223;
+  --c-control: 124 138 163;
+  --c-ink: 20 33 61;
+  --c-ink-muted: 74 90 115;
+  --c-ink-subtle: 90 104 128;
+  --c-primary: 29 95 209;
+  --c-primary-hover: 23 77 176;
+  --c-primary-subtle: 230 239 252;
   --c-on-primary: 255 255 255;
-  --c-accent: 166 120 50;
-  --c-accent-ink: 122 85 32;
-  --c-accent-subtle: 244 234 214;
-  --c-success: 40 110 70;
-  --c-success-subtle: 228 241 232;
-  --c-warning: 143 86 6;
-  --c-warning-subtle: 250 238 214;
-  --c-danger: 167 58 41;
-  --c-danger-subtle: 248 231 227;
-  --c-info: 46 106 142;
-  --c-info-subtle: 227 237 244;
-  --c-selection: 205 226 217;
-  --theme-color: #f6f3ee;
+  --c-accent: 168 106 18;
+  --c-accent-ink: 122 77 12;
+  --c-accent-subtle: 251 241 223;
+  --c-success: 23 119 75;
+  --c-success-subtle: 227 244 234;
+  --c-warning: 138 90 16;
+  --c-warning-subtle: 252 241 220;
+  --c-danger: 192 57 43;
+  --c-danger-subtle: 251 233 231;
+  --c-info: 11 106 140;
+  --c-info-subtle: 225 241 248;
+  --c-selection: 201 220 250;
+  --c-scrim: 20 33 61;
 }
 
 @media screen {
   [data-theme='dark'] {
-    --c-canvas: 18 21 19;
-    --c-surface: 26 30 27;
-    --c-raised: 33 38 34;
-    --c-sunken: 22 26 23;
-    --c-line: 46 53 47;
-    --c-line-strong: 59 68 61;
-    --c-control: 112 121 114;
-    --c-ink: 237 235 229;
-    --c-ink-muted: 168 175 168;
-    --c-ink-subtle: 142 150 142;
-    --c-primary: 79 179 154;
-    --c-primary-hover: 108 199 176;
-    --c-primary-subtle: 30 58 51;
-    --c-on-primary: 13 26 22;
-    --c-accent: 217 168 91;
-    --c-accent-ink: 226 186 120;
-    --c-accent-subtle: 58 47 28;
-    --c-success: 112 196 141;
-    --c-success-subtle: 26 50 35;
-    --c-warning: 226 171 84;
-    --c-warning-subtle: 56 42 18;
-    --c-danger: 240 141 122;
-    --c-danger-subtle: 63 30 25;
-    --c-info: 128 184 220;
-    --c-info-subtle: 24 44 58;
-    --c-selection: 40 82 71;
-    --theme-color: #121513;
+    --c-canvas: 14 21 34;
+    --c-surface: 21 31 49;
+    --c-raised: 27 40 64;
+    --c-sunken: 17 26 42;
+    --c-line: 36 48 73;
+    --c-line-strong: 51 66 95;
+    --c-control: 112 129 158;
+    --c-ink: 232 238 248;
+    --c-ink-muted: 159 176 200;
+    --c-ink-subtle: 135 153 181;
+    --c-primary: 91 155 255;
+    --c-primary-hover: 125 176 255;
+    --c-primary-subtle: 27 45 79;
+    --c-on-primary: 14 21 34;
+    --c-accent: 224 168 78;
+    --c-accent-ink: 235 192 124;
+    --c-accent-subtle: 58 46 24;
+    --c-success: 95 203 142;
+    --c-success-subtle: 18 48 31;
+    --c-warning: 232 176 79;
+    --c-warning-subtle: 58 44 18;
+    --c-danger: 255 138 122;
+    --c-danger-subtle: 63 29 29;
+    --c-info: 95 195 232;
+    --c-info-subtle: 15 46 61;
+    --c-selection: 36 70 126;
+    --c-scrim: 3 7 14;
   }
 }

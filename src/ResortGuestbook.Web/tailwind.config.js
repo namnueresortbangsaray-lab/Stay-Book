@@ -44,7 +44,7 @@ module.exports = {
     },
     boxShadow: {
       none: 'none',
-      pop: '0 12px 32px -12px rgb(16 20 18 / 0.28), 0 2px 6px -2px rgb(16 20 18 / 0.12)',
+      pop: '0 12px 32px -12px rgb(var(--c-scrim) / 0.22), 0 2px 6px -2px rgb(var(--c-scrim) / 0.08)',
     },
     extend: {
       maxWidth: { form: '45rem' },

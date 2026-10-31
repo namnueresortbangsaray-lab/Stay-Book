@@ -228,7 +228,7 @@
   .action-menu-separator { @apply my-1 border-t border-line; }
 
   @media (max-width: 767px) {
-    .action-menu-backdrop { background: rgb(18 21 19 / 0.4); }
+    .action-menu-backdrop { background: rgb(var(--c-scrim) / 0.4); }
     .action-menu { @apply rounded-b-none p-3; inset: auto 0 0 0 !important; width: 100% !important; max-height: 70dvh; overflow-y: auto; padding-bottom: calc(0.75rem + env(safe-area-inset-bottom)); }
     .action-menu-header { @apply mb-1 flex; }
     .action-menu-item { @apply h-12; }
@@ -236,7 +236,7 @@
 
   /* ---------- Dialogs: centred modal for confirmations, side drawer for forms ---------- */
   dialog { @apply border border-line bg-raised p-0 text-ink; max-height: calc(100dvh - 2rem); }
-  dialog::backdrop { background: rgb(18 21 19 / 0.5); }
+  dialog::backdrop { background: rgb(var(--c-scrim) / 0.5); }
   dialog.modal { @apply m-auto rounded-lg shadow-pop; width: min(calc(100vw - 2rem), var(--dialog-w, 30rem)); }
   dialog.drawer {
     @apply m-0 ml-auto rounded-none border-y-0 border-r-0 shadow-pop;
