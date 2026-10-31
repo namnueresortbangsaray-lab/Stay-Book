@@ -31,7 +31,22 @@
   html {
     -webkit-text-size-adjust: 100%;
     overflow-x: clip;
+    /* Keyboard focus never lands under the sticky top bar or the phone tab bar. */
+    scroll-padding-top: calc(var(--topbar-h) + env(safe-area-inset-top) + 0.75rem);
+    scroll-padding-bottom: 0.75rem;
   }
+  @media (max-width: 639px) {
+    html { scroll-padding-bottom: calc(4.25rem + env(safe-area-inset-bottom)); }
+  }
+
+  /* No double-tap zoom delay on controls. */
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  label,
+  summary { touch-action: manipulation; }
 
   body {
     @apply bg-canvas font-sans text-base text-ink antialiased;
@@ -95,7 +110,7 @@
     html.theme-switching *,
     html.theme-switching *::before,
     html.theme-switching *::after {
-      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, fill 150ms ease, stroke 150ms ease !important;
+      transition: background-color var(--motion-base) ease, border-color var(--motion-base) ease, color var(--motion-base) ease, fill var(--motion-base) ease, stroke var(--motion-base) ease !important;
     }
   }
 

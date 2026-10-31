@@ -29,7 +29,7 @@ module.exports = {
     fontSize: {
       xs: ['0.75rem', { lineHeight: '1.25rem' }],
       sm: ['0.875rem', { lineHeight: '1.4rem' }],
-      base: ['0.9375rem', { lineHeight: '1.55rem' }],
+      base: ['var(--text-base)', { lineHeight: 'var(--text-base-leading)' }],
       lg: ['1.125rem', { lineHeight: '1.8rem' }],
       xl: ['1.375rem', { lineHeight: '2.2rem' }],
       '2xl': ['1.75rem', { lineHeight: '2.8rem' }],
@@ -48,7 +48,9 @@ module.exports = {
     },
     extend: {
       maxWidth: { form: '45rem' },
-      transitionTimingFunction: { calm: 'cubic-bezier(0.2, 0, 0, 1)' },
+      transitionTimingFunction: { calm: 'var(--ease-out)' },
+      // One layering scale: sticky table cells < top bar < navigation < tooltips < toasts < menus < load bar < skip link.
+      zIndex: { cell: '1', head: '2', corner: '3', topbar: '30', nav: '40', tooltip: '50', toast: '70', menu: '90', progress: '100', skip: '120' },
     },
   },
   plugins: [require('@tailwindcss/forms')({ strategy: 'class' })],

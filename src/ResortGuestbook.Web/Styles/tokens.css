@@ -66,3 +66,19 @@
     --c-scrim: 3 7 14;
   }
 }
+
+/* Theme-independent tokens: body text size (16px on phones), motion durations and easing. */
+:root {
+  --text-base: 0.9375rem;
+  --text-base-leading: 1.55rem;
+  --motion-fast: 120ms;
+  --motion-base: 160ms;
+  --motion-slow: 200ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+}
+@media (max-width: 639px) {
+  :root {
+    --text-base: 1rem;
+    --text-base-leading: 1.65rem;
+  }
+}

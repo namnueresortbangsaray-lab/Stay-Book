@@ -2,7 +2,7 @@
   /* ---------- App shell: sidebar (expanded or icon rail) + top bar + content ---------- */
   .app-shell { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); min-height: 100dvh; }
 
-  .sidebar { @apply relative z-40 border-r border-line bg-surface; }
+  .sidebar { @apply relative z-nav border-r border-line bg-surface; }
   .sidebar-inner { @apply sticky top-0 flex flex-col overflow-y-auto px-3 pb-3; height: 100dvh; }
   .brand { @apply flex items-center gap-2.5 px-1.5 pb-3 pt-4; }
   .brand-mark { @apply hidden h-9 w-9 rounded; }
@@ -57,7 +57,7 @@
 
   .app-main { @apply flex min-w-0 flex-col; }
   .topbar {
-    @apply sticky top-0 z-30 flex items-center gap-3 border-b border-line bg-canvas px-4 sm:px-6;
+    @apply sticky top-0 z-topbar flex items-center gap-3 border-b border-line bg-canvas px-4 sm:px-6;
     height: calc(var(--topbar-h) + env(safe-area-inset-top));
     padding-top: env(safe-area-inset-top);
   }
@@ -72,7 +72,7 @@
   .content { @apply mx-auto w-full flex-1 px-4 pb-10 pt-5 sm:px-6 lg:px-8 lg:pt-6; max-width: 92rem; }
 
   /* ---------- Mobile: bottom tab bar + left drawer navigation ---------- */
-  .tabbar { @apply fixed inset-x-0 bottom-0 z-40 hidden grid-cols-5 border-t border-line bg-surface; padding-bottom: env(safe-area-inset-bottom); }
+  .tabbar { @apply fixed inset-x-0 bottom-0 z-nav hidden grid-cols-5 border-t border-line bg-surface; padding-bottom: env(safe-area-inset-bottom); }
   .tab-item { @apply relative flex h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium text-ink-muted; }
   .tab-item .icon { @apply h-5 w-5; }
   .tab-item.active { @apply text-primary; }
@@ -93,12 +93,12 @@
   /* Rail tooltips (labels are visually hidden there). */
   .nav-item[data-tip] { position: relative; }
   html[data-sidebar='collapsed'] .sidebar .nav-item[data-tip]:is(:hover, :focus-visible)::after {
-    @apply pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded bg-ink px-2 py-1 text-xs text-canvas;
+    @apply pointer-events-none absolute left-full top-1/2 z-tooltip ml-3 -translate-y-1/2 whitespace-nowrap rounded bg-ink px-2 py-1 text-xs text-canvas;
     content: attr(data-tip);
   }
   @media (min-width: 640px) and (max-width: 1279px) {
     html:not([data-sidebar='expanded']) .sidebar .nav-item[data-tip]:is(:hover, :focus-visible)::after {
-      @apply pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded bg-ink px-2 py-1 text-xs text-canvas;
+      @apply pointer-events-none absolute left-full top-1/2 z-tooltip ml-3 -translate-y-1/2 whitespace-nowrap rounded bg-ink px-2 py-1 text-xs text-canvas;
       content: attr(data-tip);
     }
   }
@@ -110,7 +110,7 @@
   }
 
   /* ---------- Splash (first load only) ---------- */
-  .splash { @apply fixed inset-0 z-[100] flex flex-col items-center justify-center gap-4 bg-canvas; }
+  .splash { @apply fixed inset-0 z-progress flex flex-col items-center justify-center gap-4 bg-canvas; }
   .splash .progress { @apply w-36; }
 
   /* ---------- Logos: colour logo on light, white logo on dark ---------- */
