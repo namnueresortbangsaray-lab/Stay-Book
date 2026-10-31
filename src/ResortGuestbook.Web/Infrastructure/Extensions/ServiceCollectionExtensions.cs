@@ -61,6 +61,7 @@ public static class ServiceCollectionExtensions
         services.Configure<AppOptions>(configuration.GetSection("App"));
         services.Configure<StorageOptions>(configuration.GetSection("Storage"));
         services.Configure<UploadOptions>(o => o.MaxBytes = uploads.MaxBytes);
+        services.Configure<IdPhotoOptions>(configuration.GetSection("IdPhotos"));
         services.Configure<AuthOptions>(o =>
         {
             o.SessionLifetimeMinutes = auth.SessionLifetimeMinutes;
@@ -137,6 +138,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<StayService>();
         services.AddScoped<SnapshotService>();
         services.AddScoped<UploadService>();
+        services.AddScoped<IdPhotoService>();
+        services.AddHostedService<IdPhotoRetentionService>();
         services.AddScoped<DatabaseSeeder>();
         services.AddSingleton<IFileStorage, LocalFileStorage>();
 

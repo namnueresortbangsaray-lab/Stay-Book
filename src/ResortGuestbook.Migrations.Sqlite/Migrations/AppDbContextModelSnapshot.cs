@@ -709,6 +709,55 @@ namespace ResortGuestbook.Migrations.Sqlite.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ResortGuestbook.Data.Entities.StayIdPhoto", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("mime_type");
+
+                    b.Property<long>("SizeBytes")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("size_bytes");
+
+                    b.Property<string>("StayId")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("stay_id");
+
+                    b.Property<string>("StoredName")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("stored_name");
+
+                    b.Property<string>("UploadedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("uploaded_by");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UploadedBy");
+
+                    b.HasIndex(new[] { "StayId" }, "ux_stay_id_photos_stay_id")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "StoredName" }, "ux_stay_id_photos_stored_name")
+                        .IsUnique();
+
+                    b.ToTable("stay_id_photos", (string)null);
+                });
+
             modelBuilder.Entity("ResortGuestbook.Data.Entities.Attachment", b =>
                 {
                     b.HasOne("ResortGuestbook.Data.Entities.Stay", null)
@@ -771,6 +820,21 @@ namespace ResortGuestbook.Migrations.Sqlite.Migrations
                     b.Navigation("Guest");
 
                     b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("ResortGuestbook.Data.Entities.StayIdPhoto", b =>
+                {
+                    b.HasOne("ResortGuestbook.Data.Entities.Stay", null)
+                        .WithMany()
+                        .HasForeignKey("StayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ResortGuestbook.Data.Entities.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UploadedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ResortGuestbook.Data.Entities.Stay", b =>

@@ -153,6 +153,53 @@ public sealed class WebTests : IClassFixture<StayBookFactory>
     }
 
     [Fact]
+    public async Task IdPhotosAreUploadedByBookingStaffAndViewedBySignedInStaffOnly()
+    {
+        using var admin = app.CreateBrowser();
+        var token = await Browser.SignInAsync(admin, StayBookFactory.AdminEmail, StayBookFactory.AdminPassword);
+        var roomId = await app.QueryAsync(db => db.Rooms.OrderBy(r => r.SortOrder).Select(r => r.Id).Skip(1).FirstAsync());
+        var created = await Browser.SendJsonAsync(admin, HttpMethod.Post, "/api/v1/stays", new
+        {
+            guest_name = "ทดสอบ รูปบัตร",
+            phone = "0822222222",
+            room_id = roomId,
+            check_in_date = "2031-05-01",
+            check_out_date = "2031-05-02",
+            guests = 1,
+            id_verified = true,
+        }, token);
+        var stayId = (await Browser.EnvelopeAsync(created)).GetProperty("data").GetProperty("id").GetString();
+        var bytes = await File.ReadAllBytesAsync(Path.Combine(AppContext.BaseDirectory, "Baseline", "fixtures", "logo_square.webp"));
+
+        async Task<HttpResponseMessage> PostAsync(HttpClient client, string csrf, byte[] content, string name)
+        {
+            using var form = new MultipartFormDataContent { { new ByteArrayContent(content), "file", name } };
+            using var request = new HttpRequestMessage(HttpMethod.Post, $"/api/v1/stays/{stayId}/id-photo") { Content = form };
+            request.Headers.Add("X-CSRF-Token", csrf);
+            return await client.SendAsync(request);
+        }
+
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, (await PostAsync(admin, token, "%PDF-1.4 test"u8.ToArray(), "id.pdf")).StatusCode);
+        Assert.Equal(HttpStatusCode.OK, (await PostAsync(admin, token, bytes, "id.webp")).StatusCode);
+
+        var list = (await Browser.EnvelopeAsync(await admin.GetAsync("/api/v1/id-photos"))).GetProperty("data");
+        Assert.Contains(list.EnumerateArray(), p => p.GetProperty("stay_id").GetString() == stayId);
+        var shown = await admin.GetAsync($"/files/id-photo/{stayId}");
+        Assert.Equal(HttpStatusCode.OK, shown.StatusCode);
+        Assert.True(shown.Headers.CacheControl?.NoStore);
+        Assert.Equal(bytes, await shown.Content.ReadAsByteArrayAsync());
+
+        await app.AddUserAsync("keeper-photos@staybook.local", Roles.Housekeeping, "Housekeeping123!");
+        using var keeper = app.CreateBrowser();
+        var keeperToken = await Browser.SignInAsync(keeper, "keeper-photos@staybook.local", "Housekeeping123!");
+        Assert.Equal(HttpStatusCode.OK, (await keeper.GetAsync($"/files/id-photo/{stayId}")).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await PostAsync(keeper, keeperToken, bytes, "id.webp")).StatusCode);
+
+        using var anonymous = app.CreateBrowser();
+        Assert.Equal(HttpStatusCode.Redirect, (await anonymous.GetAsync($"/files/id-photo/{stayId}")).StatusCode);
+    }
+
+    [Fact]
     public async Task RoomCategoriesAreReadableByStaffAndManagedOnlyWithRoomAbility()
     {
         await app.AddUserAsync("keeper-categories@staybook.local", Roles.Housekeeping, "Housekeeping123!");

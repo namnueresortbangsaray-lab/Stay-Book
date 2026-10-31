@@ -17,6 +17,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<CheckoutInspection> CheckoutInspections => Set<CheckoutInspection>();
     public DbSet<Feedback> Feedbacks => Set<Feedback>();
     public DbSet<Attachment> Attachments => Set<Attachment>();
+    public DbSet<StayIdPhoto> StayIdPhotos => Set<StayIdPhoto>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

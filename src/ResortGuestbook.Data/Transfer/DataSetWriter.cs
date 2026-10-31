@@ -22,6 +22,7 @@ public static class DataSetWriter
         {
             await target.AuditLogs.ExecuteDeleteAsync(cancellationToken);
             await target.Attachments.ExecuteDeleteAsync(cancellationToken);
+            await target.StayIdPhotos.ExecuteDeleteAsync(cancellationToken);
             await target.Feedbacks.ExecuteDeleteAsync(cancellationToken);
             await target.CheckoutInspections.ExecuteDeleteAsync(cancellationToken);
             await target.Stays.IgnoreQueryFilters().ExecuteDeleteAsync(cancellationToken);
@@ -43,6 +44,7 @@ public static class DataSetWriter
             ["checkout_inspections"] = await UpsertAsync(target, data.CheckoutInspections, i => i.Id, cancellationToken),
             ["feedbacks"] = await UpsertAsync(target, data.Feedbacks, f => f.Id, cancellationToken),
             ["attachments"] = await UpsertAsync(target, data.Attachments, a => a.Id, cancellationToken),
+            ["stay_id_photos"] = await UpsertAsync(target, data.StayIdPhotos, p => p.Id, cancellationToken),
             ["audit_logs"] = await UpsertAsync(target, data.AuditLogs, a => a.Id, cancellationToken),
         };
 
@@ -61,6 +63,7 @@ public static class DataSetWriter
         new("checkout_inspections", data.CheckoutInspections.Count, target?["checkout_inspections"] ?? data.CheckoutInspections.Count),
         new("feedbacks", data.Feedbacks.Count, target?["feedbacks"] ?? data.Feedbacks.Count),
         new("attachments", data.Attachments.Count, target?["attachments"] ?? data.Attachments.Count),
+        new("stay_id_photos", data.StayIdPhotos.Count, target?["stay_id_photos"] ?? data.StayIdPhotos.Count),
         new("audit_logs", data.AuditLogs.Count, target?["audit_logs"] ?? data.AuditLogs.Count),
     ];
 

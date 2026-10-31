@@ -19,12 +19,16 @@ public sealed record DataSet(
 
     public IReadOnlyList<RoomType> RoomTypes { get; init; } = [];
 
+    /// <summary>ID card photo rows (the files themselves live in upload storage).</summary>
+    public IReadOnlyList<StayIdPhoto> StayIdPhotos { get; init; } = [];
+
     public static async Task<DataSet> ReadAsync(AppDbContext db, CancellationToken cancellationToken) => new(
         await db.Users.IgnoreQueryFilters().AsNoTracking().ToListAsync(cancellationToken),
         await ReadRestAsync(db, cancellationToken))
     {
         RoomZones = await db.RoomZones.AsNoTracking().ToListAsync(cancellationToken),
         RoomTypes = await db.RoomTypes.AsNoTracking().ToListAsync(cancellationToken),
+        StayIdPhotos = await db.StayIdPhotos.AsNoTracking().ToListAsync(cancellationToken),
     };
 
     /// <summary>Builds a data set from users read separately (e.g. from the v1 schema) and the other tables via EF.</summary>

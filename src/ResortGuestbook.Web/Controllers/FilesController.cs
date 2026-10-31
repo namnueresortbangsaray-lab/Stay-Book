@@ -30,6 +30,24 @@ public sealed partial class FilesController(AppDbContext db, IFileStorage storag
         return File(stream, attachment.MimeType);
     }
 
+    /// <summary>A booking's ID card photo, shown inline to signed-in staff and never cached.</summary>
+    [HttpGet("/files/id-photo/{stayId}")]
+    public async Task<IActionResult> IdPhoto(string stayId, CancellationToken cancellationToken)
+    {
+        var photo = Guid.TryParse(stayId, out var key)
+            ? await db.StayIdPhotos.AsNoTracking().FirstOrDefaultAsync(p => p.StayId == key, cancellationToken)
+            : null;
+        var stream = photo is null ? null : await storage.OpenReadAsync(photo.StoredName, cancellationToken);
+        if (photo is null || stream is null)
+        {
+            return ApiResults.Error(StatusCodes.Status404NotFound, NotFoundMessage);
+        }
+
+        Response.Headers.CacheControl = "no-store";
+        Response.Headers.ContentDisposition = "inline";
+        return File(stream, photo.MimeType);
+    }
+
     /// <summary>v1: <c>preg_replace('/[^\pL\pN._ -]+/u', '_', $name)</c>.</summary>
     [GeneratedRegex(@"[^\p{L}\p{N}._ -]+")]
     private static partial Regex UnsafeFileNameCharacters();

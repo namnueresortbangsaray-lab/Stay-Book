@@ -8,7 +8,7 @@ using ResortGuestbook.Web.Services.Validation;
 
 namespace ResortGuestbook.Web.Services;
 
-public sealed class RoomService(AppDbContext db, AuditService audit, RoomCategoryService categories)
+public sealed class RoomService(AppDbContext db, AuditService audit, RoomCategoryService categories, IdPhotoService idPhotos)
 {
     private const string NotFound = "ไม่พบห้องพัก";
 
@@ -57,6 +57,8 @@ public sealed class RoomService(AppDbContext db, AuditService audit, RoomCategor
             await db.Feedbacks.Where(f => stayIds.Contains(f.StayId)).ExecuteDeleteAsync(cancellationToken);
             await db.CheckoutInspections.Where(i => stayIds.Contains(i.StayId)).ExecuteDeleteAsync(cancellationToken);
             await db.Attachments.Where(a => stayIds.Contains(a.StayId)).ExecuteDeleteAsync(cancellationToken);
+            await idPhotos.DeleteFilesForStaysAsync(stayIds, cancellationToken);
+            await db.StayIdPhotos.Where(p => stayIds.Contains(p.StayId)).ExecuteDeleteAsync(cancellationToken);
             await db.Stays.IgnoreQueryFilters().Where(s => s.RoomId == room.Id).ExecuteDeleteAsync(cancellationToken);
             await db.Rooms.IgnoreQueryFilters().Where(r => r.Id == room.Id).ExecuteDeleteAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);

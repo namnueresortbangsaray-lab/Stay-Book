@@ -9,7 +9,7 @@ using ResortGuestbook.Web.Services.Validation;
 namespace ResortGuestbook.Web.Services;
 
 /// <summary>Booking lifecycle: create/edit, check-in, checkout with inspection, delete.</summary>
-public sealed class StayService(AppDbContext db, ResortQueries queries, AuditService audit, AppClock clock)
+public sealed class StayService(AppDbContext db, ResortQueries queries, AuditService audit, AppClock clock, IdPhotoService idPhotos)
 {
     private const string BookingNotFound = "ไม่พบ Booking";
 
@@ -166,7 +166,7 @@ public sealed class StayService(AppDbContext db, ResortQueries queries, AuditSer
         return after;
     }
 
-    /// <summary>Hard delete with feedback, inspection and attachment rows; frees the room if the guest was checked in.</summary>
+    /// <summary>Hard delete with feedback, inspection, attachment and ID photo rows (and the ID photo file); frees the room if the guest was checked in.</summary>
     public async Task DeleteAsync(string id, Actor actor, CancellationToken cancellationToken)
     {
         var (stay, before) = await LoadAsync(id, cancellationToken);
@@ -175,6 +175,8 @@ public sealed class StayService(AppDbContext db, ResortQueries queries, AuditSer
             await db.Feedbacks.Where(f => f.StayId == stay.Id).ExecuteDeleteAsync(cancellationToken);
             await db.CheckoutInspections.Where(i => i.StayId == stay.Id).ExecuteDeleteAsync(cancellationToken);
             await db.Attachments.Where(a => a.StayId == stay.Id).ExecuteDeleteAsync(cancellationToken);
+            await idPhotos.DeleteFilesForStaysAsync(new[] { stay.Id }.AsQueryable(), cancellationToken);
+            await db.StayIdPhotos.Where(p => p.StayId == stay.Id).ExecuteDeleteAsync(cancellationToken);
             await db.Stays.IgnoreQueryFilters().Where(s => s.Id == stay.Id).ExecuteDeleteAsync(cancellationToken);
             if (stay.Status == StayStatus.CheckedIn)
             {

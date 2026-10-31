@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ResortGuestbook.Data.Entities;
@@ -284,6 +285,88 @@ public abstract class ResortDataTests(IDatabaseFactory factory)
 
     private static ResortGuestbook.Web.Infrastructure.Http.RequestInput Update(string name, string email, string role, bool active) =>
         TestInputs.Input(("name", name), ("email", email), ("role", role), ("active", active));
+
+    [Fact]
+    public async Task IdPhotoIsStoredReplacedAndDeletedWithItsFile()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        var room = (await s.Queries.RoomsAsync())[0];
+        var stay = await s.Stays.SaveAsync(TestInputs.Stay(room.Id), null, s.Admin, default);
+        var id = stay.Id.ToString();
+
+        var first = await s.IdPhotos.StoreAsync(id, Png(5_000), s.Admin, default);
+        Assert.Null(first.DeleteAfter);
+        var firstFile = Assert.Single(Directory.GetFiles(s.UploadsPath));
+        Assert.StartsWith("id-", Path.GetFileName(firstFile), StringComparison.Ordinal);
+
+        await s.IdPhotos.StoreAsync(id, Png(7_000), s.Admin, default);
+        Assert.False(File.Exists(firstFile));
+        Assert.Equal(7_000, (await s.Db.StayIdPhotos.SingleAsync()).SizeBytes);
+        Assert.Single(Directory.GetFiles(s.UploadsPath));
+
+        var pdf = await Assert.ThrowsAsync<ValidationException>(() => s.IdPhotos.StoreAsync(id, Upload([0x25, 0x50, 0x44, 0x46, 0x2D, 0x31, 0x2E, 0x34, 0, 0, 0, 0], 100), s.Admin, default));
+        Assert.Equal("รูปบัตรต้องเป็นไฟล์ JPEG, PNG หรือ WebP", pdf.Errors["file"]);
+        var big = await Assert.ThrowsAsync<ValidationException>(() => s.IdPhotos.StoreAsync(id, Png(2_097_153), s.Admin, default));
+        Assert.Equal("รูปบัตรต้องเป็นไฟล์รูปขนาดไม่เกิน 2 MB", big.Errors["file"]);
+
+        await s.IdPhotos.DeleteAsync(id, s.Admin, default);
+        Assert.Empty(Directory.GetFiles(s.UploadsPath));
+        Assert.Equal(["create", "delete", "update"], (await s.Db.AuditLogs.Where(a => a.EntityType == "stay_id_photo").Select(a => a.Action).ToListAsync()).Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task DeletingABookingOrRoomRemovesIdPhotoFiles()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        var rooms = await s.Queries.RoomsAsync();
+        var one = await s.Stays.SaveAsync(TestInputs.Stay(rooms[0].Id), null, s.Admin, default);
+        var two = await s.Stays.SaveAsync(TestInputs.Stay(rooms[1].Id), null, s.Admin, default);
+        await s.IdPhotos.StoreAsync(one.Id.ToString(), Png(1_000), s.Admin, default);
+        await s.IdPhotos.StoreAsync(two.Id.ToString(), Png(1_000), s.Admin, default);
+
+        await s.Stays.DeleteAsync(one.Id.ToString(), s.Admin, default);
+        Assert.Single(Directory.GetFiles(s.UploadsPath));
+        await s.Rooms.DeleteAsync(rooms[1].Id.ToString(), s.Admin, default);
+        Assert.Empty(Directory.GetFiles(s.UploadsPath));
+        Assert.Equal(0, await s.Db.StayIdPhotos.CountAsync());
+    }
+
+    [Fact]
+    public async Task IdPhotosArePurgedNinetyDaysAfterCheckout()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        var rooms = await s.Queries.RoomsAsync();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        async Task<Guid> CheckedOutAsync(Guid room, DateOnly checkOut)
+        {
+            var stay = await s.Stays.SaveAsync(TestInputs.Stay(room, ("check_in_date", checkOut.AddDays(-2).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)), ("check_out_date", checkOut.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)), ("id_verified", true), ("status", 1L)), null, s.Admin, default);
+            await s.Stays.CheckoutAsync(stay.Id.ToString(), TestInputs.Input(("no_damage", true)), s.Admin, default);
+            await s.IdPhotos.StoreAsync(stay.Id.ToString(), Png(1_000), s.Admin, default);
+            return stay.Id;
+        }
+
+        var old = await CheckedOutAsync(rooms[0].Id, today.AddDays(-92));
+        var recent = await CheckedOutAsync(rooms[1].Id, today.AddDays(-30));
+        var booked = await s.Stays.SaveAsync(TestInputs.Stay(rooms[2].Id), null, s.Admin, default);
+        await s.IdPhotos.StoreAsync(booked.Id.ToString(), Png(1_000), s.Admin, default);
+
+        Assert.Equal(1, await s.IdPhotos.PurgeExpiredAsync(default));
+        Assert.Equal(new[] { recent, booked.Id }.Order(), (await s.Db.StayIdPhotos.Select(p => p.StayId).ToListAsync()).Order());
+        Assert.Equal(2, Directory.GetFiles(s.UploadsPath).Length);
+        var purge = await s.Db.AuditLogs.SingleAsync(a => a.Action == "purge");
+        Assert.Equal((old, (Guid?)null, "system"), (purge.EntityId, purge.UserId, purge.IpAddress));
+        Assert.Equal(recent, (await s.IdPhotos.ListAsync(default)).Single(p => p.DeleteAfter is not null).StayId);
+    }
+
+    private static Microsoft.AspNetCore.Http.FormFile Png(int size) => Upload([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0, 0, 0, 0], size);
+
+    private static Microsoft.AspNetCore.Http.FormFile Upload(byte[] header, int size)
+    {
+        var bytes = new byte[size];
+        header.CopyTo(bytes, 0);
+        return new Microsoft.AspNetCore.Http.FormFile(new MemoryStream(bytes), 0, size, "file", "id.png");
+    }
 
     [Fact]
     public async Task DeletingRoomRemovesItsStays()

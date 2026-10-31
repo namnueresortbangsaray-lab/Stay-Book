@@ -4,6 +4,7 @@ using ResortGuestbook.Data.Providers;
 using ResortGuestbook.Data.Seed;
 using ResortGuestbook.Web.Infrastructure.Identity;
 using ResortGuestbook.Web.Infrastructure.Options;
+using ResortGuestbook.Web.Infrastructure.Storage;
 using ResortGuestbook.Web.Services;
 
 namespace ResortGuestbook.Tests.Data;
@@ -20,9 +21,12 @@ public sealed class TestServices : IAsyncDisposable
         Queries = new ResortQueries(db);
         var audit = new AuditService(db);
         Categories = new RoomCategoryService(db, audit);
-        Rooms = new RoomService(db, audit, Categories);
+        UploadsPath = Directory.CreateTempSubdirectory("staybook-uploads-").FullName;
+        Storage = new LocalFileStorage(Microsoft.Extensions.Options.Options.Create(new StorageOptions { UploadsPath = UploadsPath }));
+        IdPhotos = new IdPhotoService(db, Storage, audit, clock, Microsoft.Extensions.Options.Options.Create(new IdPhotoOptions()), Microsoft.Extensions.Logging.Abstractions.NullLogger<IdPhotoService>.Instance);
+        Rooms = new RoomService(db, audit, Categories, IdPhotos);
         Guests = new GuestService(db, Queries, audit);
-        Stays = new StayService(db, Queries, audit, clock);
+        Stays = new StayService(db, Queries, audit, clock, IdPhotos);
         Snapshots = new SnapshotService(Queries, clock);
         Users = new UserService(db, audit, new LegacyBcryptPasswordHasher(), clock, Microsoft.Extensions.Options.Options.Create(new AuthOptions()));
     }
@@ -37,6 +41,9 @@ public sealed class TestServices : IAsyncDisposable
     public StayService Stays { get; }
     public SnapshotService Snapshots { get; }
     public UserService Users { get; }
+    public IdPhotoService IdPhotos { get; }
+    public LocalFileStorage Storage { get; }
+    public string UploadsPath { get; }
     public Actor Admin { get; private set; } = null!;
 
     public static async Task<TestServices> CreateAsync(IDatabaseFactory factory)
