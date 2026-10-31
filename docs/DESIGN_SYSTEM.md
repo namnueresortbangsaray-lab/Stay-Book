@@ -1,8 +1,9 @@
 # Design system — Stay Book
 
 A flat, clean blue-and-white back-office UI for front-desk and housekeeping staff at น้ำเหนือรีสอร์ท บางเสร่, in light
-and dark, on phones, iPads and desktops. Screenshots: `docs/design/responsive/{light,dark}/{390,768,1024,1440}/`
-(the original interface: `docs/design/before/`). Audit and assumptions: `docs/design/UI_AUDIT.md`.
+and dark, on phones, iPads and desktops. Screenshots: `docs/design/after-skill/{light,dark}/{390,768,1024,1440}/`
+(including loading, failure, validation, print and error-page states; earlier states in `before-skill/` and `before/`).
+Audits: `docs/design/UI_AUDIT.md` and `docs/design/SKILL_AUDIT.md` (ui-ux-pro-max review, findings SA-01…SA-16).
 
 ## Principles
 
@@ -64,8 +65,9 @@ navy because white on `#5B9BFF` is only 2.8:1. Add a pair there whenever a compo
 - **IBM Plex Sans Thai** 400/500/600 for everything; **Noto Serif Thai** 600 only for page titles, the login wordmark
   and the error code. Both are self-hosted woff2 (`@fontsource` packages, copied to `wwwroot/fonts` by `build.mjs`)
   with Thai and Latin `unicode-range` subsets; the Thai and Latin 400 files are preloaded. No font CDN.
-- Scale (Tailwind `fontSize`, six steps): `xs` 12/20 · `sm` 14/22.4 · `base` 15/24.8 · `lg` 18/28.8 · `xl` 22/35.2 ·
-  `2xl` 28/44.8 (px size / line height).
+- Scale (Tailwind `fontSize`, six steps): `xs` 12/20 · `sm` 14/22.4 · `base` 15/24.8 (16/26.4 below 640px) · `lg`
+  18/28.8 · `xl` 22/35.2 · `2xl` 28/44.8 (px size / line height). `base` reads `--text-base` / `--text-base-leading`
+  from `tokens.css`, so phones get 16px body text without per-page classes.
 - Weights: 400 body, 500 labels and table emphasis, 600 headings and figures. No 700.
 - `td`, `time`, `.num`, `kbd` use `tabular-nums`; money and counts are right-aligned in tables.
 - Dates: `thaiDate` (`31 ต.ค. 2569`), `shortDate`, `longDate`, `monthTitle` in `Scripts/core/format.js`; money via `money()`.
@@ -76,6 +78,14 @@ navy because white on `#5B9BFF` is only 2.8:1. Add a pair there whenever a compo
 Borders are 1px hairlines in `line`; the only shadow is `shadow-pop`, for menus, popovers, dialogs and drawers.
 Density: `data-density="compact"` on `<html>` shrinks `--control-h` (40 → 34px) and `--row-h` (44 → 36px); coarse
 pointers always keep 44px targets.
+
+**Layering** (Tailwind `z-*`, defined once in `tailwind.config.js`; never use arbitrary `z-[…]`): `cell` 1 (sticky lead
+cells) · `head` 2 (sticky table header) · `corner` 3 · `topbar` 30 · `nav` 40 (sidebar, tab bar) · `tooltip` 50 ·
+`toast` 70 · `menu` 90 · `progress` 100 (first-load bar) · `skip` 120. Dialogs use the browser top layer.
+
+**Motion** (`tokens.css`): `--motion-fast` 120ms (hover, colour, borders), `--motion-base` 160ms (dialogs, toasts,
+theme fade), `--motion-slow` 200ms (drawers), `--ease-out` for entering. Only opacity, colour and transform animate;
+`prefers-reduced-motion` turns everything off.
 
 ## Breakpoints and touch
 
@@ -126,15 +136,17 @@ and disabled styles.
 | Pill / chip | `.pill.tone-*` (status: icon + text); `.chip[aria-pressed]` in `.chip-row` (filters with counts) | |
 | Card | `.card`, `.card-header`, `.card-title`, `.card-body` | |
 | Figures | `.kpi-strip` + `.kpi` (Today); `.figure-list` (Reports) | Real numbers only |
-| Table | `.table-wrap` + `.data-table`, `.sort-btn`, `.cell-title`, `.cell-sub`, `.table-toolbar`, `.pagination`; `renderTable()` | Sticky header, sort, highlight, column menu, 25 rows per page, ↑/↓ row navigation; `.stack` turns rows into cards below 768px (`mobileHide` columns drop) |
+| Table | `.table-wrap` + `.data-table`, `.sort-btn`, `.cell-title`, `.cell-sub`, `.table-toolbar`, `.pagination`; `renderTable()` | Sticky header, sort, highlight, column menu, 25 rows per page, ↑/↓ row navigation; `.stack` turns rows into cards below 640px (`mobileHide` columns drop); `tabletHide` columns hide at 640–1279px |
 | Menu | `openDropdownMenu(trigger, items)` → `.action-menu`, `.action-menu-item` | Headings, separators, `menuitemradio`/`checkbox`; arrow keys, Escape returns focus |
 | Dialog | `dialog.modal` (confirm, room, action) and `dialog.drawer` (booking, guest) with `.dialog-header/-body/-actions` | Native `<dialog>`: focus trap, Escape, focus restore; `form[data-guard]` asks before discarding edits |
 | Command palette | `#command-dialog` | Ctrl/⌘K |
-| Toast | `toast(message, tone)` → `.toast.tone-*` in `.toast-region` (`aria-live`) | Icon + text |
+| Toast | `toast(message, tone)` → `.toast.tone-*` in `.toast-region` (`aria-live`) | Icon + short text + close button; 4 s (errors 6 s), paused while hovered or focused. Field errors never go into a toast |
+| Error summary | `errorSummary(form, errors)` in `app.js` → `.alert.tone-danger[role=alert]` at the top of the form | Shown and focused when a submit returns two or more field errors; each item focuses its field. Inline `.field-error` messages stay |
 | Alert | `.alert.tone-*` | Login errors, inline notices |
-| Empty state | `emptyState()` → `.empty` | Explains and offers the next action |
+| Empty state | `emptyState()` → `.empty` | Explains and offers the next action; when a search or filter caused it, "ล้างการค้นหา" comes first |
 | Avatar | `.avatar`, `.avatar-lg` | Initials |
 | Timeline | `.timeline` + `.timeline-item.tone-*` | Guest notes |
+| Loading / failure | `#splash` (3px top bar), `#loading` skeleton, `<main data-state="loading\|failed">` | The shell shows at once; while there is no data the page panels are hidden and the skeleton or the failure card (with retry) fills the content |
 | Progress / skeleton | `.progress` (indeterminate upload), `.skeleton` (first load) | |
 | Charts | `barChart()` + `chartTable()` (`Scripts/core/charts.js`), `.stack-bar` | SVG in tokens; every chart has a table ("ดูเป็นตาราง") that prints |
 
@@ -162,7 +174,9 @@ and disabled styles.
   1024, 1180 and 1440px for horizontal page scroll, touch targets under 44px and input text under 16px. It exits
   non-zero on any serious or critical violation or layout issue (current result: 0 violations of any impact, 0 layout
   issues).
-- Skip link, landmarks (`nav`, `main`, labelled `section`s), one `h1` per view, `aria-current="page"` on the active nav item.
+- Skip link, landmarks (`nav`, `main`, labelled `section`s), one `h1` per view with `h2` sections below it,
+  `aria-current="page"` on the active nav item. `scroll-padding` keeps keyboard focus clear of the sticky top bar,
+  table headers and the phone tab bar (WCAG 2.4.11).
 - Keyboard: everything is reachable by Tab; menus, tabs, the palette and table rows use arrow keys; dialogs trap focus
   and restore it on close.
 - Targets ≥ 44px on touch, ≥ 34px with a mouse in compact density. Layout reflows at 200% zoom without horizontal scroll.

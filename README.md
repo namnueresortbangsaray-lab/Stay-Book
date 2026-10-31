@@ -130,14 +130,16 @@ phone menu or the sign-in page. It works on phones (menu button, bottom tabs, ca
 tables). A comfortable/compact density toggle sits next to the theme menu. Ctrl/⌘K opens search from anywhere.
 
 - Tokens, breakpoints, components and dark mode: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md). Screenshots in both
-  themes at 390, 768, 1024 and 1440px: `docs/design/responsive/` (the original interface: `docs/design/before/`).
+  themes at 390, 768, 1024 and 1440px, with loading, error and print states: `docs/design/after-skill/` (earlier:
+  `docs/design/before-skill/`, `docs/design/before/`). UI review against the ui-ux-pro-max skill:
+  [docs/design/SKILL_AUDIT.md](docs/design/SKILL_AUDIT.md).
 - Fonts (IBM Plex Sans Thai, Noto Serif Thai) and Lucide icons are self-hosted; `npm run build` copies the fonts,
   builds the icon sprite and fails if any colour pair misses WCAG AA in either theme.
 - UI checks against a running instance (`npm --prefix tests/ui ci && npx --prefix tests/ui playwright install chromium`):
 
 ```bash
 BASE_URL=http://localhost:8080 node tests/ui/a11y.mjs        # axe-core in both themes + responsive sweep
-BASE_URL=http://localhost:8080 node tests/ui/screenshots.mjs docs/design/responsive light,dark 390,768,1024,1440
+BASE_URL=http://localhost:8080 node tests/ui/screenshots.mjs docs/design/after-skill light,dark 390,768,1024,1440
 ```
 
 `tests/ui/seed-demo.mjs` fills an empty development instance with fictional guests for screenshots.

@@ -117,4 +117,5 @@ Decisions taken during the redesign without asking (the brief said not to ask af
 7. **The phone month calendar scrolls sideways inside its card** (seven readable day columns need about 640px); the
    page itself does not scroll.
 8. **`docs/design/after/` (the superseded green theme) was removed**; the current screenshots are in
-   `docs/design/responsive/`, and `docs/design/before/` keeps the original interface for comparison.
+   `docs/design/after-skill/` (after the ui-ux-pro-max review; `before-skill/` holds the state before it), and
+   `docs/design/before/` keeps the original interface for comparison.
