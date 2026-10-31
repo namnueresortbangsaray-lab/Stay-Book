@@ -36,6 +36,15 @@
   <data name="ui.close" xml:space="preserve">
     <value>ปิด</value>
   </data>
+  <data name="ui.form.error_summary" xml:space="preserve">
+    <value>พบข้อมูลที่ต้องแก้ไข {n} รายการ</value>
+  </data>
+  <data name="ui.search.clear" xml:space="preserve">
+    <value>ล้างการค้นหา</value>
+  </data>
+  <data name="ui.password.show" xml:space="preserve">
+    <value>แสดงรหัสผ่าน</value>
+  </data>
   <data name="ui.cancel" xml:space="preserve">
     <value>ยกเลิก</value>
   </data>

@@ -129,9 +129,11 @@
     .tab,
     .sort-btn,
     button.link,
-    button.cell-title { min-height: 2.75rem; }
+    button.cell-title,
+    button[data-focus-field] { min-height: 2.75rem; }
     button.link,
-    button.cell-title { @apply inline-flex items-center; }
+    button.cell-title,
+    button[data-focus-field] { @apply inline-flex items-center; }
   }
 
   /* ---------- Pills, alerts, avatar ---------- */
@@ -329,6 +331,14 @@
     border-left: 3px solid rgb(var(--tone));
   }
   .toast > .icon { @apply mt-0.5 h-5 w-5; color: rgb(var(--tone)); }
+  .toast-close {
+    @apply -my-1.5 -mr-1.5 inline-flex h-8 w-8 flex-none items-center justify-center rounded text-ink-muted hover:bg-sunken hover:text-ink;
+  }
+  @media (pointer: coarse) {
+    .toast-close { @apply -my-2.5 -mr-2.5 h-11 w-11; }
+    /* 8px between neighbouring row actions on touch. */
+    .data-table td.actions > span { gap: 0.5rem; }
+  }
   @media (prefers-reduced-motion: no-preference) {
     .toast { animation: dialog-in var(--motion-base) var(--ease-out); }
   }

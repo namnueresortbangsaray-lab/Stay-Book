@@ -586,6 +586,25 @@ if ($('#app')) {
     form.querySelectorAll('[data-field-error]').forEach(error => error.remove());
   }
 
+  /** Lists every field error at the top of the form; each item moves focus to its field. Removed with the field errors. */
+  function errorSummary(form, shown) {
+    const labelOf = field => {
+      const label = form.querySelector(`label[for="${field.id}"]`) ?? field.closest('label');
+      if (!label) return field.name;
+      const copy = label.cloneNode(true);
+      copy.querySelectorAll('.req, .sr-only, input').forEach(x => x.remove());
+      return copy.textContent.trim();
+    };
+    const summary = document.createElement('div');
+    summary.className = 'alert tone-danger mb-5';
+    summary.dataset.fieldError = '';
+    summary.setAttribute('role', 'alert');
+    summary.tabIndex = -1;
+    summary.innerHTML = `${icon('error')}<div class="min-w-0"><p class="font-medium">${h(t('ui.form.error_summary', { n: shown.length }))}</p><ul class="mt-1 space-y-0.5">${shown.map(([field, message]) => `<li><button type="button" class="text-left underline underline-offset-2 hover:no-underline" data-focus-field="${h(field.name)}">${h(labelOf(field))}: ${h(message)}</button></li>`).join('')}</ul></div>`;
+    (form.querySelector('.dialog-body') ?? form).prepend(summary);
+    return summary;
+  }
+
   function roomOptions(selected = '') {
     return state.data.rooms.map(r => `<option value="${r.id}" ${r.id === selected ? 'selected' : ''}>${h(t('ui.booking.room_option', { name: r.name, zone: r.zone, price: money(r.price_satang) }))}</option>`).join('');
   }
@@ -828,6 +847,7 @@ if ($('#app')) {
       return true;
     } catch (e) {
       let first = null;
+      const shown = [];
       for (const [name, message] of Object.entries(e.errors || {})) {
         const field = form?.elements.namedItem(name);
         if (!field || field instanceof RadioNodeList) continue;
@@ -840,9 +860,13 @@ if ($('#app')) {
         (field.closest('.check-row') || field).insertAdjacentElement('afterend', error);
         field.setAttribute('aria-describedby', [field.getAttribute('aria-describedby'), error.id].filter(Boolean).join(' '));
         first ??= field;
+        shown.push([field, message]);
       }
-      first?.focus();
-      toast(`${e.message}${Object.keys(e.errors || {}).length ? ` · ${Object.values(e.errors).join(' · ')}` : ''}`, 'error');
+      // Several errors: focus a summary that links to each field; one error: focus the field itself.
+      shown.sort(([a], [b]) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+      if (shown.length > 1) errorSummary(form, shown).focus();
+      else first?.focus();
+      toast(e.message, 'error');
       return false;
     } finally {
       setButtonLoading(submit, false);
@@ -857,6 +881,10 @@ if ($('#app')) {
     if (!b) {
       const dialog = e.target.closest('dialog');
       if (dialog && e.target === dialog && dialog.id !== 'confirm-dialog') requestClose(dialog);
+      return;
+    }
+    if (b.dataset.focusField) {
+      b.closest('form')?.elements.namedItem(b.dataset.focusField)?.focus();
       return;
     }
 

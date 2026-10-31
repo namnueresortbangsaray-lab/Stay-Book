@@ -36,6 +36,15 @@
   <data name="ui.close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="ui.form.error_summary" xml:space="preserve">
+    <value>There are {n} fields to fix</value>
+  </data>
+  <data name="ui.search.clear" xml:space="preserve">
+    <value>Clear search</value>
+  </data>
+  <data name="ui.password.show" xml:space="preserve">
+    <value>Show password</value>
+  </data>
   <data name="ui.cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
