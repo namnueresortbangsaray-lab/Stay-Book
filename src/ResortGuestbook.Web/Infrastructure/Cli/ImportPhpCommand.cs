@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using ResortGuestbook.Data;
 using ResortGuestbook.Data.Legacy;
 using ResortGuestbook.Data.Providers;
+using ResortGuestbook.Data.Seed;
 using ResortGuestbook.Data.Transfer;
 using ResortGuestbook.Web.Infrastructure.Options;
 
@@ -44,6 +45,12 @@ public sealed class ImportPhpCommand(DatabaseSettings settings, IOptions<Storage
         {
             await error.WriteLineAsync("Import conflicts with existing rows (for example the seeded admin or rooms). Re-run with --truncate to replace them.");
             return 1;
+        }
+
+        if (!dryRun)
+        {
+            // v1 has no zone or room-type tables: build the lists from the imported rooms.
+            await RoomCategorySync.AddMissingAsync(target, cancellationToken);
         }
 
         await TransferReport.WriteAsync(output, counts);

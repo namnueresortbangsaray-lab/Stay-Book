@@ -475,6 +475,109 @@ namespace ResortGuestbook.Migrations.Sqlite.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ResortGuestbook.Data.Entities.RoomType", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("id");
+
+                    b.Property<int>("BaseGuests")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("base_guests");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("created_at");
+
+                    b.Property<long>("ExtraGuestFeeSatang")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0L)
+                        .HasColumnName("extra_guest_fee_satang");
+
+                    b.Property<bool>("IsPetFriendly")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_pet_friendly");
+
+                    b.Property<int>("MaxGuests")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("max_guests");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("name");
+
+                    b.Property<long>("PriceSatang")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("price_satang");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_order");
+
+                    b.Property<string>("UpdatedAt")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "Name" }, "ux_room_types_name")
+                        .IsUnique();
+
+                    b.ToTable("room_types", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_room_types_base_guests", "base_guests >= 1");
+
+                            t.HasCheckConstraint("ck_room_types_max_guests", "max_guests >= base_guests");
+
+                            t.HasCheckConstraint("ck_room_types_price_satang", "price_satang >= 0");
+                        });
+                });
+
+            modelBuilder.Entity("ResortGuestbook.Data.Entities.RoomZone", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("name");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_order");
+
+                    b.Property<string>("UpdatedAt")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "Name" }, "ux_room_zones_name")
+                        .IsUnique();
+
+                    b.ToTable("room_zones", (string)null);
+                });
+
             modelBuilder.Entity("ResortGuestbook.Data.Entities.Stay", b =>
                 {
                     b.Property<string>("Id")

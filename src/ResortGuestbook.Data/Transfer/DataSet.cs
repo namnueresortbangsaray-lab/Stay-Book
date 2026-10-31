@@ -14,9 +14,18 @@ public sealed record DataSet(
     IReadOnlyList<Attachment> Attachments,
     IReadOnlyList<AuditLog> AuditLogs)
 {
+    /// <summary>Zone and room-type lists; empty when the source predates them (the v1 schema has no such tables).</summary>
+    public IReadOnlyList<RoomZone> RoomZones { get; init; } = [];
+
+    public IReadOnlyList<RoomType> RoomTypes { get; init; } = [];
+
     public static async Task<DataSet> ReadAsync(AppDbContext db, CancellationToken cancellationToken) => new(
         await db.Users.IgnoreQueryFilters().AsNoTracking().ToListAsync(cancellationToken),
-        await ReadRestAsync(db, cancellationToken));
+        await ReadRestAsync(db, cancellationToken))
+    {
+        RoomZones = await db.RoomZones.AsNoTracking().ToListAsync(cancellationToken),
+        RoomTypes = await db.RoomTypes.AsNoTracking().ToListAsync(cancellationToken),
+    };
 
     /// <summary>Builds a data set from users read separately (e.g. from the v1 schema) and the other tables via EF.</summary>
     public DataSet(IReadOnlyList<AppUser> users, DataSet rest)

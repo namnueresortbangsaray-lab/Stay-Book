@@ -72,7 +72,9 @@ public static class ApplicationBuilderExtensions
         await using var scope = app.Services.CreateAsyncScope();
         if (settings.AutoMigrate)
         {
-            await scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.MigrateAsync();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            await db.Database.MigrateAsync();
+            await RoomCategorySync.AddMissingAsync(db);
         }
 
         if (settings.Seed)

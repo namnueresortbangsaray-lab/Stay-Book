@@ -27,6 +27,8 @@ public static class DataSetWriter
             await target.Stays.IgnoreQueryFilters().ExecuteDeleteAsync(cancellationToken);
             await target.Guests.IgnoreQueryFilters().ExecuteDeleteAsync(cancellationToken);
             await target.Rooms.IgnoreQueryFilters().ExecuteDeleteAsync(cancellationToken);
+            await target.RoomZones.ExecuteDeleteAsync(cancellationToken);
+            await target.RoomTypes.ExecuteDeleteAsync(cancellationToken);
             await target.Users.IgnoreQueryFilters().ExecuteDeleteAsync(cancellationToken);
         }
 
@@ -34,6 +36,8 @@ public static class DataSetWriter
         {
             ["users"] = await UpsertAsync(target, data.Users, u => u.Id, cancellationToken),
             ["rooms"] = await UpsertAsync(target, data.Rooms, r => r.Id, cancellationToken),
+            ["room_zones"] = await UpsertAsync(target, data.RoomZones, z => z.Id, cancellationToken),
+            ["room_types"] = await UpsertAsync(target, data.RoomTypes, t => t.Id, cancellationToken),
             ["guests"] = await UpsertAsync(target, data.Guests, g => g.Id, cancellationToken),
             ["stays"] = await UpsertAsync(target, data.Stays, s => s.Id, cancellationToken),
             ["checkout_inspections"] = await UpsertAsync(target, data.CheckoutInspections, i => i.Id, cancellationToken),
@@ -50,6 +54,8 @@ public static class DataSetWriter
     [
         new("users", data.Users.Count, target?["users"] ?? data.Users.Count),
         new("rooms", data.Rooms.Count, target?["rooms"] ?? data.Rooms.Count),
+        new("room_zones", data.RoomZones.Count, target?["room_zones"] ?? data.RoomZones.Count),
+        new("room_types", data.RoomTypes.Count, target?["room_types"] ?? data.RoomTypes.Count),
         new("guests", data.Guests.Count, target?["guests"] ?? data.Guests.Count),
         new("stays", data.Stays.Count, target?["stays"] ?? data.Stays.Count),
         new("checkout_inspections", data.CheckoutInspections.Count, target?["checkout_inspections"] ?? data.CheckoutInspections.Count),

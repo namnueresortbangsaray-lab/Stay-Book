@@ -10,6 +10,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
 {
     public DbSet<AppUser> Users => Set<AppUser>();
     public DbSet<Room> Rooms => Set<Room>();
+    public DbSet<RoomZone> RoomZones => Set<RoomZone>();
+    public DbSet<RoomType> RoomTypes => Set<RoomType>();
     public DbSet<Guest> Guests => Set<Guest>();
     public DbSet<Stay> Stays => Set<Stay>();
     public DbSet<CheckoutInspection> CheckoutInspections => Set<CheckoutInspection>();

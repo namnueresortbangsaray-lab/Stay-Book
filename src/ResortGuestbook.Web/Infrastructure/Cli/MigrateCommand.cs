@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ResortGuestbook.Data;
+using ResortGuestbook.Data.Seed;
 
 namespace ResortGuestbook.Web.Infrastructure.Cli;
 
@@ -13,6 +14,7 @@ public sealed class MigrateCommand(AppDbContext db) : ICliCommand
     {
         var pending = (await db.Database.GetPendingMigrationsAsync(cancellationToken)).ToList();
         await db.Database.MigrateAsync(cancellationToken);
+        await RoomCategorySync.AddMissingAsync(db, cancellationToken);
         await output.WriteLineAsync(pending.Count > 0 ? $"Applied: {string.Join(", ", pending)}" : "Database is current.");
         return 0;
     }

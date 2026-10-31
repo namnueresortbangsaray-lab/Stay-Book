@@ -5,7 +5,7 @@ using ResortGuestbook.Data.Identity;
 
 namespace ResortGuestbook.Data.Seed;
 
-/// <summary>Creates the demo admin (when missing) and the resort rooms (when the room table is empty).</summary>
+/// <summary>Creates the demo admin (when missing), the resort rooms (when the room table is empty) and their zones and types.</summary>
 public sealed class DatabaseSeeder(AppDbContext db, IPasswordHasher<AppUser> hasher)
 {
     public const string DefaultAdminName = "ผู้ดูแลระบบ";
@@ -26,5 +26,7 @@ public sealed class DatabaseSeeder(AppDbContext db, IPasswordHasher<AppUser> has
             db.Rooms.AddRange(RoomSeedData.Create());
             await db.SaveChangesAsync(cancellationToken);
         }
+
+        await RoomCategorySync.AddMissingAsync(db, cancellationToken);
     }
 }
