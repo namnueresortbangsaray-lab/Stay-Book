@@ -4,23 +4,13 @@
 }
 <div class="login-shell">
   <aside class="brand-panel" aria-label="@T["app_name"]">
-    <svg class="ledger" aria-hidden="true" focusable="false">
-      <defs>
-        <pattern id="ledger-lines" width="40" height="32" patternUnits="userSpaceOnUse">
-          <path d="M0 31.5H40" stroke="currentColor" stroke-width="1" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#ledger-lines)" />
-      <path d="M72 0V2000" stroke="currentColor" stroke-width="1" />
-      <path d="M78 0V2000" stroke="currentColor" stroke-width="1" />
-    </svg>
-    <div class="relative pl-14">
+    <div>
       <img src="/images/logo_white.webp" alt="" class="h-16 w-auto" width="160" height="64" data-logo>
       <p class="brand-wordmark mt-10">@T["app_name"]</p>
       <p class="mt-1 text-base">@T["ui.login.place"]</p>
     </div>
-    <div class="relative max-w-sm pl-14">
-      <p class="text-base">@T["ui.login.panel"]</p>
+    <div class="max-w-md">
+      <p class="text-base [text-wrap:balance]">@T["ui.login.panel"]</p>
     </div>
   </aside>
 
@@ -49,7 +39,10 @@
         </div>
         <div>
           <label class="label" for="password">@T["ui.login.password"]</label>
-          <input class="field" id="password" name="password" type="password" autocomplete="current-password" required>
+          <div class="relative">
+            <input class="field pr-12" id="password" name="password" type="password" autocomplete="current-password" required>
+            <button type="button" class="btn btn-ghost btn-icon password-toggle" data-password-toggle aria-controls="password" aria-pressed="false" aria-label="@T["ui.password.show"]" title="@T["ui.password.show"]"><icon name="eye" class="password-show" /><icon name="eyeOff" class="password-hide" /></button>
+          </div>
         </div>
         <button class="btn btn-primary btn-lg w-full" type="submit">@T["login"]</button>
       </form>

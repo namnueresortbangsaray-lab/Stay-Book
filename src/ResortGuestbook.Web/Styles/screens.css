@@ -1,8 +1,13 @@
 @layer components {
   /* ---------- Login: brand panel + focused form ---------- */
   .login-shell { @apply grid min-h-[100dvh] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]; }
-  .brand-panel { @apply relative hidden overflow-hidden bg-primary text-primary-on lg:flex lg:flex-col lg:justify-between lg:p-12; }
-  .brand-panel .ledger { @apply pointer-events-none absolute inset-0 h-full w-full; opacity: 0.14; }
+  .brand-panel { @apply hidden bg-primary text-primary-on lg:flex lg:flex-col lg:justify-between lg:p-12; }
+  .password-toggle { @apply absolute right-px top-px rounded-l-none; width: calc(var(--control-h) - 2px); height: calc(var(--control-h) - 2px); }
+  @media (pointer: coarse) {
+    .password-toggle { @apply right-0 top-0; width: var(--control-h); height: var(--control-h); }
+  }
+  .password-toggle[aria-pressed='true'] .password-show,
+  .password-toggle:not([aria-pressed='true']) .password-hide { display: none; }
   .brand-wordmark { @apply font-serif text-2xl font-semibold; }
   @media screen {
     /* Dark theme: a deep blue panel instead of the bright dark-theme primary. */

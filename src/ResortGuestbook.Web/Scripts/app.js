@@ -13,6 +13,14 @@ initTheme();
 initPreferences();
 bindRowNavigation();
 
+$('[data-password-toggle]')?.addEventListener('click', event => {
+  const toggle = event.currentTarget;
+  const input = document.getElementById(toggle.getAttribute('aria-controls'));
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  toggle.setAttribute('aria-pressed', String(show));
+});
+
 if ($('#app')) {
   const role = $('#app').dataset.role;
   const canBook = role === 'admin' || role === 'front_desk';
@@ -343,11 +351,16 @@ if ($('#app')) {
         iconName: 'bookings',
         title: t('ui.bookings.empty_title'),
         text: t('ui.bookings.empty_text'),
-        action: canBook ? button({ label: t('ui.booking.new'), variant: 'primary', iconName: 'plus', attributes: { 'data-action': 'new-booking' } }) : '',
+        action: [
+          q || $('#stay-status').value ? clearSearchButton('bookings') : '',
+          canBook ? button({ label: t('ui.booking.new'), variant: 'primary', iconName: 'plus', attributes: { 'data-action': 'new-booking' } }) : '',
+        ].join(''),
       })}</div>`,
     });
     renderCalendar();
   }
+
+  const clearSearchButton = list => button({ label: t('ui.search.clear'), iconName: 'close', attributes: { 'data-action': 'clear-search', 'data-list': list } });
 
   function renderCalendar() {
     const month = state.calendar.getMonth();
@@ -391,7 +404,7 @@ if ($('#app')) {
   function breakdown(title, parts) {
     const total = Math.max(1, parts.reduce((sum, p) => sum + p.value, 0));
     return `<section class="card" aria-label="${h(title)}">
-      <div class="card-header"><h3 class="card-title">${h(title)}</h3></div>
+      <div class="card-header"><h2 class="card-title">${h(title)}</h2></div>
       <div class="card-body">
         <div class="stack-bar" aria-hidden="true">${parts.filter(p => p.value).map(p => `<span class="tone-${p.tone}" style="width:${(p.value / total) * 100}%"></span>`).join('')}</div>
         <ul class="mt-4 space-y-2 text-sm">${parts.map(p => `<li class="flex items-center justify-between gap-3"><span class="inline-flex items-center gap-2 text-ink-muted"><span class="legend-swatch tone-${p.tone}"></span>${h(p.label)}</span><span class="tabular-nums text-ink">${number(p.value)} <span class="text-ink-subtle">· ${Math.round((p.value / total) * 100)}%</span></span></li>`).join('')}</ul>
@@ -399,12 +412,12 @@ if ($('#app')) {
     </section>`;
   }
 
-  const figureGroup = (title, items) => `<section aria-label="${h(title)}"><h3 class="mb-2 text-sm font-medium text-ink-muted">${h(title)}</h3><dl class="figure-list">${items.map(([label, value]) => `<div class="figure"><dt>${h(label)}</dt><dd>${value}</dd></div>`).join('')}</dl></section>`;
+  const figureGroup = (title, items) => `<section aria-label="${h(title)}"><h2 class="mb-2 text-sm font-medium text-ink-muted">${h(title)}</h2><dl class="figure-list">${items.map(([label, value]) => `<div class="figure"><dt>${h(label)}</dt><dd>${value}</dd></div>`).join('')}</dl></section>`;
 
   function chartCard(id, title, subtitle, total, points, table) {
     return `<section class="card" aria-labelledby="${id}-title">
       <div class="card-header items-start">
-        <div><h3 id="${id}-title" class="card-title">${h(title)}</h3><p class="text-sm text-ink-muted">${h(subtitle)}</p></div>
+        <div><h2 id="${id}-title" class="card-title">${h(title)}</h2><p class="text-sm text-ink-muted">${h(subtitle)}</p></div>
         <p class="text-base font-semibold tabular-nums text-ink">${total}</p>
       </div>
       <div class="card-body">
@@ -512,7 +525,7 @@ if ($('#app')) {
       columns,
       rows: list,
       caption: t('ui.nav.guests'),
-      empty: `<div class="card">${emptyState({ iconName: 'guests', title: t('ui.guests.empty_title'), text: t('ui.guests.empty_text') })}</div>`,
+      empty: `<div class="card">${emptyState({ iconName: 'guests', title: t('ui.guests.empty_title'), text: t('ui.guests.empty_text'), action: query('guest-search') || $('#regular-only')?.checked ? clearSearchButton('guests') : '' })}</div>`,
     });
     if (guestSortKeys[state.tables.guests.sort]) $('#guest-sort').value = state.tables.guests.sort;
   }
@@ -979,6 +992,19 @@ if ($('#app')) {
     const a = b.dataset.action;
     const id = b.dataset.id;
     if (a === 'new-booking') openBooking(null, id);
+    if (a === 'clear-search') {
+      if (b.dataset.list === 'bookings') {
+        $('#stay-search').value = '';
+        $('#stay-status').value = '';
+        renderBookings();
+        $('#stay-search').focus();
+      } else {
+        $('#guest-search').value = '';
+        if ($('#regular-only')) $('#regular-only').checked = false;
+        renderGuests();
+        $('#guest-search').focus();
+      }
+    }
     if (a === 'command') {
       b.closest('dialog')?.close();
       openCommand();

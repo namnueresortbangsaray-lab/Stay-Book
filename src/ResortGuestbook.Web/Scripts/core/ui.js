@@ -31,7 +31,7 @@ export function menuTriggerButton({ context, id, label = t('ui.menu.more'), size
 export const pill = (tone, iconName, label) => `<span class="pill tone-${tone}">${iconName ? icon(iconName) : ''}<span>${h(label)}</span></span>`;
 
 export function emptyState({ iconName, title, text = '', action = '' }) {
-  return `<div class="empty"><span class="empty-icon">${icon(iconName)}</span><p class="empty-title">${h(title)}</p>${text ? `<p class="empty-text">${h(text)}</p>` : ''}${action ? `<div class="mt-4">${action}</div>` : ''}</div>`;
+  return `<div class="empty"><span class="empty-icon">${icon(iconName)}</span><p class="empty-title">${h(title)}</p>${text ? `<p class="empty-text">${h(text)}</p>` : ''}${action ? `<div class="mt-4 flex flex-wrap justify-center gap-2">${action}</div>` : ''}</div>`;
 }
 
 export function setButtonLoading(target, loading, loadingLabel = t('ui.saving')) {
