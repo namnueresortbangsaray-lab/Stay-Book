@@ -31,6 +31,8 @@ export const ICONS = {
   chevronRight: 'chevron-right',
   chevronDown: 'chevron-down',
   close: 'x',
+  camera: 'camera',
+  idCard: 'id-card',
   key: 'key-round',
   lock: 'lock',
   userCog: 'user-cog',

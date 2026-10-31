@@ -5,6 +5,7 @@
 // Usage: BASE_URL=http://localhost:8097 node a11y.mjs
 import AxeBuilder from '@axe-core/playwright';
 import { chromium } from 'playwright';
+import { fileURLToPath } from 'node:url';
 
 const base = process.env.BASE_URL ?? 'http://localhost:8097';
 const password = process.env.DEMO_ADMIN_PASSWORD ?? 'ChangeMe123!';
@@ -18,8 +19,14 @@ const openPhoneMenu = async page => {
     await page.locator('#mobile-more-dialog[open]').waitFor();
   }
 };
+// Attaches a photo in the booking form, so the preview, change and remove controls are checked too.
+const pickIdPhoto = async page => {
+  await page.locator('#booking-id-photo').setInputFiles(fileURLToPath(new URL('../baseline/fixtures/logo_square.webp', import.meta.url)));
+  await page.locator('.id-photo-thumb:not([hidden])').scrollIntoViewIfNeeded();
+};
 const dialogs = [
   ['booking-form', 'today', '[data-action="new-booking"]:visible', '#booking-dialog'],
+  ['booking-id-photo', 'today', '[data-action="new-booking"]:visible', '#booking-dialog', null, pickIdPhoto],
   ['guest-profile', 'guests', '[data-action="guest-details"]:visible', '#guest-dialog'],
   ['room-form', 'rooms', '[data-action="new-room"]:visible', '#room-dialog', '#rooms-tab-rooms'],
   ['checkout', 'bookings', '#booking-list [data-action="checkout"]:visible', '#action-dialog'],
@@ -48,13 +55,14 @@ const go = async (page, hash) => {
   await page.waitForTimeout(200);
 };
 const closeAll = page => page.evaluate(() => document.querySelectorAll('dialog[open]').forEach(d => d.close()));
-async function openDialog(page, hash, trigger, dialog, tab) {
+async function openDialog(page, hash, trigger, dialog, tab, after) {
   await closeAll(page);
   await go(page, hash);
   if (typeof tab === 'function') await tab(page);
   else if (tab) await page.locator(tab).click();
   await page.locator(trigger).first().click();
   await page.locator(`${dialog}[open]`).waitFor();
+  if (after) await after(page);
   await page.waitForTimeout(250);
 }
 
@@ -119,8 +127,8 @@ for (const theme of ['light', 'dark']) {
       await page.locator(`#rooms-tab-${tab}`).click();
       await axe(page, label(`rooms-${tab}`));
     }
-    for (const [name, hash, trigger, dialog, tab] of dialogs) {
-      await openDialog(page, hash, trigger, dialog, tab);
+    for (const [name, hash, trigger, dialog, tab, after] of dialogs) {
+      await openDialog(page, hash, trigger, dialog, tab, after);
       await axe(page, label(name), dialog);
     }
     await closeAll(page);
@@ -152,8 +160,8 @@ for (const width of [390, 507, 640, 678, 768, 1024, 1180, 1440]) {
     await page.locator(`#rooms-tab-${tab}`).click();
     await sweep(page, `${width}/rooms-${tab}`, touch);
   }
-  for (const [name, hash, trigger, dialog, tab] of dialogs) {
-    await openDialog(page, hash, trigger, dialog, tab);
+  for (const [name, hash, trigger, dialog, tab, after] of dialogs) {
+    await openDialog(page, hash, trigger, dialog, tab, after);
     await sweep(page, `${width}/${name}`, touch);
   }
   await page.context().close();

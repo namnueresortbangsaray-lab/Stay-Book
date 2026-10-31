@@ -6,6 +6,7 @@ import { t } from './core/i18n.js';
 import { icon } from './core/icons.js';
 import { initPreferences } from './core/preferences.js';
 import { bindRowNavigation, columnMenuItems, highlight, renderTable, saveColumns, tableState, toggleSort } from './core/table.js';
+import { shrinkImage } from './core/image.js';
 import { initTheme, themePreference } from './core/theme.js';
 import { button, closeDropdownMenu, emptyState, menuTriggerButton, openDropdownMenu, pill, selectTab, setButtonLoading } from './core/ui.js';
 
@@ -93,6 +94,7 @@ if ($('#app')) {
     if (canBook && status === 0) items.push({ action: 'edit-booking', id: stay.id, label: t('ui.booking.edit'), icon: 'edit' });
     if (canBook && status === 1) items.push({ action: 'extend', id: stay.id, label: t('ui.action.extend'), icon: 'clock' });
     items.push({ action: 'upload', id: stay.id, label: t('ui.action.upload'), icon: 'upload' });
+    if (state.idPhotos?.has(stay.id)) items.push({ action: 'view-id-photo', id: stay.id, label: t('ui.id_photo.view'), icon: 'idCard' });
     if (canBook) {
       items.push({ separator: true });
       items.push({ action: 'delete-booking', id: stay.id, label: t('ui.booking.delete'), icon: 'trash', destructive: true });
@@ -138,6 +140,7 @@ if ($('#app')) {
         api(`/api/v1/snapshot${start && end ? `?start=${start}&end=${end}` : ''}`),
         api('/api/v1/room-categories'),
       ]);
+      state.idPhotos = new Map((await api('/api/v1/id-photos')).map(p => [p.stay_id, p]));
       if (isAdmin) state.users = await api('/api/v1/users');
       render();
       syncExportLink();
@@ -330,7 +333,7 @@ if ($('#app')) {
         key: 'guest', label: t('ui.col.guest'), className: 'cell-lead', value: s => s.guest_name,
         cell: s => {
           const files = attachmentsOf([s.id]);
-          return `<p class="cell-title">${highlight(s.guest_name, q)}</p><p class="cell-sub">${highlight(s.phone || t('ui.no_phone'), q)}</p>
+          return `<p class="cell-title flex items-center gap-1.5"><span>${highlight(s.guest_name, q)}</span>${state.idPhotos?.has(s.id) ? `<span class="text-ink-subtle" title="${h(t('ui.id_photo.on_file'))}">${icon('idCard', 'h-3.5 w-3.5')}<span class="sr-only">${h(t('ui.id_photo.on_file'))}</span></span>` : ''}</p><p class="cell-sub">${highlight(s.phone || t('ui.no_phone'), q)}</p>
             ${s.note ? `<p class="cell-sub cell-note mt-0.5 flex items-start gap-1" title="${h(s.note)}">${icon('note', 'mt-0.5 h-3.5 w-3.5')}<span class="truncate">${highlight(s.note, q)}</span></p>` : ''}
             ${files.length ? `<p class="mt-0.5 flex flex-wrap gap-x-3">${files.map(f => `<a class="link inline-flex min-h-6 items-center gap-1 text-xs" href="/files/${f.id}" target="_blank" rel="noopener">${icon('attachment', 'h-3.5 w-3.5')}${h(f.original_name)}</a>`).join('')}</p>` : ''}`;
         },
@@ -817,6 +820,7 @@ if ($('#app')) {
     }
     $('#booking-dialog [data-dialog-title]').textContent = t(id ? 'ui.booking.edit' : 'ui.booking.new');
     f.querySelector('[data-submit-label]').textContent = t(id ? 'ui.save' : 'ui.booking.new');
+    resetIdPhoto(id);
     updatePrice();
     resetDirty(f);
     $('#booking-dialog').showModal();
@@ -923,6 +927,81 @@ if ($('#app')) {
     $('#guest-dialog').showModal();
   }
 
+  // ================= ID CARD PHOTO (booking form) =================
+  // The photo is shrunk in the browser, previewed, and uploaded after the booking itself has been saved.
+  function resetIdPhoto(stayId = null) {
+    const f = $('#booking-form');
+    state.idPhotoDraft = null;
+    state.idPhotoRemoved = false;
+    const saved = stayId ? state.idPhotos.get(stayId) : null;
+    showIdPhoto(saved ? `/files/id-photo/${stayId}?v=${encodeURIComponent(saved.created_at)}` : null);
+    f.querySelector('[data-id-photo-status]').textContent = saved
+      ? [t('ui.id_photo.stored', { size: fileSize(saved.size_bytes) }), saved.delete_after ? t('ui.id_photo.deleted_on', { date: thaiDate(saved.delete_after) }) : ''].filter(Boolean).join(' · ')
+      : t('ui.id_photo.none');
+  }
+
+  function showIdPhoto(src) {
+    const f = $('#booking-form');
+    const thumb = f.querySelector('[data-action="view-id-photo"]');
+    thumb.hidden = !src;
+    f.querySelector('[data-id-photo-preview]').src = src || '';
+    f.querySelector('[data-action="remove-id-photo"]').hidden = !src;
+    f.querySelector('[data-id-photo-pick]').textContent = t(src ? 'ui.id_photo.replace' : 'ui.id_photo.add');
+  }
+
+  async function pickIdPhoto(input) {
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+    const f = $('#booking-form');
+    const status = f.querySelector('[data-id-photo-status]');
+    status.textContent = t('ui.id_photo.shrinking');
+    try {
+      const shrunk = await shrinkImage(file);
+      state.idPhotoDraft = { ...shrunk, url: await dataUrl(shrunk.blob) };
+      state.idPhotoRemoved = false;
+      showIdPhoto(state.idPhotoDraft.url);
+      status.textContent = t('ui.id_photo.shrunk', { from: fileSize(file.size), to: fileSize(shrunk.blob.size), width: shrunk.width, height: shrunk.height });
+      f.dataset.dirty = 'true';
+    } catch {
+      status.textContent = t('ui.id_photo.unreadable');
+    }
+  }
+
+  async function saveIdPhoto(stayId) {
+    try {
+      if (state.idPhotoDraft) {
+        const body = new FormData();
+        body.append('file', state.idPhotoDraft.blob, state.idPhotoDraft.name);
+        await api(`/api/v1/stays/${stayId}/id-photo`, { method: 'POST', body });
+      } else if (state.idPhotoRemoved && state.idPhotos.has(stayId)) {
+        await api(`/api/v1/stays/${stayId}/id-photo`, { method: 'DELETE' });
+      }
+      state.idPhotoDraft = null;
+      state.idPhotoRemoved = false;
+    } catch (e) {
+      // The booking is saved either way; say so and let staff attach the photo again.
+      toast(`${t('ui.id_photo.upload_failed')} · ${e.message}`, 'error');
+    }
+  }
+
+  const dataUrl = blob => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+
+  function viewIdPhoto(stayId, src = `/files/id-photo/${stayId}`) {
+    const s = state.data.stays.find(x => x.id === stayId);
+    state.files = [];
+    $('#file-dialog-title').textContent = `${t('ui.id_photo.label')}${s ? ` · ${s.guest_name}` : ''}`;
+    $('#file-dialog-download').href = src;
+    $('#file-dialog-body').innerHTML = `<img class="viewer-img" src="${src}" alt="${h(t('ui.id_photo.label'))}">`;
+    $$('[data-file-step]').forEach(b => { b.hidden = true; });
+    if (!$('#file-dialog').open) $('#file-dialog').showModal();
+  }
+
   function showFile(index) {
     if (!state.files.length) return;
     state.fileIndex = (index + state.files.length) % state.files.length;
@@ -1019,12 +1098,13 @@ if ($('#app')) {
     dialog.close();
   }
 
-  async function mutate(path, method, body, form = null) {
+  async function mutate(path, method, body, form = null, { after } = {}) {
     const submit = form?.querySelector('[type="submit"]');
     if (form) clearErrors(form);
     setButtonLoading(submit, true);
     try {
-      await api(path, { method, body: body instanceof FormData ? body : JSON.stringify(body || {}) });
+      const result = await api(path, { method, body: body instanceof FormData ? body : JSON.stringify(body || {}) });
+      if (after) await after(result);
       toast(t('ui.toast.saved'));
       $$('form[data-guard]').forEach(resetDirty);
       $$('dialog[open]').forEach(d => d.close());
@@ -1167,6 +1247,18 @@ if ($('#app')) {
     const a = b.dataset.action;
     const id = b.dataset.id;
     if (a === 'new-booking') openBooking(null, id);
+    if (a === 'pick-id-photo') $('#booking-id-photo').click();
+    if (a === 'remove-id-photo') {
+      state.idPhotoDraft = null;
+      state.idPhotoRemoved = true;
+      showIdPhoto(null);
+      b.closest('form').querySelector('[data-id-photo-status]').textContent = t('ui.id_photo.will_remove');
+      b.closest('form').dataset.dirty = 'true';
+    }
+    if (a === 'view-id-photo') {
+      if (b.closest('#booking-form')) viewIdPhoto($('#booking-form').elements.id.value, b.querySelector('img').src);
+      else viewIdPhoto(id);
+    }
     if (a === 'clear-search') {
       if (b.dataset.list === 'bookings') {
         $('#stay-search').value = '';
@@ -1328,8 +1420,10 @@ if ($('#app')) {
     d.status = d.check_in_now ? 1 : (id ? state.data.stays.find(s => s.id === id).status : 0);
     delete d.id;
     delete d.check_in_now;
-    await mutate(id ? `/api/v1/stays/${id}` : '/api/v1/stays', id ? 'PUT' : 'POST', d, e.currentTarget);
+    await mutate(id ? `/api/v1/stays/${id}` : '/api/v1/stays', id ? 'PUT' : 'POST', d, e.currentTarget, { after: saved => saveIdPhoto(saved.id) });
   });
+
+  $('#booking-id-photo').addEventListener('change', e => pickIdPhoto(e.target));
 
   $('#room-type').addEventListener('change', e => applyTypeDefaults(e.target.form));
   $('#user-role').addEventListener('change', e => showRoleHint(e.target.form));

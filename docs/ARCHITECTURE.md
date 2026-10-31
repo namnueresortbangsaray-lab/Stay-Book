@@ -42,7 +42,8 @@ endpoint, so they never trigger a login redirect.
 | `SnapshotService` | Date-range validation and analytics |
 | `PriceCalculator`, `CsvWriter` | Pricing rules; CSV with BOM, formula guard and v1 quoting |
 | `UploadService` + `IFileStorage` | Signature sniffing, size limit, random names, private storage |
-| `AuditService` | `audit_logs` rows with before/after JSON for create, update, delete, check_in, check_out |
+| `IdPhotoService` + `IdPhotoRetentionService` | One ID card photo per booking (`stay_id_photos`, private storage); removed with the booking or room; a hosted job purges photos 90 days after check-out at start-up and daily |
+| `AuditService` | `audit_logs` rows with before/after JSON for create, update, delete, check_in, check_out; `RecordSystemAsync` for jobs (no user, IP `system`) |
 
 ## Data
 
@@ -64,7 +65,8 @@ PostgreSQL (`StaySearchExtensions`).
 - Antiforgery on every non-GET request (`X-CSRF-Token` header / `_token` field).
 - Ability policies: `admin` everything, `front_desk` everything but user management, `housekeeping` view/checkout/upload.
 - CSP with a per-request script nonce, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`.
-- Uploads outside `wwwroot`, delivered only by `FilesController` after authorization, with `nosniff`.
+- Uploads outside `wwwroot`, delivered only by `FilesController` after authorization, with `nosniff`. ID card photos
+  are shrunk in the browser (`Scripts/core/image.js`), served with `no-store`, and purged after the retention period.
 - PostgreSQL: RLS enabled on all tables without policies.
 
 ## Front end

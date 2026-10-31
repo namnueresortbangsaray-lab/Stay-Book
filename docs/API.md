@@ -46,11 +46,17 @@ Checks run in this order: 401 → 419 → 403 → 422/404/409.
 | POST | `/api/v1/room-types` | manage_rooms | Create type: `name` (`กรุณากรอกชื่อประเภทห้อง`) plus the room price and guest fields and rules |
 | PUT / DELETE | `/api/v1/room-types/{id}` | manage_rooms | Update or rename (rooms of the type follow; their prices do not change) / delete (422 while used) |
 | GET | `/files/{id}` | any (signed in) | Download an attachment |
+| GET | `/api/v1/id-photos` | any | Bookings that have an ID card photo: `stay_id, size_bytes, created_at, delete_after` (`delete_after` = check-out date + retention, once checked out) |
+| POST | `/api/v1/stays/{id}/id-photo` | booking | Multipart `file`: JPEG, PNG or WebP ≤ 2 MB (the dashboard shrinks it to WebP ≤ 1600 px first); replaces an existing photo |
+| DELETE | `/api/v1/stays/{id}/id-photo` | booking | Remove the photo (404 `ไม่พบรูปบัตร`) |
+| GET | `/files/id-photo/{stayId}` | any (signed in) | The photo, inline, `Cache-Control: no-store` |
 | GET | `/api/v1/users` | manage_users | Staff accounts: `id, name, email, role, active, locked_until, created_at, updated_at` (never hashes or stamps) |
 | POST | `/api/v1/users` | manage_users | Create: `name` (≥ 2), `email`, `role` (`admin`/`front_desk`/`housekeeping`), `password`, `confirm_password` |
 | PUT | `/api/v1/users/{id}` | manage_users | Update `name, email, role, active` (accounts are deactivated, never deleted) |
 | POST | `/api/v1/users/{id}/password` | manage_users | Set a new password (`password`, `confirm_password`); also lifts a sign-in lockout |
 | POST | `/api/v1/account/password` | any (signed in) | Change own password: `current_password`, `password`, `confirm_password` |
+
+ID card photos are deleted automatically `IdPhotos__RetentionDays` (90) days after check-out, and with their booking or room.
 
 Abilities: `admin` all; `front_desk` all except user management; `housekeeping` view, checkout, upload.
 

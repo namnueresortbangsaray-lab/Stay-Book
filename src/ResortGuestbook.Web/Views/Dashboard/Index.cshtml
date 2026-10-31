@@ -1,5 +1,6 @@
 @model ResortGuestbook.Web.Services.Actor
 @inject Microsoft.Extensions.Options.IOptions<ResortGuestbook.Web.Infrastructure.Options.AuthOptions> AuthSettings
+@inject Microsoft.Extensions.Options.IOptions<ResortGuestbook.Web.Infrastructure.Options.IdPhotoOptions> PhotoSettings
 @{
     var name = string.IsNullOrEmpty(Model.Name) ? T["ui.user.fallback"].Value : Model.Name;
     var initial = System.Globalization.StringInfo.GetNextTextElement(name);
@@ -323,6 +324,21 @@
             <input type="checkbox" name="id_verified" class="form-checkbox check">
             <span>@T["ui.booking.id_verified"]</span>
           </label>
+          <div class="sm:col-span-2">
+            <p class="label" id="booking-id-photo-label">@T["ui.id_photo.label"]</p>
+            <div class="id-photo-field">
+              <button type="button" class="id-photo-thumb" data-action="view-id-photo" hidden aria-label="@T["ui.id_photo.view"]"><img data-id-photo-preview alt=""></button>
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" class="btn btn-secondary btn-sm" data-action="pick-id-photo" aria-describedby="booking-id-photo-label booking-id-photo-status"><icon name="camera" /><span data-id-photo-pick>@T["ui.id_photo.add"]</span></button>
+                  <button type="button" class="btn btn-ghost btn-sm" data-action="remove-id-photo" hidden><icon name="trash" /><span>@T["ui.id_photo.remove"]</span></button>
+                </div>
+                <p id="booking-id-photo-status" class="hint" data-id-photo-status aria-live="polite"></p>
+                <p class="hint">@T["ui.id_photo.retention", PhotoSettings.Value.RetentionDays]</p>
+              </div>
+              <input id="booking-id-photo" type="file" accept="image/*" capture="environment" hidden>
+            </div>
+          </div>
           <label class="check-row sm:col-span-2">
             <input type="checkbox" name="check_in_now" class="form-checkbox check">
             <span>@T["ui.booking.check_in_now"]</span>

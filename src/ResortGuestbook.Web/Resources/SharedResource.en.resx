@@ -1299,4 +1299,49 @@
   <data name="ui.password.rule" xml:space="preserve">
     <value>At least {0} characters; an easy phrase works, no symbols needed</value>
   </data>
+  <data name="ui.id_photo.label" xml:space="preserve">
+    <value>ID card photo</value>
+  </data>
+  <data name="ui.id_photo.add" xml:space="preserve">
+    <value>Take or choose photo</value>
+  </data>
+  <data name="ui.id_photo.replace" xml:space="preserve">
+    <value>Change photo</value>
+  </data>
+  <data name="ui.id_photo.remove" xml:space="preserve">
+    <value>Remove photo</value>
+  </data>
+  <data name="ui.id_photo.view" xml:space="preserve">
+    <value>View ID card photo</value>
+  </data>
+  <data name="ui.id_photo.on_file" xml:space="preserve">
+    <value>ID card photo on file</value>
+  </data>
+  <data name="ui.id_photo.none" xml:space="preserve">
+    <value>No photo yet (optional)</value>
+  </data>
+  <data name="ui.id_photo.stored" xml:space="preserve">
+    <value>Saved, {size}</value>
+  </data>
+  <data name="ui.id_photo.deleted_on" xml:space="preserve">
+    <value>Deleted automatically on {date}</value>
+  </data>
+  <data name="ui.id_photo.shrinking" xml:space="preserve">
+    <value>Shrinking photo…</value>
+  </data>
+  <data name="ui.id_photo.shrunk" xml:space="preserve">
+    <value>Shrunk {from} → {to} ({width}×{height} px); saved with the booking</value>
+  </data>
+  <data name="ui.id_photo.unreadable" xml:space="preserve">
+    <value>This image cannot be read; choose a JPEG, PNG or WebP photo</value>
+  </data>
+  <data name="ui.id_photo.will_remove" xml:space="preserve">
+    <value>The photo is removed when you save</value>
+  </data>
+  <data name="ui.id_photo.upload_failed" xml:space="preserve">
+    <value>Booking saved, but the ID photo was not; please attach it again</value>
+  </data>
+  <data name="ui.id_photo.retention" xml:space="preserve">
+    <value>Deleted automatically {0} days after checkout; only signed-in staff can view it</value>
+  </data>
 </root>

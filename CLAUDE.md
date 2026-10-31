@@ -40,6 +40,8 @@ Display TZ Asia/Bangkok, store UTC.
 - Staff accounts (D-25): `UserService` only; never delete users (deactivate), keep the self-lockout and last-admin guards,
   give a new security stamp on password/role/email/status changes, never put hashes or stamps in DTOs or audit rows.
   Keep `OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync` in the cookie events.
+- ID card photos (D-26) are personal data: only through `IdPhotoService`, never in `attachments`, the snapshot, logs
+  or audit JSON (audit holds size and type only); keep `no-store`, the retention purge and deletion with booking/room.
 - Guest satisfaction feedback is not recorded by staff (D-24): no feedback endpoint or UI. The `feedbacks` table and
   existing rows stay (read as `feedback_rating` / `average_feedback`) for a future guest-facing form.
 - `TreatWarningsAsErrors`, code style enforced in build, `dotnet format` clean. One type per file, file-scoped namespaces.
@@ -84,6 +86,8 @@ issues. ui-ux-pro-max review (2026-10-31): 16 findings, 14 fixed, 2 deferred (`d
 screenshots in `docs/design/after-skill/`.
 Zones and room types (branch `room-categories`, 2026-10-31): managed lists with room defaults, room form selects;
 D-23 in the migration plan.
+ID card photos (branch `id-photos`, 2026-11-01): optional photo in the booking form, shrunk in the browser to
+WebP ≤ 1600 px (a 6 MB phone photo ≈ 30–300 KB), private storage, purged 90 days after check-out; D-26.
 
 ## Next steps
 - Optional: `SupabaseFileStorage` (see docs/SUPABASE.md), concurrency tokens if staff report conflicting edits.

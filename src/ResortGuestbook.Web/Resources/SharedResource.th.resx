@@ -1299,4 +1299,49 @@
   <data name="ui.password.rule" xml:space="preserve">
     <value>อย่างน้อย {0} ตัวอักษร ใช้วลีที่จำง่ายได้ ไม่ต้องมีสัญลักษณ์</value>
   </data>
+  <data name="ui.id_photo.label" xml:space="preserve">
+    <value>รูปบัตรประชาชน</value>
+  </data>
+  <data name="ui.id_photo.add" xml:space="preserve">
+    <value>ถ่ายรูป / เลือกรูป</value>
+  </data>
+  <data name="ui.id_photo.replace" xml:space="preserve">
+    <value>เปลี่ยนรูป</value>
+  </data>
+  <data name="ui.id_photo.remove" xml:space="preserve">
+    <value>ลบรูป</value>
+  </data>
+  <data name="ui.id_photo.view" xml:space="preserve">
+    <value>ดูรูปบัตรประชาชน</value>
+  </data>
+  <data name="ui.id_photo.on_file" xml:space="preserve">
+    <value>มีรูปบัตรประชาชน</value>
+  </data>
+  <data name="ui.id_photo.none" xml:space="preserve">
+    <value>ยังไม่มีรูป (ไม่บังคับ)</value>
+  </data>
+  <data name="ui.id_photo.stored" xml:space="preserve">
+    <value>บันทึกไว้แล้ว {size}</value>
+  </data>
+  <data name="ui.id_photo.deleted_on" xml:space="preserve">
+    <value>ลบอัตโนมัติ {date}</value>
+  </data>
+  <data name="ui.id_photo.shrinking" xml:space="preserve">
+    <value>กำลังย่อรูป…</value>
+  </data>
+  <data name="ui.id_photo.shrunk" xml:space="preserve">
+    <value>ย่อแล้ว {from} → {to} ({width}×{height} px) จะบันทึกเมื่อกดบันทึก Booking</value>
+  </data>
+  <data name="ui.id_photo.unreadable" xml:space="preserve">
+    <value>อ่านไฟล์รูปนี้ไม่ได้ กรุณาเลือกรูป JPEG, PNG หรือ WebP</value>
+  </data>
+  <data name="ui.id_photo.will_remove" xml:space="preserve">
+    <value>รูปจะถูกลบเมื่อกดบันทึก</value>
+  </data>
+  <data name="ui.id_photo.upload_failed" xml:space="preserve">
+    <value>บันทึก Booking แล้ว แต่บันทึกรูปบัตรไม่สำเร็จ กรุณาแนบรูปใหม่</value>
+  </data>
+  <data name="ui.id_photo.retention" xml:space="preserve">
+    <value>รูปจะถูกลบอัตโนมัติ {0} วันหลังเช็กเอาต์ พนักงานที่เข้าสู่ระบบเท่านั้นที่ดูได้</value>
+  </data>
 </root>

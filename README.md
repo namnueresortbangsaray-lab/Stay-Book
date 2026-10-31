@@ -42,6 +42,8 @@ Open <http://localhost:8080> and sign in with the seeded demo account:
 | `DEMO_ADMIN_EMAIL`, `DEMO_ADMIN_PASSWORD` | demo values | Seeded administrator |
 | `Storage__Provider` | `Local` | File storage (`storage/uploads`, never public) |
 | `UPLOAD_MAX_BYTES` | `5242880` | Attachment limit (JPEG, PNG, WebP, PDF) |
+| `IdPhotos__MaxBytes` | `2097152` | ID card photo limit (JPEG, PNG, WebP; the browser shrinks photos to about 30–300 KB first) |
+| `IdPhotos__RetentionDays` | `90` | ID card photos are deleted this many days after check-out (checked at start-up and daily) |
 | `SESSION_LIFETIME` | `120` | Sign-in lifetime in minutes (sliding) |
 | `Auth__PasswordMinLength` | `10` | Minimum password length (no symbol or case rules) |
 | `Auth__SessionCheckSeconds` | `60` | How soon a password, role or status change signs out the user's other sessions |
@@ -165,6 +167,8 @@ caching, forwarded headers) in front of the non-root Kestrel container. For Supa
 - **Staff accounts:** admins add, edit and deactivate accounts on the *ผู้ใช้งาน* page; everyone changes their own password
   from the sidebar (or the phone menu). `user:create` is only needed for the first admin.
 - **Upload rejected (422):** only JPEG, PNG, WebP and PDF up to `UPLOAD_MAX_BYTES`, detected from the file content.
+- **ID card photos:** attached in the booking form (camera on phones), visible to every signed-in staff member, and
+  deleted automatically `IdPhotos__RetentionDays` days after check-out; each purge is in `audit_logs` (action `purge`).
 - **Styles missing when running locally:** run `npm --prefix src/ResortGuestbook.Web run build`.
 - **Supabase connection errors:** see the IPv6 and pooler notes in [docs/SUPABASE.md](docs/SUPABASE.md).
 

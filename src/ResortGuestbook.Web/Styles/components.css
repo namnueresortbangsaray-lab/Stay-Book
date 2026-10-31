@@ -305,6 +305,9 @@
   .dialog-sub { @apply mt-0.5 text-sm text-ink-muted; }
   .dialog-body { @apply min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6; }
   .dialog-actions { @apply flex flex-none items-center justify-end gap-2 border-t border-line bg-surface px-5 py-3 sm:px-6; padding-bottom: calc(0.75rem + env(safe-area-inset-bottom)); }
+  .id-photo-field { @apply mt-1 flex items-start gap-3; }
+  .id-photo-thumb { @apply h-20 w-28 flex-none overflow-hidden rounded border border-line bg-sunken; }
+  .id-photo-thumb img { @apply h-full w-full object-cover; }
   .form-section + .form-section { @apply mt-6 border-t border-line pt-6; }
   .form-section-title { @apply mb-3 text-base font-semibold text-ink; }
   .form-grid { @apply grid gap-4 sm:grid-cols-2; }
