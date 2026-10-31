@@ -103,6 +103,56 @@ public sealed class WebTests : IClassFixture<StayBookFactory>
     }
 
     [Fact]
+    public async Task AdminsManageAccountsAndDeactivationEndsSessions()
+    {
+        await app.AddUserAsync("desk-users@staybook.local", Roles.FrontDesk, "FrontDesk12345!");
+        using var desk = app.CreateBrowser();
+        await Browser.SignInAsync(desk, "desk-users@staybook.local", "FrontDesk12345!");
+        Assert.Equal(HttpStatusCode.Forbidden, (await desk.GetAsync("/api/v1/users")).StatusCode);
+
+        using var admin = app.CreateBrowser();
+        var token = await Browser.SignInAsync(admin, StayBookFactory.AdminEmail, StayBookFactory.AdminPassword);
+        var created = await Browser.SendJsonAsync(admin, HttpMethod.Post, "/api/v1/users",
+            new { name = "พนักงานใหม่", email = "new-staff@staybook.local", role = Roles.Housekeeping, password = "first password 1", confirm_password = "first password 1" }, token);
+        Assert.Equal(HttpStatusCode.OK, created.StatusCode);
+        var data = (await Browser.EnvelopeAsync(created)).GetProperty("data");
+        Assert.False(data.TryGetProperty("password_hash", out _));
+        var id = data.GetProperty("id").GetString();
+
+        using var staff = app.CreateBrowser();
+        await Browser.SignInAsync(staff, "new-staff@staybook.local", "first password 1");
+        Assert.Equal(HttpStatusCode.OK, (await staff.GetAsync("/api/v1/snapshot")).StatusCode);
+
+        var deactivated = await Browser.SendJsonAsync(admin, HttpMethod.Put, $"/api/v1/users/{id}",
+            new { name = "พนักงานใหม่", email = "new-staff@staybook.local", role = Roles.Housekeeping, active = false }, token);
+        Assert.Equal(HttpStatusCode.OK, deactivated.StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, (await staff.GetAsync("/api/v1/snapshot")).StatusCode);
+        var again = await Browser.PostLoginAsync(app.CreateBrowser(), "new-staff@staybook.local", "first password 1");
+        Assert.Equal(HttpStatusCode.OK, again.StatusCode);
+    }
+
+    [Fact]
+    public async Task ChangingOwnPasswordKeepsThisSessionAndRetiresTheOldPassword()
+    {
+        await app.AddUserAsync("self-change@staybook.local", Roles.FrontDesk, "OldPassword123!");
+        using var client = app.CreateBrowser();
+        var token = await Browser.SignInAsync(client, "self-change@staybook.local", "OldPassword123!");
+
+        var wrong = await Browser.SendJsonAsync(client, HttpMethod.Post, "/api/v1/account/password",
+            new { current_password = "nope", password = "NewPassword123!", confirm_password = "NewPassword123!" }, token);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, wrong.StatusCode);
+        Assert.Equal("รหัสผ่านปัจจุบันไม่ถูกต้อง", (await Browser.EnvelopeAsync(wrong)).GetProperty("errors").GetProperty("current_password").GetString());
+
+        var changed = await Browser.SendJsonAsync(client, HttpMethod.Post, "/api/v1/account/password",
+            new { current_password = "OldPassword123!", password = "NewPassword123!", confirm_password = "NewPassword123!" }, token);
+        Assert.Equal(HttpStatusCode.OK, changed.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/v1/snapshot")).StatusCode);
+
+        Assert.Equal(HttpStatusCode.OK, (await Browser.PostLoginAsync(app.CreateBrowser(), "self-change@staybook.local", "OldPassword123!")).StatusCode);
+        Assert.Equal(HttpStatusCode.Redirect, (await Browser.PostLoginAsync(app.CreateBrowser(), "self-change@staybook.local", "NewPassword123!")).StatusCode);
+    }
+
+    [Fact]
     public async Task RoomCategoriesAreReadableByStaffAndManagedOnlyWithRoomAbility()
     {
         await app.AddUserAsync("keeper-categories@staybook.local", Roles.Housekeeping, "Housekeeping123!");

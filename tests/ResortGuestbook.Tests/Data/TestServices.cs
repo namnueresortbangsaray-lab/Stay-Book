@@ -24,6 +24,7 @@ public sealed class TestServices : IAsyncDisposable
         Guests = new GuestService(db, Queries, audit);
         Stays = new StayService(db, Queries, audit, clock);
         Snapshots = new SnapshotService(Queries, clock);
+        Users = new UserService(db, audit, new LegacyBcryptPasswordHasher(), clock, Microsoft.Extensions.Options.Options.Create(new AuthOptions()));
     }
 
     public AppDbContext Db { get; }
@@ -35,6 +36,7 @@ public sealed class TestServices : IAsyncDisposable
     public GuestService Guests { get; }
     public StayService Stays { get; }
     public SnapshotService Snapshots { get; }
+    public UserService Users { get; }
     public Actor Admin { get; private set; } = null!;
 
     public static async Task<TestServices> CreateAsync(IDatabaseFactory factory)

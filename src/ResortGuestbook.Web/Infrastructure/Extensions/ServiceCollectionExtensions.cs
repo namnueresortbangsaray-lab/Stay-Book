@@ -37,7 +37,12 @@ public static class ServiceCollectionExtensions
         var configuration = builder.Configuration;
         var services = builder.Services;
         var storage = configuration.GetSection("Storage").Get<StorageOptions>() ?? new StorageOptions();
-        var auth = new AuthOptions { SessionLifetimeMinutes = configuration.GetValue("SESSION_LIFETIME", 120) };
+        var auth = new AuthOptions
+        {
+            SessionLifetimeMinutes = configuration.GetValue("SESSION_LIFETIME", 120),
+            PasswordMinLength = configuration.GetValue("Auth:PasswordMinLength", 10),
+            SessionCheckSeconds = configuration.GetValue("Auth:SessionCheckSeconds", 60),
+        };
         var uploads = new UploadOptions { MaxBytes = configuration.GetValue("UPLOAD_MAX_BYTES", 5_242_880L) };
 
         builder.Host.UseSerilog((context, logger) => logger
@@ -56,7 +61,12 @@ public static class ServiceCollectionExtensions
         services.Configure<AppOptions>(configuration.GetSection("App"));
         services.Configure<StorageOptions>(configuration.GetSection("Storage"));
         services.Configure<UploadOptions>(o => o.MaxBytes = uploads.MaxBytes);
-        services.Configure<AuthOptions>(o => o.SessionLifetimeMinutes = auth.SessionLifetimeMinutes);
+        services.Configure<AuthOptions>(o =>
+        {
+            o.SessionLifetimeMinutes = auth.SessionLifetimeMinutes;
+            o.PasswordMinLength = auth.PasswordMinLength;
+            o.SessionCheckSeconds = auth.SessionCheckSeconds;
+        });
         services.Configure<BackupOptions>(o => o.Keep = configuration.GetValue("BACKUP_KEEP", 7));
         services.Configure<SeedOptions>(o =>
         {
@@ -122,6 +132,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<AuditService>();
         services.AddScoped<RoomService>();
         services.AddScoped<RoomCategoryService>();
+        services.AddScoped<UserService>();
         services.AddScoped<GuestService>();
         services.AddScoped<StayService>();
         services.AddScoped<SnapshotService>();
@@ -150,6 +161,7 @@ public static class ServiceCollectionExtensions
             .AddUserStore<AppUserStore>()
             .AddSignInManager()
             .AddClaimsPrincipalFactory<AppClaimsPrincipalFactory>();
+        services.Configure<SecurityStampValidatorOptions>(o => o.ValidationInterval = TimeSpan.FromSeconds(auth.SessionCheckSeconds));
         services.AddAuthentication(IdentityConstants.ApplicationScheme).AddIdentityCookies(cookies => cookies.ApplicationCookie?.Configure(o =>
         {
             o.Cookie.Name = ".StayBook.Auth";
@@ -161,6 +173,8 @@ public static class ServiceCollectionExtensions
             o.LoginPath = "/login";
             o.Events = new CookieAuthenticationEvents
             {
+                // Sessions end when the user's security stamp changes (new password, role or status).
+                OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync,
                 OnRedirectToLogin = context =>
                 {
                     if (ApiResults.IsApi(context.Request))

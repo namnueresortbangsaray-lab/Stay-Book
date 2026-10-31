@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ResortGuestbook.Data.Entities;
 using ResortGuestbook.Data.Providers;
 using ResortGuestbook.Data.Seed;
+using ResortGuestbook.Web.Infrastructure.Identity;
+using ResortGuestbook.Web.Services;
 using ResortGuestbook.Web.Services.Errors;
 
 namespace ResortGuestbook.Tests.Data;
@@ -204,6 +207,83 @@ public abstract class ResortDataTests(IDatabaseFactory factory)
         Assert.Equal(4, await RoomCategorySync.AddMissingAsync(s.Db));
         Assert.Equal(["อาคารหลัก", "โซน B"], await s.Db.RoomZones.OrderBy(z => z.SortOrder).Select(z => z.Name).ToListAsync());
     }
+
+    [Fact]
+    public async Task AdminsCreateAccountsWithoutStoringSecretsInTheAudit()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        var user = await s.Users.CreateAsync(NewUser("นิดา ใจดี", "Nida@Resort.Test", Roles.FrontDesk), s.Admin, default);
+        Assert.Equal(("nida@resort.test", Roles.FrontDesk, true), (user.Email, user.Role, user.Active));
+        var stored = await s.Db.Users.SingleAsync(u => u.Id == user.Id);
+        Assert.NotEqual(PasswordVerificationResult.Failed, new LegacyBcryptPasswordHasher().VerifyHashedPassword(stored, stored.PasswordHash, "correct horse battery"));
+        var audit = await s.Db.AuditLogs.SingleAsync(a => a.EntityType == "user");
+        Assert.DoesNotContain("password", audit.AfterJson!, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("stamp", audit.AfterJson!, StringComparison.OrdinalIgnoreCase);
+
+        var duplicate = await Assert.ThrowsAsync<DbUpdateException>(() => s.Users.CreateAsync(NewUser("อีกคน", "NIDA@resort.test", Roles.Housekeeping), s.Admin, default));
+        Assert.True(DbErrors.IsDuplicate(duplicate));
+        var weak = await Assert.ThrowsAsync<ValidationException>(() => s.Users.CreateAsync(TestInputs.Input(("name", "สั้น"), ("email", "x@y.z"), ("role", "admin"), ("password", "short"), ("confirm_password", "short")), s.Admin, default));
+        Assert.Equal("รหัสผ่านต้องมีอย่างน้อย 10 ตัวอักษร", weak.Errors["password"]);
+    }
+
+    [Fact]
+    public async Task AdminsCannotLockThemselvesOrTheResortOut()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        var self = s.Admin.Id.ToString();
+        var role = await Assert.ThrowsAsync<ValidationException>(() => s.Users.UpdateAsync(Update(s.Admin.Name, s.Admin.Email, Roles.FrontDesk, true), self, s.Admin, default));
+        Assert.Equal("เปลี่ยนสิทธิ์ของบัญชีตัวเองไม่ได้", role.Errors["role"]);
+        var status = await Assert.ThrowsAsync<ValidationException>(() => s.Users.UpdateAsync(Update(s.Admin.Name, s.Admin.Email, Roles.Admin, false), self, s.Admin, default));
+        Assert.Equal("ปิดใช้งานบัญชีตัวเองไม่ได้", status.Errors["active"]);
+
+        // Another account (acting as admin) still cannot demote the only active admin.
+        var other = await s.Users.CreateAsync(NewUser("ผู้ช่วย", "helper@resort.test", Roles.FrontDesk), s.Admin, default);
+        var helper = new Actor(other.Id, other.Name, other.Email, Roles.Admin, "127.0.0.1");
+        var last = await Assert.ThrowsAsync<ValidationException>(() => s.Users.UpdateAsync(Update(s.Admin.Name, s.Admin.Email, Roles.FrontDesk, true), self, helper, default));
+        Assert.Equal("ต้องมีผู้ดูแลระบบที่ใช้งานอยู่อย่างน้อย 1 คน", last.Errors["role"]);
+
+        await s.Users.CreateAsync(NewUser("ผู้ดูแลคนที่สอง", "admin2@resort.test", Roles.Admin), s.Admin, default);
+        var stampBefore = (await s.Db.Users.AsNoTracking().SingleAsync(u => u.Id == s.Admin.Id)).SecurityStamp;
+        var demoted = await s.Users.UpdateAsync(Update(s.Admin.Name, s.Admin.Email, Roles.FrontDesk, true), self, helper, default);
+        Assert.Equal(Roles.FrontDesk, demoted.Role);
+        Assert.NotEqual(stampBefore, (await s.Db.Users.AsNoTracking().SingleAsync(u => u.Id == s.Admin.Id)).SecurityStamp);
+    }
+
+    [Fact]
+    public async Task NewPasswordsEndOtherSessionsAndNeedTheCurrentOne()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        var user = await s.Users.CreateAsync(NewUser("แม่บ้าน", "keeper@resort.test", Roles.Housekeeping), s.Admin, default);
+        var entity = await s.Db.Users.SingleAsync(u => u.Id == user.Id);
+        entity.LockoutEnd = DateTimeOffset.UtcNow.AddMinutes(10);
+        entity.AccessFailedCount = 5;
+        var stamp = entity.SecurityStamp;
+        await s.Db.SaveChangesAsync();
+        Assert.NotNull((await s.Users.ListAsync(default)).Single(u => u.Id == user.Id).LockedUntil);
+
+        await s.Users.SetPasswordAsync(TestInputs.Input(("password", "reset by admin 1"), ("confirm_password", "reset by admin 1")), user.Id.ToString(), s.Admin, default);
+        await s.Db.Entry(entity).ReloadAsync();
+        Assert.Equal((null, 0), (entity.LockoutEnd, entity.AccessFailedCount));
+        Assert.NotEqual(stamp, entity.SecurityStamp);
+
+        var keeper = new Actor(user.Id, user.Name, user.Email, user.Role, "127.0.0.1");
+        var wrong = await Assert.ThrowsAsync<ValidationException>(() => s.Users.ChangeOwnPasswordAsync(TestInputs.Input(("current_password", "not it"), ("password", "my own secret 22"), ("confirm_password", "my own secret 22")), keeper, default));
+        Assert.Equal("รหัสผ่านปัจจุบันไม่ถูกต้อง", wrong.Errors["current_password"]);
+        var mismatch = await Assert.ThrowsAsync<ValidationException>(() => s.Users.ChangeOwnPasswordAsync(TestInputs.Input(("current_password", "reset by admin 1"), ("password", "my own secret 22"), ("confirm_password", "my own secret 23")), keeper, default));
+        Assert.Equal("รหัสผ่านยืนยันไม่ตรงกัน", mismatch.Errors["confirm_password"]);
+
+        var changed = await s.Users.ChangeOwnPasswordAsync(TestInputs.Input(("current_password", "reset by admin 1"), ("password", "my own secret 22"), ("confirm_password", "my own secret 22")), keeper, default);
+        var hasher = new LegacyBcryptPasswordHasher();
+        Assert.Equal(PasswordVerificationResult.Failed, hasher.VerifyHashedPassword(changed, changed.PasswordHash, "reset by admin 1"));
+        Assert.NotEqual(PasswordVerificationResult.Failed, hasher.VerifyHashedPassword(changed, changed.PasswordHash, "my own secret 22"));
+        Assert.Equal(2, await s.Db.AuditLogs.CountAsync(a => a.EntityType == "user" && a.Action == "password"));
+    }
+
+    private static ResortGuestbook.Web.Infrastructure.Http.RequestInput NewUser(string name, string email, string role) =>
+        TestInputs.Input(("name", name), ("email", email), ("role", role), ("password", "correct horse battery"), ("confirm_password", "correct horse battery"));
+
+    private static ResortGuestbook.Web.Infrastructure.Http.RequestInput Update(string name, string email, string role, bool active) =>
+        TestInputs.Input(("name", name), ("email", email), ("role", role), ("active", active));
 
     [Fact]
     public async Task DeletingRoomRemovesItsStays()

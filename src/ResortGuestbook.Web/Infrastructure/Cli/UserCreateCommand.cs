@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using ResortGuestbook.Data;
 using ResortGuestbook.Data.Entities;
 using ResortGuestbook.Data.Identity;
+using ResortGuestbook.Web.Infrastructure.Options;
 
 namespace ResortGuestbook.Web.Infrastructure.Cli;
 
-public sealed class UserCreateCommand(AppDbContext db, IPasswordHasher<AppUser> hasher) : ICliCommand
+public sealed class UserCreateCommand(AppDbContext db, IPasswordHasher<AppUser> hasher, IOptions<AuthOptions> auth) : ICliCommand
 {
     public string Name => "user:create";
 
@@ -21,6 +23,12 @@ public sealed class UserCreateCommand(AppDbContext db, IPasswordHasher<AppUser> 
                 await error.WriteLineAsync($"Missing --{key}");
                 return 1;
             }
+        }
+
+        if (arguments.Option("password")!.Length < auth.Value.PasswordMinLength)
+        {
+            await error.WriteLineAsync($"Password must be at least {auth.Value.PasswordMinLength} characters.");
+            return 1;
         }
 
         var role = arguments.Option("role") ?? Roles.FrontDesk;

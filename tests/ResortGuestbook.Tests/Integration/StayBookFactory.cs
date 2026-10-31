@@ -32,6 +32,7 @@ public class StayBookFactory : WebApplicationFactory<Program>
             ["Storage__KeysPath"] = Path.Combine(Root, "keys"),
             ["DEMO_ADMIN_EMAIL"] = AdminEmail,
             ["DEMO_ADMIN_PASSWORD"] = AdminPassword,
+            ["Auth__SessionCheckSeconds"] = "0",
         };
         foreach (var (key, value) in settings)
         {
