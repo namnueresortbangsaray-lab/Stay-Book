@@ -104,7 +104,11 @@ Set `STAYBOOK_TEST_POSTGRES` to an admin connection string to use an existing Po
 
 ## Backup and restore
 
-- `make backup` writes `stay-book-YYYYmmdd-HHMMSS.sqlite` into the `staybook_backups` volume and keeps `BACKUP_KEEP` files.
+- The `backup` service makes one at start and then every 24 hours (`BACKUP_INTERVAL_SECONDS`) while the stack runs;
+  `make backup` makes one now. Both write `stay-book-YYYYmmdd-HHMMSS.sqlite` into the `staybook_backups` volume, which keeps
+  the newest `BACKUP_KEEP` files (default 7).
+- Copy backups off this machine regularly, for example:
+  `docker run --rm -v stay-book_staybook_backups:/b:ro -v "$PWD/offsite:/out" alpine cp -r /b/. /out/`
 - Back up the `staybook_uploads` volume together with the database; files and rows belong together.
 - Restore: stop the stack, copy a backup over `/app/storage/database/staybook.db` in the `staybook_database` volume
   (delete `staybook.db-wal`/`-shm`), start again.

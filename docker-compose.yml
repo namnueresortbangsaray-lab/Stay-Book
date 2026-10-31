@@ -3,6 +3,26 @@
 # The project and volume names are those of v1, so an existing installation keeps its database and uploads.
 name: stay-book
 
+# Shared by the app and the backup job: same image, settings and volumes.
+x-app: &app
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+  image: staybook-web:latest
+  env_file: .env
+  environment:
+    ConnectionStrings__Sqlite: Data Source=/app/storage/database/staybook.db
+    Storage__UploadsPath: /app/storage/uploads
+    Storage__BackupsPath: /app/storage/backups
+    Storage__LogsPath: /app/storage/logs
+    Storage__KeysPath: /app/storage/keys
+  volumes:
+    - staybook_database:/app/storage/database
+    - staybook_uploads:/app/storage/uploads
+    - staybook_backups:/app/storage/backups
+    - staybook_logs:/app/storage/logs
+    - staybook_keys:/app/storage/keys
+
 services:
   # Existing volumes may belong to the v1 image's www-data (uid 82); the app runs as uid 1654.
   storage-init:
@@ -19,28 +39,25 @@ services:
       - staybook_keys:/storage/keys
 
   web:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    image: staybook-web:latest
-    env_file: .env
-    environment:
-      ConnectionStrings__Sqlite: Data Source=/app/storage/database/staybook.db
-      Storage__UploadsPath: /app/storage/uploads
-      Storage__BackupsPath: /app/storage/backups
-      Storage__LogsPath: /app/storage/logs
-      Storage__KeysPath: /app/storage/keys
+    <<: *app
     ports:
       - "${APP_PORT:-8080}:8080"
-    volumes:
-      - staybook_database:/app/storage/database
-      - staybook_uploads:/app/storage/uploads
-      - staybook_backups:/app/storage/backups
-      - staybook_logs:/app/storage/logs
-      - staybook_keys:/app/storage/keys
     depends_on:
       storage-init:
         condition: service_completed_successfully
+
+  # Daily SQLite backup (VACUUM INTO, safe while the app runs) into the backups volume: one at start, then every
+  # BACKUP_INTERVAL_SECONDS (default 24 h); db:backup keeps the newest BACKUP_KEEP files. Copy that volume off this
+  # machine as well (see README, Backup and restore).
+  backup:
+    <<: *app
+    entrypoint: ["bash", "-c", "while true; do dotnet ResortGuestbook.Web.dll db:backup; sleep \"${BACKUP_INTERVAL_SECONDS:-86400}\"; done"]
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    depends_on:
+      web:
+        condition: service_healthy
 
   # Local PostgreSQL 15 for testing the Supabase provider: docker compose --profile pgtest up -d postgres
   postgres:
