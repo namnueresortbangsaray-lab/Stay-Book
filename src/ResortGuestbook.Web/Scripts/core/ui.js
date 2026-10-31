@@ -97,7 +97,7 @@ export function openDropdownMenu(trigger, items, label = t('ui.menu.more')) {
   openMenu = layer;
 
   const menu = layer.querySelector('.action-menu');
-  if (window.matchMedia('(min-width: 768px)').matches) {
+  if (window.matchMedia('(min-width: 640px)').matches) {
     const rect = trigger.getBoundingClientRect();
     const width = Math.max(menu.offsetWidth, 208);
     menu.style.left = `${Math.max(12, Math.min(rect.right - width, window.innerWidth - width - 12))}px`;

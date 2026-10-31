@@ -1,6 +1,7 @@
-// Captures every screen and dialog at three widths.
-// Usage: BASE_URL=http://localhost:8097 node screenshots.mjs <outDir> [light,dark]
-// Themes are applied through the OS colour scheme (the app's default "System" setting).
+// Captures every screen and dialog per theme and width into <outDir>/<theme>/<width>/.
+// Usage: BASE_URL=http://localhost:8097 node screenshots.mjs <outDir> [light,dark] [390,768,1024,1440]
+// Themes are applied through the OS colour scheme (the app's default "System" setting). Widths below 1280
+// emulate a touch device (phone below 640), so touch sizing applies as on an iPad or phone.
 import { mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { chromium } from 'playwright';
@@ -8,7 +9,8 @@ import { chromium } from 'playwright';
 const base = process.env.BASE_URL ?? 'http://localhost:8097';
 const out = resolve(process.argv[2] ?? 'shots');
 const themes = (process.argv[3] ?? 'light').split(',');
-const widths = { desktop: [1440, 900], tablet: [768, 1024], mobile: [390, 844] };
+const heights = { 390: 844, 768: 1024, 1024: 768, 1180: 820, 1440: 900 };
+const widths = (process.argv[4] ?? '390,768,1024,1440').split(',').map(Number);
 
 const ready = page => page.waitForFunction(() => !document.querySelector('#splash') && document.querySelector('#loading')?.hidden !== false, null, { timeout: 15000 });
 const go = async (page, hash) => {
@@ -39,10 +41,14 @@ const screens = [
 
 const browser = await chromium.launch();
 for (const theme of themes) {
-  for (const [device, [width, height]] of Object.entries(widths)) {
-    const dir = join(out, theme, device);
+  for (const width of widths) {
+    const height = heights[width] ?? 900;
+    const dir = join(out, theme, String(width));
     mkdirSync(dir, { recursive: true });
-    const context = await browser.newContext({ viewport: { width, height }, colorScheme: theme, locale: 'th-TH', timezoneId: 'Asia/Bangkok', deviceScaleFactor: 1 });
+    const context = await browser.newContext({
+      viewport: { width, height }, colorScheme: theme, locale: 'th-TH', timezoneId: 'Asia/Bangkok', deviceScaleFactor: 1,
+      hasTouch: width < 1280, isMobile: width < 640,
+    });
     const page = await context.newPage();
 
     await page.goto(`${base}/login`);
@@ -66,15 +72,15 @@ for (const theme of themes) {
       await page.screenshot({ path: join(dir, `${name}.png`), fullPage: !name.match(/dialog|form|profile|checkout|palette|confirm/) });
     }
     await closeDialogs(page);
-    if (width < 768) {
-      await page.locator('[data-action="mobile-more"], [data-action="open-nav"]').first().click();
+    if (width < 640) {
+      await page.locator('[data-action="mobile-more"]:visible').first().click();
       await page.waitForTimeout(300);
       await page.screenshot({ path: join(dir, '13-mobile-menu.png') });
     }
     await page.goto(`${base}/does-not-exist`);
     await page.screenshot({ path: join(dir, '14-error-404.png'), fullPage: true });
     await context.close();
-    console.log(`${theme}/${device} done`);
+    console.log(`${theme}/${width} done`);
   }
 }
 await browser.close();

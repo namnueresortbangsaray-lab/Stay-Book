@@ -13,7 +13,7 @@
   <aside class="sidebar no-print">
     <div class="sidebar-inner">
       <div class="brand">
-        <a href="/#today" class="flex items-center" aria-label="@T["ui.nav.today"]">
+        <a href="/#today" class="flex min-h-11 min-w-11 items-center justify-center" aria-label="@T["ui.nav.today"]">
           <partial name="_Logo" model='"brand-logo"' />
           <img src="/images/logo_square.webp" alt="" class="brand-mark" width="36" height="36" data-logo>
         </a>
@@ -45,6 +45,7 @@
 
   <div class="app-main">
     <header class="topbar no-print">
+      <button type="button" class="btn btn-ghost btn-icon -ml-2 sm:hidden" data-action="mobile-more" aria-haspopup="dialog" aria-label="@T["ui.nav.open"]" title="@T["ui.nav.open"]"><icon name="menu" /></button>
       <nav aria-label="@T["ui.breadcrumb"]" class="min-w-0">
         <ol class="breadcrumb">
           <li class="hidden sm:block">@T["app_name"]</li>
@@ -59,8 +60,8 @@
           <kbd class="hidden lg:inline">Ctrl K</kbd>
         </button>
         <button type="button" class="btn btn-ghost btn-icon sm:hidden" data-action="command" aria-label="@T["ui.search"]"><icon name="search" /></button>
-        <button type="button" class="btn btn-ghost btn-icon hidden md:inline-flex" data-action="theme-menu" aria-haspopup="menu" aria-expanded="false" aria-label="@T["ui.theme.label"]" title="@T["ui.theme.label"]"><icon name="sun" class="theme-icon-light" /><icon name="moon" class="theme-icon-dark" /></button>
-        <button type="button" class="btn btn-ghost btn-icon hidden md:inline-flex" data-action="toggle-density" aria-pressed="false" aria-label="@T["ui.density.compact"]" title="@T["ui.density.compact"]"><icon name="density" /></button>
+        <button type="button" class="btn btn-ghost btn-icon hidden sm:inline-flex" data-action="theme-menu" aria-haspopup="menu" aria-expanded="false" aria-label="@T["ui.theme.label"]" title="@T["ui.theme.label"]"><icon name="sun" class="theme-icon-light" /><icon name="moon" class="theme-icon-dark" /></button>
+        <button type="button" class="btn btn-ghost btn-icon hidden sm:inline-flex" data-action="toggle-density" aria-pressed="false" aria-label="@T["ui.density.compact"]" title="@T["ui.density.compact"]"><icon name="density" /></button>
         <button type="button" class="btn btn-primary" data-action="new-booking" data-booking-control>
           <icon name="plus" />
           <span class="hidden sm:inline">@T["ui.booking.new"]</span>
@@ -104,7 +105,7 @@
             <icon name="search" />
             <input id="stay-search" class="field" type="search" placeholder="@T["ui.bookings.search"]" aria-label="@T["ui.bookings.search"]" autocomplete="off">
           </div>
-          <button type="button" class="btn btn-secondary max-md:!hidden" data-columns="bookings" aria-haspopup="menu" aria-expanded="false"><icon name="columns" /><span>@T["ui.table.columns"]</span></button>
+          <button type="button" class="btn btn-secondary max-sm:!hidden" data-columns="bookings" aria-haspopup="menu" aria-expanded="false"><icon name="columns" /><span>@T["ui.table.columns"]</span></button>
         </div>
         <div id="stay-status-chips" class="chip-row mb-3" role="group" aria-label="@T["ui.bookings.status_filter"]"></div>
         <select id="stay-status" hidden aria-hidden="true" tabindex="-1">
@@ -165,7 +166,7 @@
             <icon name="search" />
             <input id="guest-search" class="field" type="search" placeholder="@T["ui.guests.search"]" aria-label="@T["ui.guests.search"]" autocomplete="off">
           </div>
-          <label class="md:hidden">
+          <label class="sm:hidden">
             <span class="sr-only">@T["ui.guests.sort"]</span>
             <select id="guest-sort" class="field form-select w-auto">
               <option value="latest">@T["ui.guests.sort.latest"]</option>

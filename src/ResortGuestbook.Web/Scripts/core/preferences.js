@@ -10,7 +10,7 @@ const save = (key, value) => {
 };
 
 const isRail = () => root.dataset.sidebar === 'collapsed'
-  || (root.dataset.sidebar !== 'expanded' && window.matchMedia('(min-width: 768px) and (max-width: 1279px)').matches);
+  || (root.dataset.sidebar !== 'expanded' && window.matchMedia('(min-width: 640px) and (max-width: 1279px)').matches);
 
 function sync() {
   document.querySelectorAll('[data-action="toggle-density"]').forEach(button => button.setAttribute('aria-pressed', String(root.dataset.density === 'compact')));
@@ -34,5 +34,5 @@ export function initPreferences() {
     }
     sync();
   });
-  window.matchMedia('(min-width: 768px) and (max-width: 1279px)').addEventListener('change', sync);
+  window.matchMedia('(min-width: 640px) and (max-width: 1279px)').addEventListener('change', sync);
 }

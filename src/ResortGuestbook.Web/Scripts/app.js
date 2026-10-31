@@ -90,9 +90,10 @@ if ($('#app')) {
   function primaryStayAction(s, size = 'sm') {
     const status = Number(s.status);
     const attributes = { 'data-id': s.id, 'data-row-primary': true };
-    if (status === 0 && canBook) return button({ label: t('ui.action.check_in'), variant: 'primary', size, iconName: 'arrive', attributes: { ...attributes, 'data-action': 'check-in' } });
-    if (status === 1 && canCheckout) return button({ label: t('ui.action.checkout'), variant: 'primary', size, iconName: 'depart', attributes: { ...attributes, 'data-action': 'checkout' } });
-    if (status === 2 && canBook) return button({ label: t('ui.action.feedback'), variant: 'secondary', size, iconName: 'star', attributes: { ...attributes, 'data-action': 'feedback' } });
+    const tip = label => ({ ...attributes, title: label });
+    if (status === 0 && canBook) return button({ label: t('ui.action.check_in'), variant: 'primary', size, iconName: 'arrive', attributes: { ...tip(t('ui.action.check_in')), 'data-action': 'check-in' } });
+    if (status === 1 && canCheckout) return button({ label: t('ui.action.checkout'), variant: 'primary', size, iconName: 'depart', attributes: { ...tip(t('ui.action.checkout')), 'data-action': 'checkout' } });
+    if (status === 2 && canBook) return button({ label: t('ui.action.feedback'), variant: 'secondary', size, iconName: 'star', attributes: { ...tip(t('ui.action.feedback')), 'data-action': 'feedback' } });
     return '';
   }
 
@@ -162,14 +163,14 @@ if ($('#app')) {
           <h2 class="page-heading">${h(greeting)}</h2>
         </div>
       </div>
-      <div class="kpi-strip grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+      <div class="kpi-strip kpi-strip-5">
         ${kpi(t('ui.today.arrivals'), number(arrivals.length), t('ui.today.arrivals_sub', { n: arrivals.filter(s => !s.id_verified).length }), 'arrive')}
         ${kpi(t('ui.today.departures'), number(departures.length), t('ui.today.departures_sub'), 'depart')}
         ${kpi(t('ui.today.in_house'), number(inHouse.length), t('ui.guests_count', { n: inHouse.reduce((sum, s) => sum + Number(s.guests), 0) }), 'bed')}
         ${kpi(t('ui.today.occupancy'), `${occupancy}%`, t('ui.today.occupancy_sub', { used: inHouse.length, total: rooms.length }), 'roomMap')}
         ${kpi(t('ui.today.deposits'), number(unpaid.length), money(unpaid.reduce((sum, s) => sum + Number(s.deposit_amount_satang), 0)), 'wallet')}
       </div>
-      <div class="mt-6 grid gap-6 lg:grid-cols-2">
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
         <section class="card" aria-labelledby="today-arrivals">
           <div class="card-header"><h3 id="today-arrivals" class="card-title">${h(t('ui.today.arrivals_title'))}</h3>${pill('info', 'arrive', t('ui.items_count', { n: arrivals.length }))}</div>
           ${listOrEmpty(arrivals.map(s => todayRow(s, canBook ? button({ label: t('ui.action.check_in'), variant: 'primary', size: 'sm', iconName: 'arrive', attributes: { 'data-action': 'check-in', 'data-id': s.id } }) : '')), t('ui.today.no_arrivals'))}
@@ -189,7 +190,7 @@ if ($('#app')) {
           <p class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-muted">${Object.values(ROOM_STATES).map(x => `<span class="inline-flex items-center gap-1.5"><span class="legend-swatch tone-${x.tone}"></span>${h(x.label)}</span>`).join('')}</p>
         </div>
       </section>
-      <div class="mt-6 grid gap-6 lg:grid-cols-2">
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
         <section class="card" aria-labelledby="today-deposits">
           <div class="card-header"><h3 id="today-deposits" class="card-title">${h(t('ui.today.deposits_title'))}</h3><button type="button" class="link text-sm" data-page="bookings">${h(t('ui.today.open_bookings'))}</button></div>
           ${listOrEmpty(unpaid.slice(0, 6).map(s => todayRow(s, '')), t('ui.today.no_deposits'))}
@@ -277,21 +278,21 @@ if ($('#app')) {
         cell: s => {
           const files = attachmentsOf([s.id]);
           return `<p class="cell-title">${highlight(s.guest_name, q)}</p><p class="cell-sub">${highlight(s.phone || t('ui.no_phone'), q)}</p>
-            ${s.note ? `<p class="cell-sub mt-0.5 flex max-w-[20rem] items-start gap-1" title="${h(s.note)}">${icon('note', 'mt-0.5 h-3.5 w-3.5')}<span class="truncate">${highlight(s.note, q)}</span></p>` : ''}
+            ${s.note ? `<p class="cell-sub cell-note mt-0.5 flex items-start gap-1" title="${h(s.note)}">${icon('note', 'mt-0.5 h-3.5 w-3.5')}<span class="truncate">${highlight(s.note, q)}</span></p>` : ''}
             ${files.length ? `<p class="mt-0.5 flex flex-wrap gap-x-3">${files.map(f => `<a class="link inline-flex items-center gap-1 text-xs" href="/files/${f.id}" target="_blank" rel="noopener">${icon('attachment', 'h-3.5 w-3.5')}${h(f.original_name)}</a>`).join('')}</p>` : ''}`;
         },
       },
-      { key: 'room', label: t('ui.col.room'), className: 'whitespace-nowrap', value: s => s.room_name, cell: s => `<span class="inline-flex items-center gap-2"><span class="room-no">${highlight(s.room_name, q)}</span><span class="cell-sub">${highlight(s.zone, q)}</span></span>` },
-      { key: 'check_in', label: t('ui.col.check_in'), className: 'whitespace-nowrap', firstDir: 'desc', value: s => s.check_in_date, cell: s => `<time datetime="${s.check_in_date}">${h(thaiDate(s.check_in_date))}</time>` },
-      { key: 'check_out', label: t('ui.col.check_out'), className: 'whitespace-nowrap', firstDir: 'desc', value: s => s.check_out_date, cell: s => `<time datetime="${s.check_out_date}">${h(thaiDate(s.check_out_date))}</time>` },
-      { key: 'nights', label: t('ui.col.nights'), num: true, optional: true, mobileHide: true, value: s => nights(s.check_in_date, s.check_out_date), cell: s => number(nights(s.check_in_date, s.check_out_date)) },
-      { key: 'guests', label: t('ui.col.guests'), num: true, optional: true, mobileHide: true, value: s => Number(s.guests), cell: s => number(s.guests) },
+      { key: 'room', label: t('ui.col.room'), className: 'whitespace-nowrap', value: s => s.room_name, cell: s => `<span class="inline-flex items-center gap-2"><span class="room-no">${highlight(s.room_name, q)}</span><span class="cell-sub tablet-hide">${highlight(s.zone, q)}</span></span>` },
+      { key: 'check_in', label: t('ui.col.check_in'), className: 'whitespace-nowrap', firstDir: 'desc', value: s => s.check_in_date, cell: s => `<time datetime="${s.check_in_date}">${h(thaiDate(s.check_in_date))}</time><span class="cell-sub tablet-only">→ <time datetime="${s.check_out_date}">${h(thaiDate(s.check_out_date))}</time></span>` },
+      { key: 'check_out', label: t('ui.col.check_out'), className: 'whitespace-nowrap', tabletHide: true, firstDir: 'desc', value: s => s.check_out_date, cell: s => `<time datetime="${s.check_out_date}">${h(thaiDate(s.check_out_date))}</time>` },
+      { key: 'nights', label: t('ui.col.nights'), num: true, optional: true, mobileHide: true, tabletHide: true, value: s => nights(s.check_in_date, s.check_out_date), cell: s => number(nights(s.check_in_date, s.check_out_date)) },
+      { key: 'guests', label: t('ui.col.guests'), num: true, optional: true, mobileHide: true, tabletHide: true, value: s => Number(s.guests), cell: s => number(s.guests) },
       {
         key: 'status', label: t('ui.col.status'), value: s => Number(s.status),
-        cell: s => `<span class="inline-flex flex-wrap justify-end gap-1 md:justify-start">${statusPill(s.status)}${!s.deposit_paid && Number(s.deposit_amount_satang) > 0 && Number(s.status) < 2 ? pill('warning', 'wallet', t('ui.flag.deposit_short')) : ''}</span>`,
+        cell: s => `<span class="inline-flex flex-wrap justify-end gap-1 sm:justify-start">${statusPill(s.status)}${!s.deposit_paid && Number(s.deposit_amount_satang) > 0 && Number(s.status) < 2 ? pill('warning', 'wallet', t('ui.flag.deposit_short')) : ''}</span>`,
       },
       { key: 'total', label: t('ui.col.total'), num: true, firstDir: 'desc', value: s => Number(s.total_amount_satang), cell: s => money(s.total_amount_satang) },
-      { key: 'balance', label: t('ui.col.balance'), num: true, optional: true, mobileHide: true, firstDir: 'desc', value: balanceOf, cell: s => `<span class="${balanceOf(s) ? 'text-ink' : 'text-ink-subtle'}">${money(balanceOf(s))}</span>` },
+      { key: 'balance', label: t('ui.col.balance'), num: true, optional: true, mobileHide: true, tabletHide: true, firstDir: 'desc', value: balanceOf, cell: s => `<span class="${balanceOf(s) ? 'text-ink' : 'text-ink-subtle'}">${money(balanceOf(s))}</span>` },
       { key: 'actions', label: t('ui.col.actions'), hideLabel: true, className: 'actions', cell: s => `<span class="inline-flex items-center gap-1">${primaryStayAction(s)}${menuTriggerButton({ context: 'stay', id: s.id, label: t('ui.booking.menu', { room: s.room_name }), size: 'sm' })}</span>` },
     ];
   }
@@ -395,7 +396,7 @@ if ($('#app')) {
     const percent = value => `${(value * 100).toFixed(1)}%`;
     $('#report-print-range').textContent = `${thaiDate(a.start)} – ${thaiDate(a.end)}`;
     $('#analytics').innerHTML = `
-      <div class="grid gap-6 xl:grid-cols-3">
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         ${figureGroup(t('ui.reports.group.stays'), [
           [t('ui.reports.bookings'), number(a.booking_count)],
           [t('ui.reports.checked_in'), number(a.check_in_count)],
@@ -415,7 +416,7 @@ if ($('#app')) {
           [t('ui.reports.feedback'), `${Number(a.average_feedback).toFixed(1)} / 5`],
         ])}
       </div>
-      <div class="mt-6 grid gap-6 xl:grid-cols-2">
+      <div class="mt-6 grid gap-6 lg:grid-cols-2">
         ${chartCard('revenue', t('ui.reports.revenue_title'), t('ui.reports.revenue_sub'), money(a.net_revenue_satang), {
           label: t('ui.reports.revenue_title'),
           format: value => money(Math.round(value)),
@@ -427,7 +428,7 @@ if ($('#app')) {
           points: a.daily.map(d => ({ label: d.date.slice(8), value: d.occupied, title: `${thaiDate(d.date)}: ${d.occupied}/${a.total_rooms}` })),
         }, { caption: t('ui.reports.occupancy_title'), headers: [t('ui.col.date'), t('ui.reports.rooms_used')], rows: a.daily.map(d => [thaiDate(d.date), `${d.occupied}/${a.total_rooms}`]) })}
       </div>
-      <div class="mt-6 grid gap-6 lg:grid-cols-2">
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
         ${breakdown(t('ui.reports.status_title'), [
           { label: STATUS[0].label, value: a.statuses.booked, tone: STATUS[0].tone },
           { label: STATUS[1].label, value: a.statuses.checked_in, tone: STATUS[1].tone },
@@ -446,12 +447,12 @@ if ($('#app')) {
     if (!state.data) return;
     const columns = [
       { key: 'room', label: t('ui.col.room'), className: 'cell-lead', value: r => r.name, cell: r => `<span class="inline-flex items-center gap-3"><span class="room-no">${h(r.name)}</span><span><span class="cell-title block">${h(r.type)}</span><span class="cell-sub block md:hidden">${h(r.zone)}</span></span></span>` },
-      { key: 'zone', label: t('ui.col.zone'), mobileHide: true, value: r => r.zone, cell: r => h(r.zone) },
+      { key: 'zone', label: t('ui.col.zone'), mobileHide: true, tabletHide: true, value: r => r.zone, cell: r => h(r.zone) },
       { key: 'price', label: t('ui.col.price'), num: true, value: r => Number(r.price_satang), cell: r => money(r.price_satang) },
       { key: 'capacity', label: t('ui.col.capacity'), num: true, value: r => Number(r.max_guests), cell: r => `${number(r.base_guests)}–${number(r.max_guests)}` },
-      { key: 'extra_fee', label: t('ui.col.extra_fee'), num: true, optional: true, value: r => Number(r.extra_guest_fee_satang), cell: r => money(r.extra_guest_fee_satang) },
+      { key: 'extra_fee', label: t('ui.col.extra_fee'), num: true, optional: true, tabletHide: true, value: r => Number(r.extra_guest_fee_satang), cell: r => money(r.extra_guest_fee_satang) },
       { key: 'pet', label: t('ui.col.pet'), value: r => (r.is_pet_friendly ? 1 : 0), cell: r => r.is_pet_friendly ? pill('accent', 'paw', t('ui.pet_friendly')) : `<span class="text-ink-subtle">${h(t('ui.no'))}</span>` },
-      { key: 'actions', label: t('ui.col.actions'), hideLabel: true, className: 'actions', cell: r => `<span class="inline-flex items-center gap-1">${button({ label: t('ui.edit'), size: 'sm', iconName: 'edit', attributes: { 'data-action': 'edit-room', 'data-id': r.id, 'data-row-primary': true } })}${menuTriggerButton({ context: 'room', id: r.id, label: t('ui.rooms.menu', { name: r.name }), size: 'sm' })}</span>` },
+      { key: 'actions', label: t('ui.col.actions'), hideLabel: true, className: 'actions', cell: r => `<span class="inline-flex items-center gap-1">${button({ label: t('ui.edit'), size: 'sm', iconName: 'edit', attributes: { 'data-action': 'edit-room', 'data-id': r.id, 'data-row-primary': true, title: t('ui.edit') } })}${menuTriggerButton({ context: 'room', id: r.id, label: t('ui.rooms.menu', { name: r.name }), size: 'sm' })}</span>` },
     ];
     $('#rooms-list').innerHTML = renderTable({
       state: state.tables.rooms,
@@ -478,9 +479,9 @@ if ($('#app')) {
       },
       { key: 'phone', label: t('ui.col.phone'), value: g => g.phone, cell: g => highlight(g.phone, q) },
       { key: 'count', label: t('ui.col.stays'), num: true, firstDir: 'desc', value: g => Number(g.completed_stays), cell: g => number(g.completed_stays) },
-      { key: 'nights', label: t('ui.col.nights'), num: true, optional: true, mobileHide: true, firstDir: 'desc', value: g => Number(g.total_nights), cell: g => number(g.total_nights) },
+      { key: 'nights', label: t('ui.col.nights'), num: true, optional: true, mobileHide: true, tabletHide: true, firstDir: 'desc', value: g => Number(g.total_nights), cell: g => number(g.total_nights) },
       { key: 'value', label: t('ui.col.lifetime'), num: true, firstDir: 'desc', value: g => Number(g.lifetime_value_satang), cell: g => money(g.lifetime_value_satang) },
-      { key: 'latest', label: t('ui.col.last_stay'), className: 'whitespace-nowrap', firstDir: 'desc', value: g => g.last_stay_date || '', cell: g => g.last_stay_date ? `<time datetime="${g.last_stay_date}">${h(thaiDate(g.last_stay_date))}</time> <span class="cell-sub">${h(t('ui.room_label', { name: g.last_room_name || '' }))}</span>` : '<span class="text-ink-subtle">—</span>' },
+      { key: 'latest', label: t('ui.col.last_stay'), className: 'whitespace-nowrap', tabletHide: true, firstDir: 'desc', value: g => g.last_stay_date || '', cell: g => g.last_stay_date ? `<time datetime="${g.last_stay_date}">${h(thaiDate(g.last_stay_date))}</time> <span class="cell-sub">${h(t('ui.room_label', { name: g.last_room_name || '' }))}</span>` : '<span class="text-ink-subtle">—</span>' },
     ];
     $('#guest-list').innerHTML = renderTable({
       state: state.tables.guests,
@@ -850,6 +851,13 @@ if ($('#app')) {
     if (b.dataset.columns) {
       const table = tableOf(b.dataset.columns);
       openDropdownMenu(b, columnMenuItems(table, table.columns || []), t('ui.table.columns'));
+      return;
+    }
+    if (b.dataset.allColumns) {
+      const table = tableOf(b.dataset.allColumns);
+      table.allColumns = !table.allColumns;
+      saveColumns(table);
+      render();
       return;
     }
     if (b.dataset.columnToggle) {

@@ -144,6 +144,12 @@
   <data name="ui.nav.more" xml:space="preserve">
     <value>Menu</value>
   </data>
+  <data name="ui.nav.open" xml:space="preserve">
+    <value>Open menu</value>
+  </data>
+  <data name="ui.table.all_columns" xml:space="preserve">
+    <value>Show all columns</value>
+  </data>
   <data name="ui.nav.collapse" xml:space="preserve">
     <value>Collapse or expand menu</value>
   </data>

@@ -5,20 +5,23 @@ import { iconButton } from './ui.js';
 
 const PAGE_SIZE = 25;
 
-/** Per-table view state: sort, page and hidden optional columns (remembered on this device). */
+/** Per-table view state: sort, page, hidden optional columns and the tablet "all columns" switch (remembered on this device). */
 export function tableState(name, { sort = null, dir = 'asc' } = {}) {
   let hidden = [];
+  let allColumns = false;
   try {
     hidden = JSON.parse(localStorage.getItem(`columns:${name}`) || '[]');
+    allColumns = localStorage.getItem(`all-columns:${name}`) === '1';
   } catch {
     hidden = [];
   }
-  return { name, sort, dir, page: 1, hidden: new Set(hidden) };
+  return { name, sort, dir, page: 1, hidden: new Set(hidden), allColumns };
 }
 
 export function saveColumns(state) {
   try {
     localStorage.setItem(`columns:${state.name}`, JSON.stringify([...state.hidden]));
+    localStorage.setItem(`all-columns:${state.name}`, state.allColumns ? '1' : '0');
   } catch {
     // Not remembered in private mode.
   }
@@ -74,7 +77,7 @@ export function columnMenuItems(state, columns) {
   ];
 }
 
-/** A sortable, paginated table that stacks into cards on phones. */
+/** A sortable, paginated table: stacked cards on phones, key columns only on tablets unless "all columns" is on. */
 export function renderTable({ state, columns, rows, caption, empty, paginate = true }) {
   state.columns = columns;
   if (!rows.length) return empty;
@@ -91,23 +94,26 @@ export function renderTable({ state, columns, rows, caption, empty, paginate = t
     const content = c.value && c.sortable !== false
       ? `<button type="button" class="sort-btn" data-sort="${c.key}" data-table="${state.name}">${label}${icon(state.sort === c.key ? (state.dir === 'asc' ? 'sortAsc' : 'sortDesc') : 'sort')}</button>`
       : label;
-    return `<th scope="col" class="${c.num ? 'num' : ''} ${c.className === 'actions' ? 'actions' : ''}"${sortAttr}>${content}</th>`;
+    return `<th scope="col" class="${c.num ? 'num' : ''} ${c.tabletHide ? 'tablet-hide' : ''} ${c.className === 'actions' ? 'actions' : ''}"${sortAttr}>${content}</th>`;
   }).join('');
 
   const body = pageRows.map((row, index) => `<tr data-row tabindex="${index === 0 ? 0 : -1}">${visible.map(c =>
-    `<td data-label="${c.hideLabel ? '' : h(c.label)}" class="${c.num ? 'num' : ''} ${c.mobileHide ? 'mobile-hide' : ''} ${c.className || ''}">${c.cell(row)}</td>`).join('')}</tr>`).join('');
+    `<td data-label="${c.hideLabel ? '' : h(c.label)}" class="${c.num ? 'num' : ''} ${c.mobileHide ? 'mobile-hide' : ''} ${c.tabletHide ? 'tablet-hide' : ''} ${c.className || ''}">${c.cell(row)}</td>`).join('')}</tr>`).join('');
 
+  const allColumns = columns.some(c => c.tabletHide)
+    ? `<button type="button" class="btn btn-ghost btn-sm tablet-only" data-all-columns="${state.name}" aria-pressed="${state.allColumns}">${icon('columns')}<span>${h(t('ui.table.all_columns'))}</span></button>`
+    : '';
   const footer = paginate && sorted.length > PAGE_SIZE ? `
     <div class="pagination">
-      <span>${h(t('ui.table.showing', { from: start + 1, to: start + pageRows.length, total: sorted.length }))}</span>
+      <span class="flex flex-wrap items-center gap-2">${h(t('ui.table.showing', { from: start + 1, to: start + pageRows.length, total: sorted.length }))}${allColumns}</span>
       <span class="flex items-center gap-1">
         ${iconButton({ label: t('ui.table.previous'), iconName: 'chevronLeft', size: 'sm', attributes: { 'data-table-page': '-1', 'data-table': state.name, disabled: state.page === 1 } })}
         <span class="px-2 tabular-nums">${state.page} / ${pages}</span>
         ${iconButton({ label: t('ui.table.next'), iconName: 'chevronRight', size: 'sm', attributes: { 'data-table-page': '1', 'data-table': state.name, disabled: state.page === pages } })}
       </span>
-    </div>` : `<p class="pagination">${h(t('ui.table.count', { total: sorted.length }))}</p>`;
+    </div>` : `<div class="pagination"><span>${h(t('ui.table.count', { total: sorted.length }))}</span>${allColumns}</div>`;
 
-  return `<div class="table-wrap"><table class="data-table stack"><caption class="sr-only">${h(caption)}</caption><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>${footer}`;
+  return `<div class="table-wrap"${state.allColumns ? ' data-all-columns' : ''}><table class="data-table stack"><caption class="sr-only">${h(caption)}</caption><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>${footer}`;
 }
 
 /** Arrow keys move between rows; Enter runs the row's primary control. */

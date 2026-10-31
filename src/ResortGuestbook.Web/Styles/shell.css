@@ -14,6 +14,9 @@
     @apply relative flex h-10 w-full items-center gap-3 rounded px-3 text-left text-sm font-medium text-ink-muted hover:bg-sunken hover:text-ink;
   }
   .nav-item .icon { @apply h-[1.125rem] w-[1.125rem]; }
+  @media (pointer: coarse) {
+    .nav-item { @apply h-11; }
+  }
   .nav-item.active { @apply bg-primary-subtle text-primary; }
   .nav-item.active::before { @apply absolute -left-3 bottom-2 top-2 w-[3px] rounded-r-sm bg-primary; content: ''; }
   .sidebar-footer { @apply mt-auto space-y-2 border-t border-line pt-3; }
@@ -23,28 +26,28 @@
 
   /* Icon rail: chosen by the user, or automatic on tablets unless the user expanded it. */
   html[data-sidebar='collapsed'] .app-shell { grid-template-columns: var(--rail-w) minmax(0, 1fr); }
-  @media (min-width: 768px) and (max-width: 1279px) {
+  @media (min-width: 640px) and (max-width: 1279px) {
     html:not([data-sidebar='expanded']) .app-shell { grid-template-columns: var(--rail-w) minmax(0, 1fr); }
   }
   html[data-sidebar='collapsed'] .sidebar-inner { @apply items-center px-2; }
 
-  @media (min-width: 768px) and (max-width: 1279px) {
+  @media (min-width: 640px) and (max-width: 1279px) {
     html:not([data-sidebar='expanded']) .sidebar-inner { @apply items-center px-2; }
   }
 
   /* Rail mode hides labels visually (they stay available to screen readers) and shows the square logo. */
   html[data-sidebar='collapsed'] .rail-hide,
   html[data-sidebar='collapsed'] .nav-label { @apply sr-only; }
-  html[data-sidebar='collapsed'] .nav-item { @apply w-10 justify-center px-0; }
+  html[data-sidebar='collapsed'] .nav-item { @apply w-11 justify-center px-0; }
   html[data-sidebar='collapsed'] .nav-item.active::before { @apply -left-2; }
   html[data-sidebar='collapsed'] .nav-heading { @apply h-px w-8 bg-line p-0 text-[0]; margin: 0.875rem auto 0.5rem; }
   html[data-sidebar='collapsed'] .brand-logo { @apply hidden; }
   html[data-sidebar='collapsed'] .brand-mark { @apply block; }
   html[data-sidebar='collapsed'] .user-card { @apply justify-center px-0; }
-  @media (min-width: 768px) and (max-width: 1279px) {
+  @media (min-width: 640px) and (max-width: 1279px) {
     html:not([data-sidebar='expanded']) .rail-hide,
     html:not([data-sidebar='expanded']) .nav-label { @apply sr-only; }
-    html:not([data-sidebar='expanded']) .nav-item { @apply w-10 justify-center px-0; }
+    html:not([data-sidebar='expanded']) .nav-item { @apply w-11 justify-center px-0; }
     html:not([data-sidebar='expanded']) .nav-item.active::before { @apply -left-2; }
     html:not([data-sidebar='expanded']) .nav-heading { @apply h-px w-8 bg-line p-0 text-[0]; margin: 0.875rem auto 0.5rem; }
     html:not([data-sidebar='expanded']) .brand-logo { @apply hidden; }
@@ -55,11 +58,15 @@
   .app-main { @apply flex min-w-0 flex-col; }
   .topbar {
     @apply sticky top-0 z-30 flex items-center gap-3 border-b border-line bg-canvas px-4 sm:px-6;
-    height: var(--topbar-h);
+    height: calc(var(--topbar-h) + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
   }
   .breadcrumb { @apply flex min-w-0 items-center gap-2 text-sm text-ink-subtle; }
   .breadcrumb li:not(.hidden) { @apply flex min-w-0 items-center; }
   .breadcrumb li + li::before { @apply mr-2 text-line-strong; content: '/'; }
+  @media (max-width: 639px) {
+    .breadcrumb li:last-child::before { content: none; }
+  }
   .page-title { @apply truncate text-base font-semibold text-ink; }
   .topbar-actions { @apply ml-auto flex items-center gap-1.5; }
   .content { @apply mx-auto w-full flex-1 px-4 pb-10 pt-5 sm:px-6 lg:px-8 lg:pt-6; max-width: 92rem; }
@@ -71,12 +78,16 @@
   .tab-item.active { @apply text-primary; }
   .tab-item.active::before { @apply absolute inset-x-5 top-0 h-[3px] rounded-b-sm bg-primary; content: ''; }
 
-  @media (max-width: 767px) {
+  @media (max-width: 639px) {
     .app-shell { display: block; }
     .sidebar { display: none; }
     .tabbar { display: grid; }
     .content { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
-    .topbar { @apply px-4; }
+    .topbar,
+    .content {
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
   }
 
   /* Rail tooltips (labels are visually hidden there). */
@@ -85,7 +96,7 @@
     @apply pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded bg-ink px-2 py-1 text-xs text-canvas;
     content: attr(data-tip);
   }
-  @media (min-width: 768px) and (max-width: 1279px) {
+  @media (min-width: 640px) and (max-width: 1279px) {
     html:not([data-sidebar='expanded']) .sidebar .nav-item[data-tip]:is(:hover, :focus-visible)::after {
       @apply pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded bg-ink px-2 py-1 text-xs text-canvas;
       content: attr(data-tip);
