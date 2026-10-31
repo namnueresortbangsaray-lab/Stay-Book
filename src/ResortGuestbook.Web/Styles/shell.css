@@ -62,7 +62,7 @@
     padding-top: env(safe-area-inset-top);
   }
   .breadcrumb { @apply flex min-w-0 items-center gap-2 text-sm text-ink-subtle; }
-  .breadcrumb li:not(.hidden) { @apply flex min-w-0 items-center; }
+  .breadcrumb li:not(.hidden) { @apply flex min-w-0 items-center whitespace-nowrap; }
   .breadcrumb li + li::before { @apply mr-2 text-line-strong; content: '/'; }
   @media (max-width: 639px) {
     .breadcrumb li:last-child::before { content: none; }

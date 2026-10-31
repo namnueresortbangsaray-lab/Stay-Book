@@ -46,7 +46,7 @@
       <nav aria-label="@T["ui.breadcrumb"]" class="min-w-0">
         <ol class="breadcrumb">
           <li class="hidden sm:block">@T["app_name"]</li>
-          <li id="page-group" class="hidden md:block">@T["ui.nav.group.daily"]</li>
+          <li id="page-group" class="hidden lg:block">@T["ui.nav.group.daily"]</li>
           <li class="min-w-0"><h1 id="page-title" class="page-title">@T["ui.nav.today"]</h1></li>
         </ol>
       </nav>
@@ -147,14 +147,41 @@
       </section>
 
       <section id="page-rooms" data-page-panel hidden aria-labelledby="page-title">
-        <div class="section-head">
-          <div>
-            <h2 class="text-lg font-semibold">@T["ui.rooms.title"]</h2>
-            <p class="text-sm text-ink-muted">@T["ui.rooms.subtitle"]</p>
-          </div>
-          <button type="button" class="btn btn-primary" data-action="new-room"><icon name="plus" /><span>@T["ui.rooms.new"]</span></button>
+        <div class="tabs mb-6" role="tablist" aria-label="@T["ui.rooms.tabs"]">
+          <button type="button" class="tab" role="tab" id="rooms-tab-rooms" aria-controls="rooms-panel-rooms" aria-selected="true">@T["ui.rooms.tab.rooms"]</button>
+          <button type="button" class="tab" role="tab" id="rooms-tab-zones" aria-controls="rooms-panel-zones" aria-selected="false" tabindex="-1">@T["ui.rooms.tab.zones"]</button>
+          <button type="button" class="tab" role="tab" id="rooms-tab-types" aria-controls="rooms-panel-types" aria-selected="false" tabindex="-1">@T["ui.rooms.tab.types"]</button>
         </div>
-        <div id="rooms-list"></div>
+        <div id="rooms-panel-rooms" role="tabpanel" aria-labelledby="rooms-tab-rooms">
+          <div class="section-head">
+            <div>
+              <h2 class="text-lg font-semibold">@T["ui.rooms.title"]</h2>
+              <p class="text-sm text-ink-muted">@T["ui.rooms.subtitle"]</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-action="new-room"><icon name="plus" /><span>@T["ui.rooms.new"]</span></button>
+          </div>
+          <div id="rooms-list"></div>
+        </div>
+        <div id="rooms-panel-zones" role="tabpanel" aria-labelledby="rooms-tab-zones" hidden>
+          <div class="section-head">
+            <div>
+              <h2 class="text-lg font-semibold">@T["ui.zones.title"]</h2>
+              <p class="text-sm text-ink-muted">@T["ui.zones.subtitle"]</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-action="new-zone"><icon name="plus" /><span>@T["ui.zones.new"]</span></button>
+          </div>
+          <div id="zone-list"></div>
+        </div>
+        <div id="rooms-panel-types" role="tabpanel" aria-labelledby="rooms-tab-types" hidden>
+          <div class="section-head">
+            <div>
+              <h2 class="text-lg font-semibold">@T["ui.types.title"]</h2>
+              <p class="text-sm text-ink-muted">@T["ui.types.subtitle"]</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-action="new-type"><icon name="plus" /><span>@T["ui.types.new"]</span></button>
+          </div>
+          <div id="type-list"></div>
+        </div>
       </section>
 
       <section id="page-guests" data-page-panel hidden aria-labelledby="page-title">
@@ -326,11 +353,15 @@
           </div>
           <div>
             <label class="label" for="room-zone">@T["ui.room.zone"]<span class="req" aria-hidden="true">*</span></label>
-            <input id="room-zone" class="field" name="zone" value="อาคารหลัก" required>
+            <select id="room-zone" class="field form-select" name="zone" required></select>
           </div>
           <div class="sm:col-span-2">
             <label class="label" for="room-type">@T["ui.room.type"]<span class="req" aria-hidden="true">*</span></label>
-            <input id="room-type" class="field" name="type" value="เตียงคู่" required>
+            <select id="room-type" class="field form-select" name="type" required aria-describedby="room-type-hint"></select>
+            <p id="room-type-hint" class="hint">@T["ui.room.type_hint"]</p>
+          </div>
+          <div class="sm:col-span-2">
+            <button type="button" class="link inline-flex items-center gap-1.5 text-sm" data-action="manage-categories"><icon name="settings" /><span>@T["ui.room.manage_categories"]</span></button>
           </div>
         </div>
       </section>
@@ -373,6 +404,84 @@
     <div class="dialog-actions">
       <button type="button" class="btn btn-ghost" data-close>@T["ui.cancel"]</button>
       <button class="btn btn-primary" type="submit" data-submit-label>@T["ui.rooms.new"]</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="zone-dialog" class="modal [--dialog-w:28rem]" aria-labelledby="zone-dialog-title">
+  <form id="zone-form" novalidate data-guard>
+    <div class="dialog-header">
+      <div>
+        <h2 id="zone-dialog-title" class="dialog-title" data-dialog-title>@T["ui.zones.new"]</h2>
+        <p class="dialog-sub">@T["ui.zones.dialog_sub"]</p>
+      </div>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="@T["ui.close"]"><icon name="close" /></button>
+    </div>
+    <input type="hidden" name="id">
+    <div class="dialog-body space-y-4">
+      <div>
+        <label class="label" for="zone-name">@T["ui.zones.name"]<span class="req" aria-hidden="true">*</span></label>
+        <input id="zone-name" class="field" name="name" required placeholder="@T["ui.zones.name_placeholder"]">
+      </div>
+      <div>
+        <label class="label" for="zone-sort">@T["ui.category.order"]</label>
+        <input id="zone-sort" class="field num" type="number" name="sort_order" min="0" value="0" inputmode="numeric" aria-describedby="zone-sort-hint">
+        <p id="zone-sort-hint" class="hint">@T["ui.category.order_hint"]</p>
+      </div>
+    </div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-ghost" data-close>@T["ui.cancel"]</button>
+      <button class="btn btn-primary" type="submit" data-submit-label>@T["ui.zones.new"]</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="type-dialog" class="modal [--dialog-w:34rem]" aria-labelledby="type-dialog-title">
+  <form id="type-form" novalidate data-guard>
+    <div class="dialog-header">
+      <div>
+        <h2 id="type-dialog-title" class="dialog-title" data-dialog-title>@T["ui.types.new"]</h2>
+        <p class="dialog-sub">@T["ui.types.dialog_sub"]</p>
+      </div>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="@T["ui.close"]"><icon name="close" /></button>
+    </div>
+    <input type="hidden" name="id">
+    <div class="dialog-body">
+      <div class="form-grid">
+        <div class="sm:col-span-2">
+          <label class="label" for="type-name">@T["ui.types.name"]<span class="req" aria-hidden="true">*</span></label>
+          <input id="type-name" class="field" name="name" required placeholder="@T["ui.types.name_placeholder"]">
+        </div>
+          <div>
+            <label class="label" for="type-price">@T["ui.room.price"]<span class="req" aria-hidden="true">*</span></label>
+            <input id="type-price" class="field num" type="number" name="price" min="1" value="500" required inputmode="decimal">
+          </div>
+          <div>
+            <label class="label" for="type-extra-fee">@T["ui.room.extra_fee"]</label>
+            <input id="type-extra-fee" class="field num" type="number" name="extra_guest_fee" min="0" value="100" inputmode="decimal">
+          </div>
+          <div>
+            <label class="label" for="type-base">@T["ui.room.base_guests"]</label>
+            <input id="type-base" class="field num" type="number" name="base_guests" min="1" value="2" inputmode="numeric">
+          </div>
+          <div>
+            <label class="label" for="type-max">@T["ui.room.max_guests"]</label>
+            <input id="type-max" class="field num" type="number" name="max_guests" min="1" value="3" inputmode="numeric">
+          </div>
+        <div>
+          <label class="label" for="type-sort">@T["ui.category.order"]</label>
+          <input id="type-sort" class="field num" type="number" name="sort_order" min="0" value="0" inputmode="numeric" aria-describedby="type-sort-hint">
+          <p id="type-sort-hint" class="hint">@T["ui.category.order_hint"]</p>
+        </div>
+        <label class="check-row self-start sm:mt-7">
+          <input type="checkbox" name="is_pet_friendly" class="form-checkbox check">
+          <span>@T["ui.room.pet_friendly"]</span>
+        </label>
+      </div>
+    </div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-ghost" data-close>@T["ui.cancel"]</button>
+      <button class="btn btn-primary" type="submit" data-submit-label>@T["ui.types.new"]</button>
     </div>
   </form>
 </dialog>

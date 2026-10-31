@@ -41,6 +41,8 @@ if ($('#app')) {
       day: tableState('day', { sort: 'room' }),
       guests: tableState('guests', { sort: 'latest', dir: 'desc' }),
       rooms: tableState('rooms'),
+      zones: tableState('zones', { sort: 'order' }),
+      types: tableState('types', { sort: 'order' }),
     },
   };
 
@@ -94,6 +96,15 @@ if ($('#app')) {
   }
 
   const roomMenuItems = room => [{ action: 'delete-room', id: room.id, label: t('ui.rooms.delete'), icon: 'trash', destructive: true }];
+  // A zone or type used by rooms cannot be deleted; the menu says why instead of failing afterwards.
+  const categoryMenuItems = (kind, item) => [{
+    action: `delete-${kind}`,
+    id: item.id,
+    label: item.room_count ? t('ui.category.in_use', { n: item.room_count }) : t(`ui.${kind}s.delete`),
+    icon: 'trash',
+    destructive: !item.room_count,
+    disabled: item.room_count > 0,
+  }];
 
   function primaryStayAction(s, size = 'sm') {
     const status = Number(s.status);
@@ -119,7 +130,10 @@ if ($('#app')) {
     try {
       const start = $('#range-start')?.value || '';
       const end = $('#range-end')?.value || '';
-      state.data = await api(`/api/v1/snapshot${start && end ? `?start=${start}&end=${end}` : ''}`);
+      [state.data, state.categories] = await Promise.all([
+        api(`/api/v1/snapshot${start && end ? `?start=${start}&end=${end}` : ''}`),
+        api('/api/v1/room-categories'),
+      ]);
       render();
       syncExportLink();
       delete $('#main').dataset.state;
@@ -149,6 +163,7 @@ if ($('#app')) {
     renderBookings();
     renderAnalytics();
     renderRooms();
+    renderCategories();
     renderGuests();
   }
 
@@ -242,7 +257,7 @@ if ($('#app')) {
   // ================= ROOM BOARD =================
   function renderRoomMap() {
     const rooms = state.data.rooms.map(room => ({ room, ...roomStatus(room) }));
-    const zones = [...new Set(rooms.map(x => x.room.zone))];
+    const zones = byZoneOrder(new Set(rooms.map(x => x.room.zone)));
     const chip = (attr, value, label, count, current, tone = '') => `<button type="button" class="chip" data-${attr}="${h(value)}" aria-pressed="${current === value}">${tone ? `<span class="legend-swatch tone-${tone}"></span>` : ''}<span>${h(label)}</span><span class="count">${count}</span></button>`;
 
     $('#room-summary').innerHTML = rooms.length ? `
@@ -271,7 +286,7 @@ if ($('#app')) {
       return;
     }
 
-    $('#room-map').innerHTML = [...new Set(shown.map(x => x.room.zone))].map(zone => {
+    $('#room-map').innerHTML = byZoneOrder(new Set(shown.map(x => x.room.zone))).map(zone => {
       const inZone = shown.filter(x => x.room.zone === zone);
       return `<section class="mb-8" aria-label="${h(zone)}">
         <h2 class="mb-3 flex items-baseline gap-2 text-base font-semibold">${h(zone)}<span class="text-sm font-normal text-ink-subtle">${h(t('ui.rooms_count', { n: inZone.length }))}</span></h2>
@@ -311,7 +326,7 @@ if ($('#app')) {
           const files = attachmentsOf([s.id]);
           return `<p class="cell-title">${highlight(s.guest_name, q)}</p><p class="cell-sub">${highlight(s.phone || t('ui.no_phone'), q)}</p>
             ${s.note ? `<p class="cell-sub cell-note mt-0.5 flex items-start gap-1" title="${h(s.note)}">${icon('note', 'mt-0.5 h-3.5 w-3.5')}<span class="truncate">${highlight(s.note, q)}</span></p>` : ''}
-            ${files.length ? `<p class="mt-0.5 flex flex-wrap gap-x-3">${files.map(f => `<a class="link inline-flex items-center gap-1 text-xs" href="/files/${f.id}" target="_blank" rel="noopener">${icon('attachment', 'h-3.5 w-3.5')}${h(f.original_name)}</a>`).join('')}</p>` : ''}`;
+            ${files.length ? `<p class="mt-0.5 flex flex-wrap gap-x-3">${files.map(f => `<a class="link inline-flex min-h-6 items-center gap-1 text-xs" href="/files/${f.id}" target="_blank" rel="noopener">${icon('attachment', 'h-3.5 w-3.5')}${h(f.original_name)}</a>`).join('')}</p>` : ''}`;
         },
       },
       { key: 'room', label: t('ui.col.room'), className: 'whitespace-nowrap', value: s => s.room_name, cell: s => `<span class="inline-flex items-center gap-2"><span class="room-no">${highlight(s.room_name, q)}</span><span class="cell-sub tablet-hide">${highlight(s.zone, q)}</span></span>` },
@@ -500,6 +515,91 @@ if ($('#app')) {
     });
   }
 
+  // ================= ZONES AND ROOM TYPES =================
+  const zoneRank = zone => {
+    const index = state.categories?.zones.findIndex(z => z.name === zone) ?? -1;
+    return index < 0 ? Number.MAX_SAFE_INTEGER : index;
+  };
+  const byZoneOrder = names => [...names].sort((a, b) => zoneRank(a) - zoneRank(b) || a.localeCompare(b, 'th'));
+
+  function renderCategories() {
+    if (!state.categories) return;
+    const order = { key: 'order', label: t('ui.category.order_short'), num: true, optional: true, mobileHide: true, value: x => Number(x.sort_order), cell: x => number(x.sort_order) };
+    const used = { key: 'rooms', label: t('ui.col.rooms_using'), num: true, firstDir: 'desc', value: x => Number(x.room_count), cell: x => number(x.room_count) };
+    const actions = kind => ({
+      key: 'actions', label: t('ui.col.actions'), hideLabel: true, className: 'actions',
+      cell: x => `<span class="inline-flex items-center gap-1">${button({ label: t('ui.edit'), size: 'sm', iconName: 'edit', attributes: { 'data-action': `edit-${kind}`, 'data-id': x.id, 'data-row-primary': true, title: t('ui.edit') } })}${menuTriggerButton({ context: kind, id: x.id, label: t(`ui.${kind}s.menu`, { name: x.name }), size: 'sm' })}</span>`,
+    });
+    const empty = kind => `<div class="card">${emptyState({ iconName: kind === 'zone' ? 'roomMap' : 'rooms', title: t(`ui.${kind}s.empty_title`), text: t(`ui.${kind}s.empty_text`), action: button({ label: t(`ui.${kind}s.new`), variant: 'primary', iconName: 'plus', attributes: { 'data-action': `new-${kind}` } }) })}</div>`;
+
+    $('#zone-list').innerHTML = renderTable({
+      state: state.tables.zones,
+      columns: [
+        { key: 'name', label: t('ui.col.zone'), className: 'cell-lead', value: z => z.name, cell: z => `<span class="cell-title">${h(z.name)}</span>` },
+        used, order, actions('zone'),
+      ],
+      rows: state.categories.zones,
+      caption: t('ui.zones.title'),
+      empty: empty('zone'),
+    });
+    $('#type-list').innerHTML = renderTable({
+      state: state.tables.types,
+      columns: [
+        { key: 'name', label: t('ui.col.type'), className: 'cell-lead', value: x => x.name, cell: x => `<span class="cell-title">${h(x.name)}</span>${x.is_pet_friendly ? ` <span class="ml-1">${pill('accent', 'paw', t('ui.pet_friendly'))}</span>` : ''}` },
+        { key: 'price', label: t('ui.col.price'), num: true, value: x => Number(x.price_satang), cell: x => money(x.price_satang) },
+        { key: 'capacity', label: t('ui.col.capacity'), num: true, value: x => Number(x.max_guests), cell: x => `${number(x.base_guests)}–${number(x.max_guests)}` },
+        { key: 'extra_fee', label: t('ui.col.extra_fee'), num: true, optional: true, tabletHide: true, mobileHide: true, value: x => Number(x.extra_guest_fee_satang), cell: x => money(x.extra_guest_fee_satang) },
+        used, order, actions('type'),
+      ],
+      rows: state.categories.types,
+      caption: t('ui.types.title'),
+      empty: empty('type'),
+    });
+  }
+
+  function openCategory(kind, id = null) {
+    const f = $(`#${kind}-form`);
+    f.reset();
+    clearErrors(f);
+    f.elements.id.value = '';
+    const list = kind === 'zone' ? state.categories.zones : state.categories.types;
+    if (id) {
+      const x = list.find(item => item.id === id);
+      fillForm(f, kind === 'zone' ? x : { ...x, price: Number(x.price_satang) / 100, extra_guest_fee: Number(x.extra_guest_fee_satang) / 100 });
+    } else {
+      f.elements.sort_order.value = list.length + 1;
+    }
+    $(`#${kind}-dialog [data-dialog-title]`).textContent = t(id ? `ui.${kind}s.edit` : `ui.${kind}s.new`);
+    f.querySelector('[data-submit-label]').textContent = t(id ? 'ui.save' : `ui.${kind}s.new`);
+    resetDirty(f);
+    $(`#${kind}-dialog`).showModal();
+  }
+
+  /** Room form choices; a value no longer in the list (renamed elsewhere) stays selectable for that room. */
+  function categoryOptions(list, selected) {
+    const names = list.map(x => x.name);
+    if (selected && !names.includes(selected)) names.unshift(selected);
+    return names.map(name => `<option value="${h(name)}" ${name === selected ? 'selected' : ''}>${h(name)}</option>`).join('');
+  }
+
+  /** Choosing a type fills in its room defaults; staff can still change them. */
+  function applyTypeDefaults(form) {
+    const type = state.categories?.types.find(x => x.name === form.elements.type.value);
+    if (!type) return;
+    fillForm(form, {
+      price: Number(type.price_satang) / 100,
+      extra_guest_fee: Number(type.extra_guest_fee_satang) / 100,
+      base_guests: type.base_guests,
+      max_guests: type.max_guests,
+      is_pet_friendly: type.is_pet_friendly,
+    });
+  }
+
+  function showRoomSetupTab(name) {
+    navigate('rooms');
+    selectTab($(`#rooms-tab-${name}`), true);
+  }
+
   // ================= GUESTS =================
   const guestSortKeys = { name: 'name', count: 'count', value: 'value', latest: 'latest' };
 
@@ -680,10 +780,11 @@ if ($('#app')) {
     f.reset();
     clearErrors(f);
     f.elements.id.value = '';
-    if (id) {
-      const r = state.data.rooms.find(x => x.id === id);
-      fillForm(f, { ...r, price: Number(r.price_satang) / 100, extra_guest_fee: Number(r.extra_guest_fee_satang) / 100 });
-    }
+    const r = id ? state.data.rooms.find(x => x.id === id) : null;
+    f.elements.zone.innerHTML = categoryOptions(state.categories?.zones ?? [], r?.zone);
+    f.elements.type.innerHTML = categoryOptions(state.categories?.types ?? [], r?.type);
+    if (r) fillForm(f, { ...r, price: Number(r.price_satang) / 100, extra_guest_fee: Number(r.extra_guest_fee_satang) / 100 });
+    else applyTypeDefaults(f);
     $('#room-dialog [data-dialog-title]').textContent = t(id ? 'ui.room.edit' : 'ui.rooms.new');
     f.querySelector('[data-submit-label]').textContent = t(id ? 'ui.save' : 'ui.rooms.new');
     resetDirty(f);
@@ -879,7 +980,7 @@ if ($('#app')) {
       shown.sort(([a], [b]) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
       if (shown.length > 1) errorSummary(form, shown).focus();
       else first?.focus();
-      toast(e.message, 'error');
+      toast(form ? e.message : [e.message, ...Object.values(e.errors || {})].join(' · '), 'error');
       return false;
     } finally {
       setButtonLoading(submit, false);
@@ -902,8 +1003,11 @@ if ($('#app')) {
     }
 
     if (b.dataset.menuTrigger) {
-      const item = b.dataset.menuTrigger === 'stay' ? state.data.stays.find(s => s.id === b.dataset.id) : state.data.rooms.find(r => r.id === b.dataset.id);
-      if (item) openDropdownMenu(b, b.dataset.menuTrigger === 'stay' ? stayMenuItems(item) : roomMenuItems(item), b.getAttribute('aria-label'));
+      const context = b.dataset.menuTrigger;
+      const source = { stay: state.data.stays, room: state.data.rooms, zone: state.categories?.zones, type: state.categories?.types }[context] ?? [];
+      const item = source.find(x => x.id === b.dataset.id);
+      const items = { stay: stayMenuItems, room: roomMenuItems, zone: x => categoryMenuItems('zone', x), type: x => categoryMenuItems('type', x) }[context];
+      if (item && items) openDropdownMenu(b, items(item), b.getAttribute('aria-label'));
       return;
     }
     if (b.dataset.action === 'theme-menu') {
@@ -1014,6 +1118,26 @@ if ($('#app')) {
     if (a === 'edit-booking') openBooking(id);
     if (a === 'new-room') openRoom();
     if (a === 'edit-room') openRoom(id);
+    if (a === 'new-zone') openCategory('zone');
+    if (a === 'edit-zone') openCategory('zone', id);
+    if (a === 'new-type') openCategory('type');
+    if (a === 'edit-type') openCategory('type', id);
+    if (a === 'manage-categories') {
+      const dialog = b.closest('dialog');
+      if (dialog) await requestClose(dialog);
+      if (!dialog?.open) showRoomSetupTab('zones');
+    }
+    if (a === 'delete-zone' || a === 'delete-type') {
+      const kind = a.slice('delete-'.length);
+      const item = (kind === 'zone' ? state.categories.zones : state.categories.types).find(x => x.id === id);
+      const confirmed = await confirmAction({
+        title: t(`ui.confirm.delete_${kind}_title`),
+        message: t(`ui.confirm.delete_${kind}_message`, { name: item?.name || '' }),
+        confirmLabel: t(`ui.${kind}s.delete`),
+        destructive: true,
+      });
+      if (confirmed) await mutate(`/api/v1/room-${kind}s/${id}`, 'DELETE', {});
+    }
     if (a === 'guest-details') openGuest(id);
     if (a === 'clear-room-filters') {
       state.roomState = '';
@@ -1117,6 +1241,18 @@ if ($('#app')) {
     delete d.check_in_now;
     await mutate(id ? `/api/v1/stays/${id}` : '/api/v1/stays', id ? 'PUT' : 'POST', d, e.currentTarget);
   });
+
+  $('#room-type').addEventListener('change', e => applyTypeDefaults(e.target.form));
+
+  for (const kind of ['zone', 'type']) {
+    $(`#${kind}-form`).addEventListener('submit', async e => {
+      e.preventDefault();
+      const d = formObject(e.currentTarget);
+      const id = d.id;
+      delete d.id;
+      await mutate(id ? `/api/v1/room-${kind}s/${id}` : `/api/v1/room-${kind}s`, id ? 'PUT' : 'POST', d, e.currentTarget);
+    });
+  }
 
   $('#room-form').addEventListener('submit', async e => {
     e.preventDefault();

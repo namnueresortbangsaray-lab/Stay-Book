@@ -31,6 +31,7 @@ export const ICONS = {
   chevronRight: 'chevron-right',
   chevronDown: 'chevron-down',
   close: 'x',
+  settings: 'settings',
   eye: 'eye',
   eyeOff: 'eye-off',
   money: 'banknote',

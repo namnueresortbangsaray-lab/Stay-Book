@@ -1119,4 +1119,118 @@
   <data name="ui.command.rooms" xml:space="preserve">
     <value>ราคา ความจุ และสิ่งอำนวยความสะดวก</value>
   </data>
+  <data name="ui.rooms.tabs" xml:space="preserve">
+    <value>ส่วนของการตั้งค่าห้องพัก</value>
+  </data>
+  <data name="ui.rooms.tab.rooms" xml:space="preserve">
+    <value>ห้องพัก</value>
+  </data>
+  <data name="ui.rooms.tab.zones" xml:space="preserve">
+    <value>โซนที่ตั้ง</value>
+  </data>
+  <data name="ui.rooms.tab.types" xml:space="preserve">
+    <value>ประเภทห้องพัก</value>
+  </data>
+  <data name="ui.zones.title" xml:space="preserve">
+    <value>โซนที่ตั้ง</value>
+  </data>
+  <data name="ui.zones.subtitle" xml:space="preserve">
+    <value>จัดกลุ่มห้องตามที่ตั้ง ใช้ในผังห้อง ตัวกรอง และฟอร์มห้อง</value>
+  </data>
+  <data name="ui.zones.new" xml:space="preserve">
+    <value>เพิ่มโซน</value>
+  </data>
+  <data name="ui.zones.edit" xml:space="preserve">
+    <value>แก้ไขโซน</value>
+  </data>
+  <data name="ui.zones.delete" xml:space="preserve">
+    <value>ลบโซน</value>
+  </data>
+  <data name="ui.zones.menu" xml:space="preserve">
+    <value>การทำงานของโซน {name}</value>
+  </data>
+  <data name="ui.zones.empty_title" xml:space="preserve">
+    <value>ยังไม่มีโซน</value>
+  </data>
+  <data name="ui.zones.empty_text" xml:space="preserve">
+    <value>เพิ่มโซนแรก เช่น อาคารหลัก หรือ ริมสระ</value>
+  </data>
+  <data name="ui.zones.name" xml:space="preserve">
+    <value>ชื่อโซน</value>
+  </data>
+  <data name="ui.zones.name_placeholder" xml:space="preserve">
+    <value>เช่น อาคารหลัก</value>
+  </data>
+  <data name="ui.zones.dialog_sub" xml:space="preserve">
+    <value>ชื่อนี้ใช้จัดกลุ่มห้องในผังห้อง เปลี่ยนชื่อแล้วห้องในโซนจะเปลี่ยนตาม</value>
+  </data>
+  <data name="ui.types.title" xml:space="preserve">
+    <value>ประเภทห้องพัก</value>
+  </data>
+  <data name="ui.types.subtitle" xml:space="preserve">
+    <value>ราคาและจำนวนคนเริ่มต้นของแต่ละประเภท ใช้เติมฟอร์มห้องให้อัตโนมัติ</value>
+  </data>
+  <data name="ui.types.new" xml:space="preserve">
+    <value>เพิ่มประเภทห้อง</value>
+  </data>
+  <data name="ui.types.edit" xml:space="preserve">
+    <value>แก้ไขประเภทห้อง</value>
+  </data>
+  <data name="ui.types.delete" xml:space="preserve">
+    <value>ลบประเภทห้อง</value>
+  </data>
+  <data name="ui.types.menu" xml:space="preserve">
+    <value>การทำงานของประเภท {name}</value>
+  </data>
+  <data name="ui.types.empty_title" xml:space="preserve">
+    <value>ยังไม่มีประเภทห้อง</value>
+  </data>
+  <data name="ui.types.empty_text" xml:space="preserve">
+    <value>เพิ่มประเภทแรก เช่น เตียงคู่ พร้อมราคาและจำนวนคนเริ่มต้น</value>
+  </data>
+  <data name="ui.types.name" xml:space="preserve">
+    <value>ชื่อประเภทห้อง</value>
+  </data>
+  <data name="ui.types.name_placeholder" xml:space="preserve">
+    <value>เช่น เตียงคู่</value>
+  </data>
+  <data name="ui.types.dialog_sub" xml:space="preserve">
+    <value>ค่าเริ่มต้นที่จะเติมให้เมื่อเลือกประเภทนี้ในฟอร์มห้อง ห้องที่มีอยู่ไม่เปลี่ยน</value>
+  </data>
+  <data name="ui.category.order" xml:space="preserve">
+    <value>ลำดับการแสดง</value>
+  </data>
+  <data name="ui.category.order_short" xml:space="preserve">
+    <value>ลำดับ</value>
+  </data>
+  <data name="ui.category.order_hint" xml:space="preserve">
+    <value>เลขน้อยแสดงก่อน</value>
+  </data>
+  <data name="ui.category.in_use" xml:space="preserve">
+    <value>ลบไม่ได้ · มีห้องใช้อยู่ {n} ห้อง</value>
+  </data>
+  <data name="ui.col.type" xml:space="preserve">
+    <value>ประเภท</value>
+  </data>
+  <data name="ui.col.rooms_using" xml:space="preserve">
+    <value>จำนวนห้อง</value>
+  </data>
+  <data name="ui.room.type_hint" xml:space="preserve">
+    <value>เลือกประเภทแล้ว ระบบจะเติมราคาและจำนวนคนให้ แก้ไขต่อได้</value>
+  </data>
+  <data name="ui.room.manage_categories" xml:space="preserve">
+    <value>จัดการโซนและประเภทห้อง</value>
+  </data>
+  <data name="ui.confirm.delete_zone_title" xml:space="preserve">
+    <value>ลบโซนนี้?</value>
+  </data>
+  <data name="ui.confirm.delete_zone_message" xml:space="preserve">
+    <value>โซน {name} จะถูกลบออกจากรายการ</value>
+  </data>
+  <data name="ui.confirm.delete_type_title" xml:space="preserve">
+    <value>ลบประเภทห้องนี้?</value>
+  </data>
+  <data name="ui.confirm.delete_type_message" xml:space="preserve">
+    <value>ประเภท {name} จะถูกลบออกจากรายการ</value>
+  </data>
 </root>

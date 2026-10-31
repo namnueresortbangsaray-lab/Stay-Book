@@ -1119,4 +1119,118 @@
   <data name="ui.command.rooms" xml:space="preserve">
     <value>Rates, capacity and amenities</value>
   </data>
+  <data name="ui.rooms.tabs" xml:space="preserve">
+    <value>Room setup sections</value>
+  </data>
+  <data name="ui.rooms.tab.rooms" xml:space="preserve">
+    <value>Rooms</value>
+  </data>
+  <data name="ui.rooms.tab.zones" xml:space="preserve">
+    <value>Zones</value>
+  </data>
+  <data name="ui.rooms.tab.types" xml:space="preserve">
+    <value>Room types</value>
+  </data>
+  <data name="ui.zones.title" xml:space="preserve">
+    <value>Zones</value>
+  </data>
+  <data name="ui.zones.subtitle" xml:space="preserve">
+    <value>Group rooms by location for the room board, filters and the room form</value>
+  </data>
+  <data name="ui.zones.new" xml:space="preserve">
+    <value>Add zone</value>
+  </data>
+  <data name="ui.zones.edit" xml:space="preserve">
+    <value>Edit zone</value>
+  </data>
+  <data name="ui.zones.delete" xml:space="preserve">
+    <value>Delete zone</value>
+  </data>
+  <data name="ui.zones.menu" xml:space="preserve">
+    <value>Actions for zone {name}</value>
+  </data>
+  <data name="ui.zones.empty_title" xml:space="preserve">
+    <value>No zones yet</value>
+  </data>
+  <data name="ui.zones.empty_text" xml:space="preserve">
+    <value>Add the first zone, for example Main building</value>
+  </data>
+  <data name="ui.zones.name" xml:space="preserve">
+    <value>Zone name</value>
+  </data>
+  <data name="ui.zones.name_placeholder" xml:space="preserve">
+    <value>e.g. Main building</value>
+  </data>
+  <data name="ui.zones.dialog_sub" xml:space="preserve">
+    <value>Groups rooms on the room board; renaming updates its rooms</value>
+  </data>
+  <data name="ui.types.title" xml:space="preserve">
+    <value>Room types</value>
+  </data>
+  <data name="ui.types.subtitle" xml:space="preserve">
+    <value>Default rate and guests per type, filled into the room form</value>
+  </data>
+  <data name="ui.types.new" xml:space="preserve">
+    <value>Add room type</value>
+  </data>
+  <data name="ui.types.edit" xml:space="preserve">
+    <value>Edit room type</value>
+  </data>
+  <data name="ui.types.delete" xml:space="preserve">
+    <value>Delete room type</value>
+  </data>
+  <data name="ui.types.menu" xml:space="preserve">
+    <value>Actions for type {name}</value>
+  </data>
+  <data name="ui.types.empty_title" xml:space="preserve">
+    <value>No room types yet</value>
+  </data>
+  <data name="ui.types.empty_text" xml:space="preserve">
+    <value>Add the first type, for example Twin, with its default rate and guests</value>
+  </data>
+  <data name="ui.types.name" xml:space="preserve">
+    <value>Room type name</value>
+  </data>
+  <data name="ui.types.name_placeholder" xml:space="preserve">
+    <value>e.g. Twin</value>
+  </data>
+  <data name="ui.types.dialog_sub" xml:space="preserve">
+    <value>Filled into the room form when this type is chosen; existing rooms keep their values</value>
+  </data>
+  <data name="ui.category.order" xml:space="preserve">
+    <value>Display order</value>
+  </data>
+  <data name="ui.category.order_short" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="ui.category.order_hint" xml:space="preserve">
+    <value>Lower numbers come first</value>
+  </data>
+  <data name="ui.category.in_use" xml:space="preserve">
+    <value>Cannot delete · used by {n} rooms</value>
+  </data>
+  <data name="ui.col.type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="ui.col.rooms_using" xml:space="preserve">
+    <value>Rooms</value>
+  </data>
+  <data name="ui.room.type_hint" xml:space="preserve">
+    <value>Choosing a type fills in the rate and guests; you can still change them</value>
+  </data>
+  <data name="ui.room.manage_categories" xml:space="preserve">
+    <value>Manage zones and room types</value>
+  </data>
+  <data name="ui.confirm.delete_zone_title" xml:space="preserve">
+    <value>Delete this zone?</value>
+  </data>
+  <data name="ui.confirm.delete_zone_message" xml:space="preserve">
+    <value>Zone {name} will be removed from the list.</value>
+  </data>
+  <data name="ui.confirm.delete_type_title" xml:space="preserve">
+    <value>Delete this room type?</value>
+  </data>
+  <data name="ui.confirm.delete_type_message" xml:space="preserve">
+    <value>Room type {name} will be removed from the list.</value>
+  </data>
 </root>

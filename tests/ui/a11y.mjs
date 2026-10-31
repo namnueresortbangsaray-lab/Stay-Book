@@ -13,9 +13,11 @@ const sections = ['today', 'room-map', 'bookings', 'guests', 'dashboard', 'rooms
 const dialogs = [
   ['booking-form', 'today', '[data-action="new-booking"]:visible', '#booking-dialog'],
   ['guest-profile', 'guests', '[data-action="guest-details"]:visible', '#guest-dialog'],
-  ['room-form', 'rooms', '[data-action="new-room"]:visible', '#room-dialog'],
+  ['room-form', 'rooms', '[data-action="new-room"]:visible', '#room-dialog', '#rooms-tab-rooms'],
   ['checkout', 'bookings', '#booking-list [data-action="checkout"]:visible', '#action-dialog'],
   ['confirm', 'bookings', '#booking-list [data-action="check-in"]:visible', '#confirm-dialog'],
+  ['zone-form', 'rooms', '[data-action="new-zone"]:visible', '#zone-dialog', '#rooms-tab-zones'],
+  ['type-form', 'rooms', '[data-action="new-type"]:visible', '#type-dialog', '#rooms-tab-types'],
 ];
 const violations = [];
 const layout = [];
@@ -36,9 +38,10 @@ const go = async (page, hash) => {
   await page.waitForTimeout(200);
 };
 const closeAll = page => page.evaluate(() => document.querySelectorAll('dialog[open]').forEach(d => d.close()));
-async function openDialog(page, hash, trigger, dialog) {
+async function openDialog(page, hash, trigger, dialog, tab) {
   await closeAll(page);
   await go(page, hash);
+  if (tab) await page.locator(tab).click();
   await page.locator(trigger).first().click();
   await page.locator(`${dialog}[open]`).waitFor();
   await page.waitForTimeout(250);
@@ -100,8 +103,13 @@ for (const theme of ['light', 'dark']) {
     await page.locator('[data-calendar-today]').click();
     await axe(page, label('calendar'));
     await page.locator('[data-view="list"]').click();
-    for (const [name, hash, trigger, dialog] of dialogs) {
-      await openDialog(page, hash, trigger, dialog);
+    for (const tab of ['zones', 'types']) {
+      await go(page, 'rooms');
+      await page.locator(`#rooms-tab-${tab}`).click();
+      await axe(page, label(`rooms-${tab}`));
+    }
+    for (const [name, hash, trigger, dialog, tab] of dialogs) {
+      await openDialog(page, hash, trigger, dialog, tab);
       await axe(page, label(name), dialog);
     }
     await closeAll(page);
@@ -128,8 +136,13 @@ for (const width of [390, 507, 640, 678, 768, 1024, 1180, 1440]) {
   await page.locator('[data-view="calendar"]').click();
   await sweep(page, `${width}/calendar`, touch);
   await page.locator('[data-view="list"]').click();
-  for (const [name, hash, trigger, dialog] of dialogs) {
-    await openDialog(page, hash, trigger, dialog);
+  for (const tab of ['zones', 'types']) {
+    await go(page, 'rooms');
+    await page.locator(`#rooms-tab-${tab}`).click();
+    await sweep(page, `${width}/rooms-${tab}`, touch);
+  }
+  for (const [name, hash, trigger, dialog, tab] of dialogs) {
+    await openDialog(page, hash, trigger, dialog, tab);
     await sweep(page, `${width}/${name}`, touch);
   }
   await page.context().close();
