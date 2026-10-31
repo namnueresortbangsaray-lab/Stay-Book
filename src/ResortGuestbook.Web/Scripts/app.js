@@ -97,18 +97,42 @@ if ($('#app')) {
     return '';
   }
 
+  let loadingMarkup = null;
+
   async function load(show = true) {
-    if (show) $('#loading').hidden = false;
+    const loading = $('#loading');
+    loadingMarkup ??= loading.innerHTML;
+    if (show) {
+      loading.innerHTML = loadingMarkup;
+      loading.setAttribute('aria-busy', 'true');
+      loading.hidden = false;
+      if (!state.data) $('#main').dataset.state = 'loading';
+    }
     try {
       const start = $('#range-start')?.value || '';
       const end = $('#range-end')?.value || '';
       state.data = await api(`/api/v1/snapshot${start && end ? `?start=${start}&end=${end}` : ''}`);
       render();
       syncExportLink();
+      delete $('#main').dataset.state;
       $('#splash')?.remove();
     } finally {
       $('#loading').hidden = true;
     }
+  }
+
+  /** No data at all: the failure card with a retry replaces the page (the toast would only repeat it). */
+  function showLoadFailure(error) {
+    $('#splash')?.remove();
+    if (state.data) {
+      toast(error.message, 'error');
+      return;
+    }
+    $('#main').dataset.state = 'failed';
+    const loading = $('#loading');
+    loading.setAttribute('aria-busy', 'false');
+    loading.hidden = false;
+    loading.innerHTML = `<div class="card" role="alert">${emptyState({ iconName: 'error', title: t('ui.load_failed'), text: error.message, action: button({ label: t('ui.retry'), variant: 'primary', iconName: 'refresh', attributes: { 'data-action': 'retry-load' } }) })}</div>`;
   }
 
   function render() {
@@ -932,7 +956,7 @@ if ($('#app')) {
       openCommand();
     }
     if (a === 'mobile-more') $('#mobile-more-dialog').showModal();
-    if (a === 'retry-load') load().catch(error => toast(error.message, 'error'));
+    if (a === 'retry-load') load().catch(showLoadFailure);
     if (a === 'edit-booking') openBooking(id);
     if (a === 'new-room') openRoom();
     if (a === 'edit-room') openRoom(id);
@@ -1157,12 +1181,8 @@ if ($('#app')) {
 
   $$('[data-manager-only]').forEach(element => { element.hidden = !canManageRooms; });
   $$('[data-booking-control]').forEach(element => { element.hidden = !canBook; });
+  document.documentElement.classList.add('app-ready');
   navigate(location.hash.slice(1) || 'today', false);
 
-  load().catch(e => {
-    toast(e.message, 'error');
-    $('#splash')?.remove();
-    $('#loading').hidden = false;
-    $('#loading').innerHTML = `<div class="card">${emptyState({ iconName: 'error', title: t('ui.load_failed'), text: e.message, action: button({ label: t('ui.retry'), variant: 'primary', iconName: 'refresh', attributes: { 'data-action': 'retry-load' } }) })}</div>`;
-  });
+  load().catch(showLoadFailure);
 }

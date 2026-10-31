@@ -110,8 +110,16 @@
   }
 
   /* ---------- Splash (first load only) ---------- */
-  .splash { @apply fixed inset-0 z-progress flex flex-col items-center justify-center gap-4 bg-canvas; }
-  .splash .progress { @apply w-36; }
+  /* First load: a thin bar above the shell while the skeleton fills the content area. */
+  .splash { @apply pointer-events-none fixed inset-x-0 top-0 z-progress; height: 3px; }
+  .splash .progress { @apply h-full rounded-none bg-transparent; }
+
+  /* Controls that depend on the role stay invisible (without moving the layout) until the script has applied permissions. */
+  html:not(.app-ready) [data-manager-only],
+  html:not(.app-ready) [data-booking-control] { visibility: hidden; }
+
+  /* While there is no data (first load or a failed load) only the loading or failure state shows. */
+  .content[data-state] > [data-page-panel] { display: none; }
 
   /* ---------- Logos: colour logo on light, white logo on dark ---------- */
   .logo-dark { display: none; }

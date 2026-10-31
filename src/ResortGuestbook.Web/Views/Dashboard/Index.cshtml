@@ -5,10 +5,7 @@
     var role = T[$"ui.role.{Model.Role}"];
 }
 <div id="app" data-role="@Model.Role" class="app-shell">
-  <div id="splash" class="splash" aria-hidden="true">
-    <partial name="_Logo" model='"h-14 w-auto"' />
-    <div class="progress"></div>
-  </div>
+  <div id="splash" class="splash" aria-hidden="true"><div class="progress"></div></div>
 
   <aside class="sidebar no-print">
     <div class="sidebar-inner">
@@ -70,7 +67,7 @@
       </div>
     </header>
 
-    <main id="main" class="content" tabindex="-1">
+    <main id="main" class="content" tabindex="-1" data-state="loading">
       <div id="loading" aria-busy="true">
         <p class="sr-only">@T["ui.loading"]</p>
         <div class="skeleton h-5 w-48"></div>
