@@ -95,8 +95,8 @@ Tailwind classes (`sm` = 640, `md` = 768, `lg` = 1024, `xl` = 1280):
 | Range | Layout |
 |---|---|
 | Phone, < 640px | Top bar with a menu button (opens the navigation drawer `#mobile-more-dialog`), bottom tab bar with five destinations, tables stacked into cards, single-column forms, drawers full screen, modals and menus as bottom sheets, action bars at the bottom within thumb reach |
-| iPad, 640–1279px | Icon rail (expandable, remembered), two-column dashboards and forms, tables with key columns only, calendar with seven columns; works in portrait, landscape and split view |
-| Desktop, ≥ 1280px | Full sidebar and full tables |
+| iPad, 640–1279px | Icon rail by default, expanded with the top-bar menu button (remembered), two-column dashboards and forms, tables with key columns only, calendar with seven columns; works in portrait, landscape and split view |
+| Desktop, ≥ 1280px | Full sidebar (the top-bar menu button collapses it to the icon rail, remembered) and full tables |
 
 - **Tables:** `renderTable` columns take `mobileHide` (dropped from phone cards) and `tabletHide` (hidden on
   tablets). A "แสดงทุกคอลัมน์" toggle under each table brings tablet columns back (remembered per table); a

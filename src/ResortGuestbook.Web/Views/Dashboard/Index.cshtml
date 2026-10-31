@@ -7,7 +7,7 @@
 <div id="app" data-role="@Model.Role" class="app-shell">
   <div id="splash" class="splash" aria-hidden="true"><div class="progress"></div></div>
 
-  <aside class="sidebar no-print">
+  <aside id="sidebar" class="sidebar no-print">
     <div class="sidebar-inner">
       <div class="brand">
         <a href="/#today" class="flex min-h-11 min-w-11 items-center justify-center" aria-label="@T["ui.nav.today"]">
@@ -22,10 +22,6 @@
       </nav>
 
       <div class="sidebar-footer">
-        <button type="button" class="nav-item" data-action="toggle-sidebar" data-tip="@T["ui.nav.collapse"]" aria-pressed="false">
-          <icon name="sidebarCollapse" />
-          <span class="nav-label">@T["ui.nav.collapse"]</span>
-        </button>
         <div class="user-card">
           <span class="avatar" aria-hidden="true">@initial</span>
           <div class="min-w-0 rail-hide">
@@ -42,7 +38,8 @@
 
   <div class="app-main">
     <header class="topbar no-print">
-      <button type="button" class="btn btn-ghost btn-icon -ml-2 sm:hidden" data-action="mobile-more" aria-haspopup="dialog" aria-label="@T["ui.nav.open"]" title="@T["ui.nav.open"]"><icon name="menu" /></button>
+      <button type="button" class="btn btn-ghost btn-icon -ml-2 hidden flex-none sm:inline-flex" data-action="toggle-sidebar" aria-controls="sidebar" aria-expanded="true" aria-label="@T["ui.nav.collapse"]" title="@T["ui.nav.collapse"]"><icon name="menu" /></button>
+      <button type="button" class="btn btn-ghost btn-icon -ml-2 flex-none sm:hidden" data-action="mobile-more" aria-haspopup="dialog" aria-label="@T["ui.nav.open"]" title="@T["ui.nav.open"]"><icon name="menu" /></button>
       <nav aria-label="@T["ui.breadcrumb"]" class="min-w-0">
         <ol class="breadcrumb">
           <li class="hidden sm:block">@T["app_name"]</li>

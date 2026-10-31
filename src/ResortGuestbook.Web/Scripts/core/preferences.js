@@ -14,7 +14,8 @@ const isRail = () => root.dataset.sidebar === 'collapsed'
 
 function sync() {
   document.querySelectorAll('[data-action="toggle-density"]').forEach(button => button.setAttribute('aria-pressed', String(root.dataset.density === 'compact')));
-  document.querySelectorAll('[data-action="toggle-sidebar"]').forEach(button => button.setAttribute('aria-pressed', String(isRail())));
+  // The top-bar menu button collapses the sidebar to an icon rail (and back); its state is the sidebar's expansion.
+  document.querySelectorAll('[data-action="toggle-sidebar"]').forEach(button => button.setAttribute('aria-expanded', String(!isRail())));
 }
 
 export function initPreferences() {

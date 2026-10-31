@@ -41,7 +41,6 @@ export const ICONS = {
   refresh: 'refresh-cw',
   more: 'ellipsis',
   menu: 'menu',
-  sidebarCollapse: 'panel-left-close',
   sidebarExpand: 'panel-left-open',
   sun: 'sun',
   moon: 'moon',
