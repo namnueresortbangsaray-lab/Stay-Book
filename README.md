@@ -124,19 +124,20 @@ uploads are already mounted. The new app uses its own file (`staybook.db`) and n
 
 ## User interface
 
-A quiet, warm, data-dense interface ("a calm hospitality ledger") with Light, Dark and System themes, chosen from the
-sun/moon menu in the top bar or on the sign-in page. A comfortable/compact density toggle sits next to it, and the
-sidebar collapses to icons. Ctrl/⌘K opens search from anywhere.
+A flat blue-and-white interface with Light, Dark and System themes, chosen from the sun/moon menu in the top bar, the
+phone menu or the sign-in page. It works on phones (menu button, bottom tabs, card lists, full-screen forms), iPads
+(icon rail, key table columns, two-column layouts, portrait, landscape and split view) and desktops (full sidebar and
+tables). A comfortable/compact density toggle sits next to the theme menu. Ctrl/⌘K opens search from anywhere.
 
-- Tokens, components and dark mode: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md). Screenshots in both themes at
-  three widths: `docs/design/after/` (before: `docs/design/before/`).
+- Tokens, breakpoints, components and dark mode: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md). Screenshots in both
+  themes at 390, 768, 1024 and 1440px: `docs/design/responsive/` (the original interface: `docs/design/before/`).
 - Fonts (IBM Plex Sans Thai, Noto Serif Thai) and Lucide icons are self-hosted; `npm run build` copies the fonts,
   builds the icon sprite and fails if any colour pair misses WCAG AA in either theme.
 - UI checks against a running instance (`npm --prefix tests/ui ci && npx --prefix tests/ui playwright install chromium`):
 
 ```bash
-BASE_URL=http://localhost:8080 node tests/ui/a11y.mjs                                # axe-core, both themes
-BASE_URL=http://localhost:8080 node tests/ui/screenshots.mjs docs/design/after light,dark
+BASE_URL=http://localhost:8080 node tests/ui/a11y.mjs        # axe-core in both themes + responsive sweep
+BASE_URL=http://localhost:8080 node tests/ui/screenshots.mjs docs/design/responsive light,dark 390,768,1024,1440
 ```
 
 `tests/ui/seed-demo.mjs` fills an empty development instance with fictional guests for screenshots.

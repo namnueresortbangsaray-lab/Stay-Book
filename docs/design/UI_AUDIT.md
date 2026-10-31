@@ -98,3 +98,23 @@ Decisions taken during the redesign without asking (the brief said not to ask af
     `lucide-static` (ISC). Both are build-time dev dependencies; nothing is loaded from a CDN.
 13. **Full-page mobile screenshots** show the fixed bottom tab bar where the first viewport ends; this is how stitched
     full-page captures draw fixed elements, not a layout fault (in the browser it stays at the bottom of the screen).
+
+## Assumptions (blue theme + responsive)
+
+1. **Brief colours that miss AA are darkened within their hue:** light ink-subtle `#6B7A92` → `#5A6880`, success
+   `#1E8E5A` → `#17774B`, warning `#B7791F` → `#8A5A10`, info `#0E7FA8` → `#0B6A8C` (as text they were 3.4–4.4:1).
+   Every other given value is used exactly.
+2. **Text on the dark-theme primary is navy** (`#0E1522`, 6.6:1); white on `#5B9BFF` would be 2.8:1.
+3. **Input borders use a separate `control` token** (`#7C8AA3`, 3.5:1) because `border-strong` (`#C3CFDF`) is 1.6:1
+   and WCAG asks 3:1 for input boundaries; hairline borders keep the brief's values.
+4. **Accent stays amber** (pets, regular guests, search highlights), retuned to sit next to blue; it is not a second
+   primary.
+5. **Phones are below 640px**, iPads 640–1279px (the previous build switched at 768px). The phone navigation drawer
+   and the bottom tab bar already existed; the new top-bar menu button opens the same drawer.
+6. **Tablet key columns:** bookings keep guest, room, check-in (with check-out underneath), status, total and
+   actions; guests drop nights and last stay; rooms drop zone and extra-guest fee. "Show all columns" brings them
+   back. At split-view widths of 640–700px a table may still scroll inside its card, with the lead column sticky.
+7. **The phone month calendar scrolls sideways inside its card** (seven readable day columns need about 640px); the
+   page itself does not scroll.
+8. **`docs/design/after/` (the superseded green theme) was removed**; the current screenshots are in
+   `docs/design/responsive/`, and `docs/design/before/` keeps the original interface for comparison.

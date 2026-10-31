@@ -1,13 +1,13 @@
 # Design system — Stay Book
 
-"A calm hospitality ledger": a quiet, warm, data-dense back-office UI for front-desk and housekeeping staff at
-น้ำเหนือรีสอร์ท บางเสร่, in light and dark. Screenshots: `docs/design/after/{light,dark}/{desktop,tablet,mobile}/`
-(before: `docs/design/before/`). Audit and assumptions: `docs/design/UI_AUDIT.md`.
+A flat, clean blue-and-white back-office UI for front-desk and housekeeping staff at น้ำเหนือรีสอร์ท บางเสร่, in light
+and dark, on phones, iPads and desktops. Screenshots: `docs/design/responsive/{light,dark}/{390,768,1024,1440}/`
+(the original interface: `docs/design/before/`). Audit and assumptions: `docs/design/UI_AUDIT.md`.
 
 ## Principles
 
-1. **Paper, ink, pine.** Warm paper surfaces, near-black ink, one pine-green primary, a brass accent used sparingly.
-   No gradients, glass, coloured shadows or decoration that carries no information.
+1. **Blue and white.** White surfaces on a very light blue-grey canvas, navy ink, one blue primary, an amber accent
+   used sparingly, hairline borders. No gradients, glass, coloured shadows or decoration that carries no information.
 2. **Density over cards.** Lists of stays and guests are tables with sticky headers, sorting and right-aligned
    tabular numbers; cards are for grouping, not for every row. Figures are grouped by meaning, not tiled.
 3. **State is never colour alone.** Every status pairs a tone with an icon and a text label (pills, room tiles,
@@ -25,26 +25,28 @@ not extended, so `text-gray-500` does not exist.
 
 | Token | Use | Light | Dark |
 |---|---|---|---|
-| `canvas` | Page background | `#F6F3EE` | `#121513` |
-| `surface` | Cards, sidebar, tables | `#FCFAF7` | `#1A1E1B` |
-| `raised` | Inputs, menus, dialogs | `#FFFFFF` | `#212622` |
-| `sunken` | Table headers, wells, segmented track | `#EFEBE4` | `#161A17` |
-| `line` / `line-strong` | Hairlines / dividers that must be seen | `#E4DFD6` / `#CFC8BB` | `#2E352F` / `#3B443D` |
-| `control` | Input and checkbox borders (3:1) | `#857E72` | `#707972` |
-| `ink` | Body text, headings | `#1F2421` | `#EDEBE5` |
-| `ink-muted` | Secondary text, labels | `#545C57` | `#A8AFA8` |
-| `ink-subtle` | Hints, meta, placeholders | `#616863` | `#8E968E` |
-| `primary` (+`hover`) | Primary buttons, links, focus ring, active nav | `#1F5C4F` (`#174A40`) | `#4FB39A` (`#6CC7B0`) |
-| `primary-subtle` | Selected rows/chips, active nav background | `#E3EFEA` | `#1E3A33` |
-| `on-primary` | Text on `primary` | `#FFFFFF` | `#0D1A16` |
-| `accent` / `accent-ink` / `accent-subtle` | Brass: pets, regular guests, `<mark>` | `#A67832` / `#7A5520` / `#F4EAD6` | `#D9A85B` / `#E2BA78` / `#3A2F1C` |
-| `success` (+`subtle`) | Checked in, paid | `#286E46` / `#E4F1E8` | `#70C48D` / `#1A3223` |
-| `warning` (+`subtle`) | Departing, deposit due | `#8F5606` / `#FAEED6` | `#E2AB54` / `#382A12` |
-| `danger` (+`subtle`) | Errors, destructive actions | `#A73A29` / `#F8E7E3` | `#F08D7A` / `#3F1E19` |
-| `info` (+`subtle`) | Booked / arriving | `#2E6A8E` / `#E3EDF4` | `#80B8DC` / `#182C3A` |
-| `selection` | `::selection` | `#CDE2D9` | `#285247` |
+| `canvas` | Page background | `#F4F7FB` | `#0E1522` |
+| `surface` | Cards, sidebar, tables | `#FFFFFF` | `#151F31` |
+| `raised` | Inputs, menus, dialogs | `#FFFFFF` | `#1B2840` |
+| `sunken` | Table headers, wells, segmented track | `#ECF1F8` | `#111A2A` |
+| `line` / `line-strong` | Hairlines / dividers that must be seen | `#DCE4EF` / `#C3CFDF` | `#243049` / `#33425F` |
+| `control` | Input and checkbox borders (3:1) | `#7C8AA3` | `#70819E` |
+| `ink` | Body text, headings | `#14213D` | `#E8EEF8` |
+| `ink-muted` | Secondary text, labels | `#4A5A73` | `#9FB0C8` |
+| `ink-subtle` | Hints, meta, placeholders | `#5A6880` | `#8799B5` |
+| `primary` (+`hover`) | Primary buttons, links, focus ring, active nav | `#1D5FD1` (`#174DB0`) | `#5B9BFF` (`#7DB0FF`) |
+| `primary-subtle` | Selected rows/chips, active nav background | `#E6EFFC` | `#1B2D4F` |
+| `on-primary` | Text on `primary` | `#FFFFFF` | `#0E1522` |
+| `accent` / `accent-ink` / `accent-subtle` | Amber: pets, regular guests, `<mark>` | `#A86A12` / `#7A4D0C` / `#FBF1DF` | `#E0A84E` / `#EBC07C` / `#3A2E18` |
+| `success` (+`subtle`) | Vacant, paid | `#17774B` / `#E3F4EA` | `#5FCB8E` / `#12301F` |
+| `warning` (+`subtle`) | Departing, deposit due | `#8A5A10` / `#FCF1DC` | `#E8B04F` / `#3A2C12` |
+| `danger` (+`subtle`) | Errors, destructive actions | `#C0392B` / `#FBE9E7` | `#FF8A7A` / `#3F1D1D` |
+| `info` (+`subtle`) | Booked / arriving | `#0B6A8C` / `#E1F1F8` | `#5FC3E8` / `#0F2E3D` |
+| `selection` | `::selection` | `#C9DCFA` | `#24467E` |
+| `scrim` | Dialog and sheet backdrops, popover shadow | `#14213D` | `#03070E` |
 
-Dark surfaces get lighter with elevation (canvas → surface → raised). `--theme-color` feeds the browser chrome colour.
+Dark surfaces get lighter with elevation (canvas → surface → raised). The browser chrome colour comes from the
+`data-light` / `data-dark` attributes of the `theme-color` meta in `_Layout.cshtml` (its only copy).
 
 **Tones.** `.tone-{primary,accent,success,warning,danger,info,neutral}` set `--tone` and `--tone-bg`; `.pill`,
 `.chip`, `.room-tile`, `.toast`, `.timeline-item`, `.tone-text` and chart marks read them. These classes live outside
@@ -52,9 +54,10 @@ Dark surfaces get lighter with elevation (canvas → surface → raised). `--the
 
 **Contrast gate.** `build/check-contrast.mjs` runs first in `npm run build` and fails the build if any of 62 pairs per
 theme misses WCAG AA: text pairs (each ink, primary and danger on every background, status on its subtle, on-primary on
-primary and hover) need 4.5:1; controls, focus ring, status icons and chart marks need 3:1. Examples: ink on canvas
-14.2 / 15.4, ink-subtle on sunken 4.8 / 5.8, on-primary on primary 7.8 / 7.0, control on surface 3.9 / 3.8
-(light / dark). Add a pair there whenever a component uses a new combination.
+primary and hover) need 4.5:1; controls, focus ring, status icons and chart marks need 3:1. Examples (light / dark): ink on canvas 14.9 / 15.7, ink-subtle on sunken 5.0 / 6.0, primary on canvas 5.4 / 6.6,
+on-primary on primary 5.8 / 6.6, control on surface 3.5 / 4.2; the lowest text pair is 4.8 / 5.1. Brief values that
+missed AA were darkened within their hue (light ink-subtle, success, warning, info); text on the dark-theme primary is
+navy because white on `#5B9BFF` is only 2.8:1. Add a pair there whenever a component uses a new combination.
 
 ## Typography
 
@@ -73,6 +76,31 @@ primary and hover) need 4.5:1; controls, focus ring, status icons and chart mark
 Borders are 1px hairlines in `line`; the only shadow is `shadow-pop`, for menus, popovers, dialogs and drawers.
 Density: `data-density="compact"` on `<html>` shrinks `--control-h` (40 → 34px) and `--row-h` (44 → 36px); coarse
 pointers always keep 44px targets.
+
+## Breakpoints and touch
+
+Mobile first; one set of breakpoints in CSS (`@media`), JS (`matchMedia` in `preferences.js`, `ui.js`) and
+Tailwind classes (`sm` = 640, `md` = 768, `lg` = 1024, `xl` = 1280):
+
+| Range | Layout |
+|---|---|
+| Phone, < 640px | Top bar with a menu button (opens the navigation drawer `#mobile-more-dialog`), bottom tab bar with five destinations, tables stacked into cards, single-column forms, drawers full screen, modals and menus as bottom sheets, action bars at the bottom within thumb reach |
+| iPad, 640–1279px | Icon rail (expandable, remembered), two-column dashboards and forms, tables with key columns only, calendar with seven columns; works in portrait, landscape and split view |
+| Desktop, ≥ 1280px | Full sidebar and full tables |
+
+- **Tables:** `renderTable` columns take `mobileHide` (dropped from phone cards) and `tabletHide` (hidden on
+  tablets). A "แสดงทุกคอลัมน์" toggle under each table brings tablet columns back (remembered per table); a
+  `.tablet-only` line shows check-out under check-in when that column is hidden. Row actions turn icon-only on
+  tablets (label kept as accessible name and `title`). When a table is still wider than its card (split-view widths),
+  the lead column stays sticky while the rest scrolls inside the card; the page itself never scrolls sideways.
+- **Touch:** every control is at least 44×44px on coarse pointers (`--control-h`, chips, tabs, segmented items, sort
+  headers, link buttons, rail items); inline text links are exempt. Inputs use 16px text below 1280px and on touch
+  devices so iOS does not zoom. Nothing depends on hover: rail labels are tooltips on hover/focus and the items still
+  navigate on tap.
+- **Viewport:** `viewport-fit=cover` with `env(safe-area-inset-*)` padding on the top bar, content, tab bar, sheets
+  and drawers; heights use `100dvh`.
+- **Thai text** wraps at word boundaries; truncation (`truncate`, `.cell-note`) always carries the full text in a
+  `title`.
 
 ## Icons
 
@@ -130,8 +158,10 @@ and disabled styles.
 ## Accessibility
 
 - WCAG 2.2 AA target. `tests/ui/a11y.mjs` runs axe-core on login, all six sections, the calendar, five dialogs, the
-  command palette and the 404 page, in light and dark, at desktop and mobile widths; it exits non-zero on any serious or
-  critical violation (current result: 0 violations of any impact).
+  command palette and the 404 page, in light and dark, at 390, 768 and 1440px; then sweeps 390, 507, 640, 678, 768,
+  1024, 1180 and 1440px for horizontal page scroll, touch targets under 44px and input text under 16px. It exits
+  non-zero on any serious or critical violation or layout issue (current result: 0 violations of any impact, 0 layout
+  issues).
 - Skip link, landmarks (`nav`, `main`, labelled `section`s), one `h1` per view, `aria-current="page"` on the active nav item.
 - Keyboard: everything is reachable by Tab; menus, tabs, the palette and table rows use arrow keys; dialogs trap focus
   and restore it on close.
@@ -152,4 +182,5 @@ and disabled styles.
 5. **Behaviour hooks:** keep `id`, `name`, `data-action` and `data-id` attributes stable; JS and the baseline contract
    tests depend on them. No inline event handlers or inline scripts without the nonce.
 6. **Check:** `npm --prefix src/ResortGuestbook.Web run build`, `dotnet test`, then against a running instance
-   `node tests/ui/a11y.mjs` and `node tests/ui/screenshots.mjs <dir> light,dark`; look at the screenshots in both themes.
+   `node tests/ui/a11y.mjs` and `node tests/ui/screenshots.mjs <dir> light,dark 390,768,1024,1440`; look at the
+   screenshots in both themes at every width.

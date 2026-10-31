@@ -60,13 +60,17 @@ Read @docs/DESIGN_SYSTEM.md before touching views, `Styles/` or `Scripts/`. In s
 - Keep `id`, `name`, `data-action`, `data-id` stable (JS and the baseline contract depend on them).
 - `.tone-*` sit outside `@layer` on purpose (runtime class names would be purged).
 - Build helpers live in `build/`, not `scripts/`: on Windows `scripts` collides with `Scripts` in Docker contexts.
-- Verify with `node tests/ui/a11y.mjs` (0 serious/critical) and `node tests/ui/screenshots.mjs`, and look at both themes.
+- Breakpoints: phone < 640 (`sm`), iPad 640–1279 (icon rail, `tabletHide` columns), desktop ≥ 1280. Touch targets
+  44px on coarse pointers, inputs 16px below 1280px. The `theme-color` hex lives only on the meta tag in `_Layout`.
+- Verify with `node tests/ui/a11y.mjs` (axe + responsive sweep must exit 0) and `node tests/ui/screenshots.mjs`, and
+  look at both themes at 390/768/1024/1440.
 
 ## Status
 All phases done (migration from v1 completed 2026-10-30): 96 tests green on SQLite + PostgreSQL, baseline contract
 matches, Docker stack healthy, local installation upgraded and v1 data imported.
-UI redesign + dark mode done 2026-10-31 on branch `ui-redesign`: contrast gate passes in both themes, axe-core reports
-0 violations on every screen and dialog in both themes, screenshots in `docs/design/after/`.
+UI redesign + dark mode done 2026-10-31 on branch `ui-redesign`; blue/white theme and phone/iPad layouts on branch
+`ui-blue-responsive` (2026-10-31): contrast gate passes in both themes, axe-core 0 violations and responsive sweep 0
+issues, screenshots in `docs/design/responsive/`.
 
 ## Next steps
 - Optional: `SupabaseFileStorage` (see docs/SUPABASE.md), concurrency tokens if staff report conflicting edits.

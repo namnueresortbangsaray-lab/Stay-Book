@@ -5,7 +5,7 @@
   .brand-panel .ledger { @apply pointer-events-none absolute inset-0 h-full w-full; opacity: 0.14; }
   .brand-wordmark { @apply font-serif text-2xl font-semibold; }
   @media screen {
-    /* Dark theme: a deep pine panel instead of the bright dark-theme primary. */
+    /* Dark theme: a deep blue panel instead of the bright dark-theme primary. */
     [data-theme='dark'] .brand-panel { @apply bg-primary-subtle text-ink; }
   }
   .login-main { @apply flex flex-col px-5 py-6 sm:px-10; }
