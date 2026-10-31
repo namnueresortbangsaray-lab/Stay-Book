@@ -1,10 +1,11 @@
 @model ResortGuestbook.Web.Services.Actor
+@inject Microsoft.Extensions.Options.IOptions<ResortGuestbook.Web.Infrastructure.Options.AuthOptions> AuthSettings
 @{
     var name = string.IsNullOrEmpty(Model.Name) ? T["ui.user.fallback"].Value : Model.Name;
     var initial = System.Globalization.StringInfo.GetNextTextElement(name);
     var role = T[$"ui.role.{Model.Role}"];
 }
-<div id="app" data-role="@Model.Role" class="app-shell">
+<div id="app" data-role="@Model.Role" data-user-id="@Model.Id" class="app-shell">
   <div id="splash" class="splash" aria-hidden="true"><div class="progress"></div></div>
 
   <aside id="sidebar" class="sidebar no-print">
@@ -29,6 +30,7 @@
             <p class="user-role">@(role.ResourceNotFound ? Model.Role : role)</p>
           </div>
         </div>
+        <button type="button" class="nav-item" data-action="change-password" data-tip="@T["ui.account.change_password"]"><icon name="key" /><span class="nav-label">@T["ui.account.change_password"]</span></button>
         <form method="post" action="/logout" asp-antiforgery="true">
           <button class="nav-item" type="submit" data-tip="@T["ui.nav.signout"]"><icon name="signout" /><span class="nav-label">@T["ui.nav.signout"]</span></button>
         </form>
@@ -141,6 +143,17 @@
           </div>
         </div>
         <div id="analytics"></div>
+      </section>
+
+      <section id="page-users" data-page-panel hidden aria-labelledby="page-title">
+        <div class="section-head">
+          <div>
+            <h2 class="text-lg font-semibold">@T["ui.users.title"]</h2>
+            <p class="text-sm text-ink-muted">@T["ui.users.subtitle"]</p>
+          </div>
+          <button type="button" class="btn btn-primary" data-action="new-user"><icon name="plus" /><span>@T["ui.users.new"]</span></button>
+        </div>
+        <div id="user-list"></div>
       </section>
 
       <section id="page-rooms" data-page-panel hidden aria-labelledby="page-title">
@@ -405,6 +418,137 @@
   </form>
 </dialog>
 
+
+<dialog id="user-dialog" class="modal [--dialog-w:30rem]" aria-labelledby="user-dialog-title">
+  <form id="user-form" novalidate data-guard>
+    <div class="dialog-header">
+      <div>
+        <h2 id="user-dialog-title" class="dialog-title" data-dialog-title>@T["ui.users.new"]</h2>
+        <p class="dialog-sub" data-dialog-sub>@T["ui.users.dialog_sub"]</p>
+      </div>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="@T["ui.close"]"><icon name="close" /></button>
+    </div>
+    <input type="hidden" name="id">
+    <div class="dialog-body space-y-4">
+        <div>
+          <label class="label" for="user-name">@T["ui.users.name"]<span class="req" aria-hidden="true">*</span></label>
+          <input id="user-name" class="field" name="name" required autocomplete="off">
+        </div>
+        <div>
+          <label class="label" for="user-email">@T["ui.users.email"]<span class="req" aria-hidden="true">*</span></label>
+          <input id="user-email" class="field" type="email" name="email" required autocomplete="off" inputmode="email" aria-describedby="user-email-hint">
+          <p id="user-email-hint" class="hint">@T["ui.users.email_hint"]</p>
+        </div>
+        <div>
+          <label class="label" for="user-role">@T["ui.users.role"]<span class="req" aria-hidden="true">*</span></label>
+          <select id="user-role" class="field form-select" name="role" required aria-describedby="user-role-hint">
+            <option value="front_desk">@T["ui.role.front_desk"]</option>
+            <option value="housekeeping">@T["ui.role.housekeeping"]</option>
+            <option value="admin">@T["ui.role.admin"]</option>
+          </select>
+          <p id="user-role-hint" class="hint" data-role-hint></p>
+        </div>
+        <input type="hidden" name="active" value="true">
+        <div class="space-y-4" data-new-user-only>
+        <div>
+          <label class="label" for="user-password">@T["ui.users.password"]<span class="req" aria-hidden="true">*</span></label>
+          <div class="relative">
+            <input id="user-password" class="field pr-12" type="password" name="password" required autocomplete="new-password" aria-describedby="user-password-hint">
+            <button type="button" class="btn btn-ghost btn-icon password-toggle" data-password-toggle aria-controls="user-password" aria-pressed="false" aria-label="@T["ui.password.show"]" title="@T["ui.password.show"]"><icon name="eye" class="password-show" /><icon name="eyeOff" class="password-hide" /></button>
+          </div>
+          <p id="user-password-hint" class="hint">@T["ui.password.rule", AuthSettings.Value.PasswordMinLength]</p>
+        </div>
+        <div>
+          <label class="label" for="user-password-confirm">@T["ui.password.confirm"]<span class="req" aria-hidden="true">*</span></label>
+          <div class="relative">
+            <input id="user-password-confirm" class="field pr-12" type="password" name="confirm_password" required autocomplete="new-password">
+            <button type="button" class="btn btn-ghost btn-icon password-toggle" data-password-toggle aria-controls="user-password-confirm" aria-pressed="false" aria-label="@T["ui.password.show"]" title="@T["ui.password.show"]"><icon name="eye" class="password-show" /><icon name="eyeOff" class="password-hide" /></button>
+          </div>
+        </div>
+        </div>
+    </div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-ghost" data-close>@T["ui.cancel"]</button>
+      <button class="btn btn-primary" type="submit" data-submit-label>@T["ui.users.new"]</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="reset-password-dialog" class="modal [--dialog-w:30rem]" aria-labelledby="reset-password-dialog-title">
+  <form id="reset-password-form" novalidate data-guard>
+    <div class="dialog-header">
+      <div>
+        <h2 id="reset-password-dialog-title" class="dialog-title" data-dialog-title>@T["ui.users.reset_title"]</h2>
+        <p class="dialog-sub" data-dialog-sub>@T["ui.users.reset_sub"]</p>
+      </div>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="@T["ui.close"]"><icon name="close" /></button>
+    </div>
+    <input type="hidden" name="id">
+    <div class="dialog-body space-y-4">
+        <div>
+          <label class="label" for="reset-password-new">@T["ui.password.new"]<span class="req" aria-hidden="true">*</span></label>
+          <div class="relative">
+            <input id="reset-password-new" class="field pr-12" type="password" name="password" required autocomplete="new-password" aria-describedby="reset-password-new-hint">
+            <button type="button" class="btn btn-ghost btn-icon password-toggle" data-password-toggle aria-controls="reset-password-new" aria-pressed="false" aria-label="@T["ui.password.show"]" title="@T["ui.password.show"]"><icon name="eye" class="password-show" /><icon name="eyeOff" class="password-hide" /></button>
+          </div>
+          <p id="reset-password-new-hint" class="hint">@T["ui.password.rule", AuthSettings.Value.PasswordMinLength]</p>
+        </div>
+        <div>
+          <label class="label" for="reset-password-confirm">@T["ui.password.confirm"]<span class="req" aria-hidden="true">*</span></label>
+          <div class="relative">
+            <input id="reset-password-confirm" class="field pr-12" type="password" name="confirm_password" required autocomplete="new-password">
+            <button type="button" class="btn btn-ghost btn-icon password-toggle" data-password-toggle aria-controls="reset-password-confirm" aria-pressed="false" aria-label="@T["ui.password.show"]" title="@T["ui.password.show"]"><icon name="eye" class="password-show" /><icon name="eyeOff" class="password-hide" /></button>
+          </div>
+        </div>
+    </div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-ghost" data-close>@T["ui.cancel"]</button>
+      <button class="btn btn-primary" type="submit" data-submit-label>@T["ui.users.reset_submit"]</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="account-password-dialog" class="modal [--dialog-w:30rem]" aria-labelledby="account-password-dialog-title">
+  <form id="account-password-form" novalidate data-guard>
+    <div class="dialog-header">
+      <div>
+        <h2 id="account-password-dialog-title" class="dialog-title" data-dialog-title>@T["ui.account.change_password"]</h2>
+        <p class="dialog-sub" data-dialog-sub>@T["ui.account.change_sub"]</p>
+      </div>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="@T["ui.close"]"><icon name="close" /></button>
+    </div>
+    <input type="hidden" name="id">
+    <div class="dialog-body space-y-4">
+        <div>
+          <label class="label" for="account-current">@T["ui.password.current"]<span class="req" aria-hidden="true">*</span></label>
+          <div class="relative">
+            <input id="account-current" class="field pr-12" type="password" name="current_password" required autocomplete="current-password">
+            <button type="button" class="btn btn-ghost btn-icon password-toggle" data-password-toggle aria-controls="account-current" aria-pressed="false" aria-label="@T["ui.password.show"]" title="@T["ui.password.show"]"><icon name="eye" class="password-show" /><icon name="eyeOff" class="password-hide" /></button>
+          </div>
+        </div>
+        <div>
+          <label class="label" for="account-new">@T["ui.password.new"]<span class="req" aria-hidden="true">*</span></label>
+          <div class="relative">
+            <input id="account-new" class="field pr-12" type="password" name="password" required autocomplete="new-password" aria-describedby="account-new-hint">
+            <button type="button" class="btn btn-ghost btn-icon password-toggle" data-password-toggle aria-controls="account-new" aria-pressed="false" aria-label="@T["ui.password.show"]" title="@T["ui.password.show"]"><icon name="eye" class="password-show" /><icon name="eyeOff" class="password-hide" /></button>
+          </div>
+          <p id="account-new-hint" class="hint">@T["ui.password.rule", AuthSettings.Value.PasswordMinLength]</p>
+        </div>
+        <div>
+          <label class="label" for="account-confirm">@T["ui.password.confirm"]<span class="req" aria-hidden="true">*</span></label>
+          <div class="relative">
+            <input id="account-confirm" class="field pr-12" type="password" name="confirm_password" required autocomplete="new-password">
+            <button type="button" class="btn btn-ghost btn-icon password-toggle" data-password-toggle aria-controls="account-confirm" aria-pressed="false" aria-label="@T["ui.password.show"]" title="@T["ui.password.show"]"><icon name="eye" class="password-show" /><icon name="eyeOff" class="password-hide" /></button>
+          </div>
+        </div>
+    </div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-ghost" data-close>@T["ui.cancel"]</button>
+      <button class="btn btn-primary" type="submit" data-submit-label>@T["ui.account.change_submit"]</button>
+    </div>
+  </form>
+</dialog>
+
 <dialog id="zone-dialog" class="modal [--dialog-w:28rem]" aria-labelledby="zone-dialog-title">
   <form id="zone-form" novalidate data-guard>
     <div class="dialog-header">
@@ -592,6 +736,10 @@
       <partial name="_NavItems" />
       <p class="nav-heading">@T["ui.theme.label"]</p>
       <div class="px-1"><partial name="_ThemeSwitch" /></div>
+      <p class="nav-heading">@T["ui.account.title"]</p>
+      <ul class="nav-list">
+        <li><button type="button" class="nav-item" data-action="change-password"><icon name="key" /><span class="nav-label">@T["ui.account.change_password"]</span></button></li>
+      </ul>
     </nav>
     <div class="dialog-actions justify-between">
       <div class="user-card min-w-0">

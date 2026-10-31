@@ -1188,4 +1188,115 @@
   <data name="ui.confirm.delete_type_message" xml:space="preserve">
     <value>ประเภท {name} จะถูกลบออกจากรายการ</value>
   </data>
+  <data name="ui.nav.users" xml:space="preserve">
+    <value>ผู้ใช้งาน</value>
+  </data>
+  <data name="ui.account.title" xml:space="preserve">
+    <value>บัญชีของฉัน</value>
+  </data>
+  <data name="ui.account.change_password" xml:space="preserve">
+    <value>เปลี่ยนรหัสผ่าน</value>
+  </data>
+  <data name="ui.account.change_sub" xml:space="preserve">
+    <value>เครื่องอื่นที่เข้าสู่ระบบด้วยบัญชีนี้จะถูกออกจากระบบ</value>
+  </data>
+  <data name="ui.account.change_submit" xml:space="preserve">
+    <value>เปลี่ยนรหัสผ่าน</value>
+  </data>
+  <data name="ui.users.title" xml:space="preserve">
+    <value>ผู้ใช้งานระบบ</value>
+  </data>
+  <data name="ui.users.subtitle" xml:space="preserve">
+    <value>เพิ่มพนักงาน กำหนดสิทธิ์ ปิดบัญชีที่ไม่ได้ใช้แล้ว และตั้งรหัสผ่านใหม่ให้คนที่ลืม</value>
+  </data>
+  <data name="ui.users.new" xml:space="preserve">
+    <value>เพิ่มผู้ใช้</value>
+  </data>
+  <data name="ui.users.edit" xml:space="preserve">
+    <value>แก้ไขผู้ใช้</value>
+  </data>
+  <data name="ui.users.dialog_sub" xml:space="preserve">
+    <value>พนักงานใช้อีเมลนี้เข้าสู่ระบบ</value>
+  </data>
+  <data name="ui.users.name" xml:space="preserve">
+    <value>ชื่อที่แสดง</value>
+  </data>
+  <data name="ui.users.email" xml:space="preserve">
+    <value>อีเมลเข้าใช้งาน</value>
+  </data>
+  <data name="ui.users.email_hint" xml:space="preserve">
+    <value>ใช้เป็นชื่อผู้ใช้ตอนเข้าสู่ระบบ ไม่จำเป็นต้องรับอีเมลได้จริง</value>
+  </data>
+  <data name="ui.users.role" xml:space="preserve">
+    <value>สิทธิ์การใช้งาน</value>
+  </data>
+  <data name="ui.users.role_hint.admin" xml:space="preserve">
+    <value>ทำได้ทุกอย่าง รวมถึงจัดการผู้ใช้งาน</value>
+  </data>
+  <data name="ui.users.role_hint.front_desk" xml:space="preserve">
+    <value>การจอง เช็กอิน/เอาต์ ลูกค้า ห้องพัก และรายงาน</value>
+  </data>
+  <data name="ui.users.role_hint.housekeeping" xml:space="preserve">
+    <value>ดูข้อมูล เช็กเอาต์พร้อมตรวจห้อง และแนบไฟล์</value>
+  </data>
+  <data name="ui.users.password" xml:space="preserve">
+    <value>รหัสผ่านเริ่มต้น</value>
+  </data>
+  <data name="ui.users.menu" xml:space="preserve">
+    <value>การทำงานของบัญชี {name}</value>
+  </data>
+  <data name="ui.users.you" xml:space="preserve">
+    <value>คุณ</value>
+  </data>
+  <data name="ui.users.status.active" xml:space="preserve">
+    <value>ใช้งาน</value>
+  </data>
+  <data name="ui.users.status.inactive" xml:space="preserve">
+    <value>ปิดใช้งาน</value>
+  </data>
+  <data name="ui.users.status.locked" xml:space="preserve">
+    <value>ล็อกชั่วคราว</value>
+  </data>
+  <data name="ui.users.reset_title" xml:space="preserve">
+    <value>ตั้งรหัสผ่านใหม่</value>
+  </data>
+  <data name="ui.users.reset_sub" xml:space="preserve">
+    <value>บัญชีจะออกจากระบบทุกเครื่องและถูกปลดล็อก</value>
+  </data>
+  <data name="ui.users.reset_for" xml:space="preserve">
+    <value>สำหรับ {name} · บัญชีจะออกจากระบบทุกเครื่องและถูกปลดล็อก</value>
+  </data>
+  <data name="ui.users.reset_submit" xml:space="preserve">
+    <value>ตั้งรหัสผ่านใหม่</value>
+  </data>
+  <data name="ui.users.deactivate" xml:space="preserve">
+    <value>ปิดใช้งานบัญชี</value>
+  </data>
+  <data name="ui.users.activate" xml:space="preserve">
+    <value>เปิดใช้งานบัญชี</value>
+  </data>
+  <data name="ui.users.cannot_deactivate_self" xml:space="preserve">
+    <value>ปิดบัญชีตัวเองไม่ได้</value>
+  </data>
+  <data name="ui.confirm.deactivate_user_title" xml:space="preserve">
+    <value>ปิดใช้งานบัญชีนี้?</value>
+  </data>
+  <data name="ui.confirm.deactivate_user_message" xml:space="preserve">
+    <value>{name} จะเข้าสู่ระบบไม่ได้ และถูกออกจากระบบภายใน 1 นาที เปิดใช้งานใหม่ได้ภายหลัง</value>
+  </data>
+  <data name="ui.col.user" xml:space="preserve">
+    <value>ผู้ใช้</value>
+  </data>
+  <data name="ui.password.current" xml:space="preserve">
+    <value>รหัสผ่านปัจจุบัน</value>
+  </data>
+  <data name="ui.password.new" xml:space="preserve">
+    <value>รหัสผ่านใหม่</value>
+  </data>
+  <data name="ui.password.confirm" xml:space="preserve">
+    <value>ยืนยันรหัสผ่านใหม่</value>
+  </data>
+  <data name="ui.password.rule" xml:space="preserve">
+    <value>อย่างน้อย {0} ตัวอักษร ใช้วลีที่จำง่ายได้ ไม่ต้องมีสัญลักษณ์</value>
+  </data>
 </root>

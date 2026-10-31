@@ -1188,4 +1188,115 @@
   <data name="ui.confirm.delete_type_message" xml:space="preserve">
     <value>Room type {name} will be removed from the list.</value>
   </data>
+  <data name="ui.nav.users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="ui.account.title" xml:space="preserve">
+    <value>My account</value>
+  </data>
+  <data name="ui.account.change_password" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="ui.account.change_sub" xml:space="preserve">
+    <value>Other devices signed in with this account will be signed out</value>
+  </data>
+  <data name="ui.account.change_submit" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="ui.users.title" xml:space="preserve">
+    <value>Staff accounts</value>
+  </data>
+  <data name="ui.users.subtitle" xml:space="preserve">
+    <value>Add staff, set roles, deactivate unused accounts and reset forgotten passwords</value>
+  </data>
+  <data name="ui.users.new" xml:space="preserve">
+    <value>Add user</value>
+  </data>
+  <data name="ui.users.edit" xml:space="preserve">
+    <value>Edit user</value>
+  </data>
+  <data name="ui.users.dialog_sub" xml:space="preserve">
+    <value>Staff sign in with this email</value>
+  </data>
+  <data name="ui.users.name" xml:space="preserve">
+    <value>Display name</value>
+  </data>
+  <data name="ui.users.email" xml:space="preserve">
+    <value>Sign-in email</value>
+  </data>
+  <data name="ui.users.email_hint" xml:space="preserve">
+    <value>Used as the sign-in name; it does not need to receive mail</value>
+  </data>
+  <data name="ui.users.role" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="ui.users.role_hint.admin" xml:space="preserve">
+    <value>Everything, including staff accounts</value>
+  </data>
+  <data name="ui.users.role_hint.front_desk" xml:space="preserve">
+    <value>Bookings, check-in/out, guests, rooms and reports</value>
+  </data>
+  <data name="ui.users.role_hint.housekeeping" xml:space="preserve">
+    <value>View, check out with inspection and attach files</value>
+  </data>
+  <data name="ui.users.password" xml:space="preserve">
+    <value>First password</value>
+  </data>
+  <data name="ui.users.menu" xml:space="preserve">
+    <value>Actions for {name}</value>
+  </data>
+  <data name="ui.users.you" xml:space="preserve">
+    <value>you</value>
+  </data>
+  <data name="ui.users.status.active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="ui.users.status.inactive" xml:space="preserve">
+    <value>Deactivated</value>
+  </data>
+  <data name="ui.users.status.locked" xml:space="preserve">
+    <value>Locked</value>
+  </data>
+  <data name="ui.users.reset_title" xml:space="preserve">
+    <value>Set a new password</value>
+  </data>
+  <data name="ui.users.reset_sub" xml:space="preserve">
+    <value>The account is signed out everywhere and unlocked</value>
+  </data>
+  <data name="ui.users.reset_for" xml:space="preserve">
+    <value>For {name} · signed out everywhere and unlocked</value>
+  </data>
+  <data name="ui.users.reset_submit" xml:space="preserve">
+    <value>Set password</value>
+  </data>
+  <data name="ui.users.deactivate" xml:space="preserve">
+    <value>Deactivate account</value>
+  </data>
+  <data name="ui.users.activate" xml:space="preserve">
+    <value>Reactivate account</value>
+  </data>
+  <data name="ui.users.cannot_deactivate_self" xml:space="preserve">
+    <value>You cannot deactivate yourself</value>
+  </data>
+  <data name="ui.confirm.deactivate_user_title" xml:space="preserve">
+    <value>Deactivate this account?</value>
+  </data>
+  <data name="ui.confirm.deactivate_user_message" xml:space="preserve">
+    <value>{name} can no longer sign in and is signed out within a minute; you can reactivate later.</value>
+  </data>
+  <data name="ui.col.user" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="ui.password.current" xml:space="preserve">
+    <value>Current password</value>
+  </data>
+  <data name="ui.password.new" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="ui.password.confirm" xml:space="preserve">
+    <value>Confirm new password</value>
+  </data>
+  <data name="ui.password.rule" xml:space="preserve">
+    <value>At least {0} characters; an easy phrase works, no symbols needed</value>
+  </data>
 </root>

@@ -13,8 +13,9 @@ initTheme();
 initPreferences();
 bindRowNavigation();
 
-$('[data-password-toggle]')?.addEventListener('click', event => {
-  const toggle = event.currentTarget;
+document.addEventListener('click', event => {
+  const toggle = event.target.closest('[data-password-toggle]');
+  if (!toggle) return;
   const input = document.getElementById(toggle.getAttribute('aria-controls'));
   const show = input.type === 'password';
   input.type = show ? 'text' : 'password';
@@ -25,8 +26,10 @@ if ($('#app')) {
   const role = $('#app').dataset.role;
   const canBook = role === 'admin' || role === 'front_desk';
   const canManageRooms = canBook;
+  const isAdmin = role === 'admin';
   const canCheckout = canBook || role === 'housekeeping';
   const state = {
+    me: $('#app').dataset.userId,
     data: null,
     page: 'today',
     bookingView: 'list',
@@ -42,6 +45,7 @@ if ($('#app')) {
       guests: tableState('guests', { sort: 'latest', dir: 'desc' }),
       rooms: tableState('rooms'),
       zones: tableState('zones', { sort: 'order' }),
+      users: tableState('users', { sort: 'name' }),
       types: tableState('types', { sort: 'order' }),
     },
   };
@@ -53,6 +57,7 @@ if ($('#app')) {
     guests: ['ui.nav.guests', 'ui.nav.group.records'],
     dashboard: ['ui.nav.reports', 'ui.nav.group.records'],
     rooms: ['ui.nav.rooms', 'ui.nav.group.records'],
+    users: ['ui.nav.users', 'ui.nav.group.records'],
   };
 
   const STATUS = [
@@ -133,6 +138,7 @@ if ($('#app')) {
         api(`/api/v1/snapshot${start && end ? `?start=${start}&end=${end}` : ''}`),
         api('/api/v1/room-categories'),
       ]);
+      if (isAdmin) state.users = await api('/api/v1/users');
       render();
       syncExportLink();
       delete $('#main').dataset.state;
@@ -164,6 +170,7 @@ if ($('#app')) {
     renderRooms();
     renderCategories();
     renderGuests();
+    renderUsers();
   }
 
   // ================= TODAY =================
@@ -598,6 +605,77 @@ if ($('#app')) {
     selectTab($(`#rooms-tab-${name}`), true);
   }
 
+  // ================= USERS =================
+  const ROLE_TONES = { admin: 'primary', front_desk: 'info', housekeeping: 'neutral' };
+  const userStatus = u => !u.active
+    ? pill('neutral', 'userX', t('ui.users.status.inactive'))
+    : u.locked_until ? pill('warning', 'lock', t('ui.users.status.locked')) : pill('success', 'userCheck', t('ui.users.status.active'));
+
+  function renderUsers() {
+    if (!isAdmin || !state.users) return;
+    $('#user-list').innerHTML = renderTable({
+      state: state.tables.users,
+      columns: [
+        {
+          key: 'name', label: t('ui.col.user'), className: 'cell-lead', value: u => u.name,
+          cell: u => `<span class="flex items-center gap-3"><span class="avatar" aria-hidden="true">${h([...u.name][0] || '?')}</span><span class="min-w-0"><span class="cell-title block">${h(u.name)}${u.id === state.me ? ` <span class="text-xs font-normal text-ink-subtle">(${h(t('ui.users.you'))})</span>` : ''}</span><span class="cell-sub block truncate">${h(u.email)}</span></span></span>`,
+        },
+        { key: 'role', label: t('ui.users.role'), value: u => u.role, cell: u => pill(ROLE_TONES[u.role] || 'neutral', '', t(`ui.role.${u.role}`)) },
+        { key: 'status', label: t('ui.col.status'), value: u => (u.active ? 0 : 1), cell: userStatus },
+        {
+          key: 'actions', label: t('ui.col.actions'), hideLabel: true, className: 'actions',
+          cell: u => `<span class="inline-flex items-center gap-1">${button({ label: t('ui.edit'), size: 'sm', iconName: 'edit', attributes: { 'data-action': 'edit-user', 'data-id': u.id, 'data-row-primary': true, title: t('ui.edit') } })}${menuTriggerButton({ context: 'user', id: u.id, label: t('ui.users.menu', { name: u.name }), size: 'sm' })}</span>`,
+        },
+      ],
+      rows: state.users,
+      caption: t('ui.users.title'),
+      empty: '',
+    });
+  }
+
+  const userMenuItems = u => [
+    { action: 'reset-password', id: u.id, label: t('ui.users.reset_title'), icon: 'key' },
+    { separator: true },
+    u.active
+      ? { action: 'deactivate-user', id: u.id, label: u.id === state.me ? t('ui.users.cannot_deactivate_self') : t('ui.users.deactivate'), icon: 'userX', destructive: u.id !== state.me, disabled: u.id === state.me }
+      : { action: 'activate-user', id: u.id, label: t('ui.users.activate'), icon: 'userCheck' },
+  ];
+
+  function showRoleHint(form) {
+    form.querySelector('[data-role-hint]').textContent = t(`ui.users.role_hint.${form.elements.role.value}`);
+  }
+
+  function openUser(id = null) {
+    const f = $('#user-form');
+    f.reset();
+    clearErrors(f);
+    f.elements.id.value = '';
+    const u = id ? state.users.find(x => x.id === id) : null;
+    if (u) fillForm(f, u);
+    f.querySelector('[data-new-user-only]').hidden = Boolean(u);
+    f.querySelectorAll('[data-new-user-only] input').forEach(input => { input.disabled = Boolean(u); });
+    // An admin cannot change their own role; the server enforces it too.
+    f.elements.role.disabled = u?.id === state.me;
+    showRoleHint(f);
+    $('#user-dialog [data-dialog-title]').textContent = t(u ? 'ui.users.edit' : 'ui.users.new');
+    f.querySelector('[data-submit-label]').textContent = t(u ? 'ui.save' : 'ui.users.new');
+    resetDirty(f);
+    $('#user-dialog').showModal();
+  }
+
+  function openPasswordDialog(kind, id = null) {
+    const f = $(`#${kind}-form`);
+    f.reset();
+    clearErrors(f);
+    f.elements.id.value = id || '';
+    if (kind === 'reset-password') {
+      const u = state.users.find(x => x.id === id);
+      $('#reset-password-dialog [data-dialog-sub]').textContent = t('ui.users.reset_for', { name: u?.name || '' });
+    }
+    resetDirty(f);
+    $(`#${kind}-dialog`).showModal();
+  }
+
   // ================= GUESTS =================
   const guestSortKeys = { name: 'name', count: 'count', value: 'value', latest: 'latest' };
 
@@ -632,6 +710,7 @@ if ($('#app')) {
   function navigate(page, updateHash = true) {
     if (!pages[page]) return;
     if (page === 'rooms' && !canManageRooms) page = 'today';
+    if (page === 'users' && !isAdmin) page = 'today';
     state.page = page;
     $$('[data-page-panel]').forEach(x => { x.hidden = x.id !== `page-${page}`; });
     $$('.nav-item[data-page], .tab-item[data-page]').forEach(x => {
@@ -996,9 +1075,9 @@ if ($('#app')) {
 
     if (b.dataset.menuTrigger) {
       const context = b.dataset.menuTrigger;
-      const source = { stay: state.data.stays, room: state.data.rooms, zone: state.categories?.zones, type: state.categories?.types }[context] ?? [];
+      const source = { stay: state.data.stays, room: state.data.rooms, zone: state.categories?.zones, type: state.categories?.types, user: state.users }[context] ?? [];
       const item = source.find(x => x.id === b.dataset.id);
-      const items = { stay: stayMenuItems, room: roomMenuItems, zone: x => categoryMenuItems('zone', x), type: x => categoryMenuItems('type', x) }[context];
+      const items = { stay: stayMenuItems, room: roomMenuItems, zone: x => categoryMenuItems('zone', x), type: x => categoryMenuItems('type', x), user: userMenuItems }[context];
       if (item && items) openDropdownMenu(b, items(item), b.getAttribute('aria-label'));
       return;
     }
@@ -1110,6 +1189,24 @@ if ($('#app')) {
     if (a === 'edit-booking') openBooking(id);
     if (a === 'new-room') openRoom();
     if (a === 'edit-room') openRoom(id);
+    if (a === 'new-user') openUser();
+    if (a === 'edit-user') openUser(id);
+    if (a === 'reset-password') openPasswordDialog('reset-password', id);
+    if (a === 'change-password') {
+      b.closest('dialog')?.close();
+      openPasswordDialog('account-password');
+    }
+    if (a === 'deactivate-user' || a === 'activate-user') {
+      const u = state.users.find(x => x.id === id);
+      const active = a === 'activate-user';
+      const confirmed = active || await confirmAction({
+        title: t('ui.confirm.deactivate_user_title'),
+        message: t('ui.confirm.deactivate_user_message', { name: u?.name || '' }),
+        confirmLabel: t('ui.users.deactivate'),
+        destructive: true,
+      });
+      if (confirmed && u) await mutate(`/api/v1/users/${id}`, 'PUT', { name: u.name, email: u.email, role: u.role, active });
+    }
     if (a === 'new-zone') openCategory('zone');
     if (a === 'edit-zone') openCategory('zone', id);
     if (a === 'new-type') openCategory('type');
@@ -1235,6 +1332,30 @@ if ($('#app')) {
   });
 
   $('#room-type').addEventListener('change', e => applyTypeDefaults(e.target.form));
+  $('#user-role').addEventListener('change', e => showRoleHint(e.target.form));
+
+  $('#user-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const d = formObject(e.currentTarget);
+    const id = d.id;
+    delete d.id;
+    if (e.currentTarget.elements.role.disabled) d.role = state.users.find(x => x.id === id)?.role;
+    if (id) d.active = state.users.find(x => x.id === id)?.active;
+    await mutate(id ? `/api/v1/users/${id}` : '/api/v1/users', id ? 'PUT' : 'POST', d, e.currentTarget);
+  });
+
+  $('#reset-password-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const d = formObject(e.currentTarget);
+    await mutate(`/api/v1/users/${d.id}/password`, 'POST', { password: d.password, confirm_password: d.confirm_password }, e.currentTarget);
+  });
+
+  $('#account-password-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const d = formObject(e.currentTarget);
+    delete d.id;
+    await mutate('/api/v1/account/password', 'POST', d, e.currentTarget);
+  });
 
   for (const kind of ['zone', 'type']) {
     $(`#${kind}-form`).addEventListener('submit', async e => {

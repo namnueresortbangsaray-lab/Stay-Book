@@ -9,7 +9,15 @@ import { chromium } from 'playwright';
 const base = process.env.BASE_URL ?? 'http://localhost:8097';
 const password = process.env.DEMO_ADMIN_PASSWORD ?? 'ChangeMe123!';
 const tags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
-const sections = ['today', 'room-map', 'bookings', 'guests', 'dashboard', 'rooms'];
+const sections = ['today', 'room-map', 'bookings', 'guests', 'dashboard', 'rooms', 'users'];
+// On phones the account actions live in the menu drawer.
+const openPhoneMenu = async page => {
+  const menu = page.locator('.topbar [data-action="mobile-more"]');
+  if (await menu.isVisible()) {
+    await menu.click();
+    await page.locator('#mobile-more-dialog[open]').waitFor();
+  }
+};
 const dialogs = [
   ['booking-form', 'today', '[data-action="new-booking"]:visible', '#booking-dialog'],
   ['guest-profile', 'guests', '[data-action="guest-details"]:visible', '#guest-dialog'],
@@ -18,6 +26,8 @@ const dialogs = [
   ['confirm', 'bookings', '#booking-list [data-action="check-in"]:visible', '#confirm-dialog'],
   ['zone-form', 'rooms', '[data-action="new-zone"]:visible', '#zone-dialog', '#rooms-tab-zones'],
   ['type-form', 'rooms', '[data-action="new-type"]:visible', '#type-dialog', '#rooms-tab-types'],
+  ['user-form', 'users', '[data-action="new-user"]:visible', '#user-dialog'],
+  ['account-password', 'today', '[data-action="change-password"]:visible', '#account-password-dialog', openPhoneMenu],
 ];
 const violations = [];
 const layout = [];
@@ -41,7 +51,8 @@ const closeAll = page => page.evaluate(() => document.querySelectorAll('dialog[o
 async function openDialog(page, hash, trigger, dialog, tab) {
   await closeAll(page);
   await go(page, hash);
-  if (tab) await page.locator(tab).click();
+  if (typeof tab === 'function') await tab(page);
+  else if (tab) await page.locator(tab).click();
   await page.locator(trigger).first().click();
   await page.locator(`${dialog}[open]`).waitFor();
   await page.waitForTimeout(250);

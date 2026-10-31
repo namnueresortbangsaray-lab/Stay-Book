@@ -35,6 +35,8 @@ const screens = [
   ['06c-room-types', async p => { await go(p, 'rooms'); await p.locator('#rooms-tab-types').click(); }],
   ['06d-type-form', async p => { await go(p, 'rooms'); await p.locator('#rooms-tab-types').click(); await openDialog(p, '[data-action="new-type"]:visible', '#type-dialog'); }],
   ['06e-room-form', async p => { await go(p, 'rooms'); await p.locator('#rooms-tab-rooms').click(); await openDialog(p, '[data-action="new-room"]:visible', '#room-dialog'); }],
+  ['06f-users', p => go(p, 'users')],
+  ['06g-user-form', async p => { await go(p, 'users'); await openDialog(p, '[data-action="new-user"]:visible', '#user-dialog'); }],
   ['07-guests', p => go(p, 'guests')],
   ['08-guest-profile', async p => { await go(p, 'guests'); await openDialog(p, '[data-action="guest-details"]:visible', '#guest-dialog'); }],
   ['09-booking-form', async p => { await go(p, 'today'); await openDialog(p, '[data-action="new-booking"]:visible', '#booking-dialog'); }],
