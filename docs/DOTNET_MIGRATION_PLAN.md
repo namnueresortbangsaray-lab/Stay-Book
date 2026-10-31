@@ -130,6 +130,7 @@ Status: ☑ done and verified (unit, integration and contract tests; Docker smok
 | D-19 | `user:create` crashed on a duplicate email | prints an error and exits 1 | clearer CLI; other CLI failures also print one line instead of a stack trace |
 | D-20 | prompt suggested header `RequestVerificationToken` | header stays `X-CSRF-Token` | API compatibility; the JavaScript is unchanged |
 | D-21 | no Thai normalizer existed | search reproduces `LOWER() LIKE` / `ILIKE` without a normalized column | nothing to port; Thai has no letter case |
+| D-22 | dashboard shell copy (section labels, dialog subtitles) | redesigned interface copy from the resx files; titles, element ids and login/error text unchanged | UI redesign (docs/DESIGN_SYSTEM.md); recorded in tests/baseline/deviations.json |
 
 ## 6. Assumptions
 

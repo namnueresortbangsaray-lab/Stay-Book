@@ -10,5 +10,8 @@
   "protected-uploads-direct": [
     "body:title",
     "body:text"
+  ],
+  "dashboard": [
+    "body:text"
   ]
 }

@@ -50,9 +50,23 @@ Display TZ Asia/Bangkok, store UTC.
 - Git Bash rewrites `/app/...` paths in `docker compose exec` args: prefix with `MSYS_NO_PATHCONV=1`.
 - Volumes from v1 belong to uid 82; `storage-init` chowns them for uid 1654 on every start.
 
+## UI / Design system
+Read @docs/DESIGN_SYSTEM.md before touching views, `Styles/` or `Scripts/`. In short:
+- Colours only through token utilities (`bg-surface`, `text-ink-muted`, `tone-*`); the Tailwind palette is replaced, so
+  `gray-500` etc. do not exist. New colour pairs go into `build/check-contrast.mjs` (the build fails below AA).
+- Dark mode = `data-theme` on `<html>` (cookie + `_ThemeBoot` head script, nonce'd, before the stylesheet). Dark
+  tokens are `@media screen` only, so print stays light. Avoid `dark:` variants unless a token cannot express it.
+- All UI text via resx (`@T["ui.x"]` / `t('ui.x')`), Lucide icons via `<icon name>` / `icon()` + `icon-set.js`.
+- Keep `id`, `name`, `data-action`, `data-id` stable (JS and the baseline contract depend on them).
+- `.tone-*` sit outside `@layer` on purpose (runtime class names would be purged).
+- Build helpers live in `build/`, not `scripts/`: on Windows `scripts` collides with `Scripts` in Docker contexts.
+- Verify with `node tests/ui/a11y.mjs` (0 serious/critical) and `node tests/ui/screenshots.mjs`, and look at both themes.
+
 ## Status
 All phases done (migration from v1 completed 2026-10-30): 96 tests green on SQLite + PostgreSQL, baseline contract
 matches, Docker stack healthy, local installation upgraded and v1 data imported.
+UI redesign + dark mode done 2026-10-31 on branch `ui-redesign`: contrast gate passes in both themes, axe-core reports
+0 violations on every screen and dialog in both themes, screenshots in `docs/design/after/`.
 
 ## Next steps
 - Optional: `SupabaseFileStorage` (see docs/SUPABASE.md), concurrency tokens if staff report conflicting edits.

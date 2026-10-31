@@ -209,6 +209,7 @@
     .data-table.stack td.cell-lead::before,
     .data-table.stack td.actions::before { content: none; }
     .data-table.stack td.actions { @apply w-auto justify-end pt-2; }
+    .data-table.stack td.mobile-hide { display: none; }
     .data-table.stack tbody tr:hover td { background: transparent; }
   }
 

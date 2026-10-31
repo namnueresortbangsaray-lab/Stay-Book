@@ -7,7 +7,7 @@ import { ICONS } from './Scripts/core/icon-set.js';
 
 const watch = process.argv.includes('--watch');
 
-execFileSync(process.execPath, ['scripts/check-contrast.mjs'], { stdio: 'inherit' });
+execFileSync(process.execPath, ['build/check-contrast.mjs'], { stdio: 'inherit' });
 
 mkdirSync('wwwroot/fonts', { recursive: true });
 const fonts = [

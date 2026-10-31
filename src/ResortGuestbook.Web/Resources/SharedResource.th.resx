@@ -222,6 +222,15 @@
   <data name="ui.status.checked_out" xml:space="preserve">
     <value>เช็กเอาต์แล้ว</value>
   </data>
+  <data name="ui.status.booked_short" xml:space="preserve">
+    <value>รอเข้า</value>
+  </data>
+  <data name="ui.status.in_house_short" xml:space="preserve">
+    <value>พักอยู่</value>
+  </data>
+  <data name="ui.status.checked_out_short" xml:space="preserve">
+    <value>ออกแล้ว</value>
+  </data>
   <data name="ui.room_state.vacant" xml:space="preserve">
     <value>ว่าง</value>
   </data>

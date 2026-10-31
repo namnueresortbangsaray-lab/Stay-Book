@@ -30,11 +30,11 @@ const screens = [
   ['05-reports', async p => { await go(p, 'bookings'); await p.locator('[data-view="list"]').click(); await go(p, 'dashboard'); }],
   ['06-rooms', p => go(p, 'rooms')],
   ['07-guests', p => go(p, 'guests')],
-  ['08-guest-profile', async p => { await go(p, 'guests'); await openDialog(p, '[data-action="guest-details"]', '#guest-dialog'); }],
+  ['08-guest-profile', async p => { await go(p, 'guests'); await openDialog(p, '[data-action="guest-details"]:visible', '#guest-dialog'); }],
   ['09-booking-form', async p => { await go(p, 'today'); await openDialog(p, '[data-action="new-booking"]:visible', '#booking-dialog'); }],
-  ['10-checkout', async p => { await go(p, 'bookings'); await openDialog(p, '#booking-list [data-action="checkout"]', '#action-dialog'); }],
+  ['10-checkout', async p => { await go(p, 'bookings'); await openDialog(p, '#booking-list [data-action="checkout"]:visible', '#action-dialog'); }],
   ['11-command-palette', async p => { await go(p, 'today'); await p.keyboard.press('Control+k'); await p.locator('#command-dialog[open]').waitFor(); await p.keyboard.type('สมศรี'); await p.waitForTimeout(200); }],
-  ['12-confirm', async p => { await go(p, 'today'); await openDialog(p, '[data-action="check-in"]', '#confirm-dialog'); }],
+  ['12-confirm', async p => { await go(p, 'bookings'); await openDialog(p, '#booking-list [data-action="check-in"]:visible', '#confirm-dialog'); }],
 ];
 
 const browser = await chromium.launch();
@@ -60,6 +60,9 @@ for (const theme of themes) {
     for (const [name, action] of screens) {
       await closeDialogs(page);
       await action(page);
+      // Full-page captures stitch fixed layers at the current scroll offset, so start from the top.
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForTimeout(100);
       await page.screenshot({ path: join(dir, `${name}.png`), fullPage: !name.match(/dialog|form|profile|checkout|palette|confirm/) });
     }
     await closeDialogs(page);

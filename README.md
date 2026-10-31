@@ -122,6 +122,25 @@ uploads are already mounted. The new app uses its own file (`staybook.db`) and n
 4. Sign in: existing passwords keep working and are re-hashed to the Identity format on first sign-in.
    Old sessions cannot carry over, so everyone signs in once. The unused `staybook_sessions` volume can be removed.
 
+## User interface
+
+A quiet, warm, data-dense interface ("a calm hospitality ledger") with Light, Dark and System themes, chosen from the
+sun/moon menu in the top bar or on the sign-in page. A comfortable/compact density toggle sits next to it, and the
+sidebar collapses to icons. Ctrl/⌘K opens search from anywhere.
+
+- Tokens, components and dark mode: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md). Screenshots in both themes at
+  three widths: `docs/design/after/` (before: `docs/design/before/`).
+- Fonts (IBM Plex Sans Thai, Noto Serif Thai) and Lucide icons are self-hosted; `npm run build` copies the fonts,
+  builds the icon sprite and fails if any colour pair misses WCAG AA in either theme.
+- UI checks against a running instance (`npm --prefix tests/ui ci && npx --prefix tests/ui playwright install chromium`):
+
+```bash
+BASE_URL=http://localhost:8080 node tests/ui/a11y.mjs                                # axe-core, both themes
+BASE_URL=http://localhost:8080 node tests/ui/screenshots.mjs docs/design/after light,dark
+```
+
+`tests/ui/seed-demo.mjs` fills an empty development instance with fictional guests for screenshots.
+
 ## Production
 
 See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): `make prod-up` runs Nginx (gzip, security headers, upload limit, asset
@@ -139,4 +158,5 @@ caching, forwarded headers) in front of the non-root Kestrel container. For Supa
 ## Documentation
 
 [API](docs/API.md) · [Architecture](docs/ARCHITECTURE.md) · [Deployment](docs/DEPLOYMENT.md) · [Supabase](docs/SUPABASE.md) ·
-[Project knowledge](docs/PROJECT_KNOWLEDGE.md) · [Migration plan and deviations](docs/DOTNET_MIGRATION_PLAN.md)
+[Project knowledge](docs/PROJECT_KNOWLEDGE.md) · [Migration plan and deviations](docs/DOTNET_MIGRATION_PLAN.md) ·
+[Design system](docs/DESIGN_SYSTEM.md) · [UI audit and assumptions](docs/design/UI_AUDIT.md)

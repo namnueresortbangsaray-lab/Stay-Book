@@ -2,9 +2,12 @@
   /* ---------- Login: brand panel + focused form ---------- */
   .login-shell { @apply grid min-h-[100dvh] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]; }
   .brand-panel { @apply relative hidden overflow-hidden bg-primary text-primary-on lg:flex lg:flex-col lg:justify-between lg:p-12; }
-  .brand-panel .ledger { @apply pointer-events-none absolute inset-0 h-full w-full; color: rgb(var(--c-on-primary) / 0.12); }
+  .brand-panel .ledger { @apply pointer-events-none absolute inset-0 h-full w-full; opacity: 0.14; }
   .brand-wordmark { @apply font-serif text-2xl font-semibold; }
-  .brand-panel p { color: rgb(var(--c-on-primary) / 0.86); }
+  @media screen {
+    /* Dark theme: a deep pine panel instead of the bright dark-theme primary. */
+    [data-theme='dark'] .brand-panel { @apply bg-primary-subtle text-ink; }
+  }
   .login-main { @apply flex flex-col px-5 py-6 sm:px-10; }
   .login-card { @apply m-auto w-full max-w-sm; }
 
@@ -21,9 +24,9 @@
 
   /* ---------- Calendar ---------- */
   .cal-scroll { @apply -mx-1 overflow-x-auto px-1 pb-1; overscroll-behavior-inline: contain; }
-  .cal-grid { @apply grid min-w-[44rem] grid-cols-7 gap-px overflow-hidden rounded-lg border border-line bg-line; }
+  .cal-grid { @apply grid min-w-[40rem] md:min-w-0 grid-cols-7 gap-px overflow-hidden rounded-lg border border-line bg-line; }
   .cal-head { @apply bg-sunken py-2 text-center text-xs font-medium text-ink-muted; }
-  .cal-day { @apply flex min-h-[6rem] flex-col gap-1 bg-surface p-2 text-left hover:bg-raised; }
+  .cal-day { @apply flex min-h-[6rem] flex-col gap-1 bg-surface p-1.5 lg:p-2 text-left hover:bg-raised; }
   .cal-day[aria-pressed='true'] { @apply bg-primary-subtle; box-shadow: inset 0 0 0 2px rgb(var(--c-primary)); }
   .cal-day.is-today .cal-date { @apply rounded-full bg-primary px-1.5 text-primary-on; }
   .cal-date { @apply self-start text-sm font-semibold tabular-nums text-ink; }

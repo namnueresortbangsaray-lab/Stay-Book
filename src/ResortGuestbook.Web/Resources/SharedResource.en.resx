@@ -222,6 +222,15 @@
   <data name="ui.status.checked_out" xml:space="preserve">
     <value>Checked out</value>
   </data>
+  <data name="ui.status.booked_short" xml:space="preserve">
+    <value>Due</value>
+  </data>
+  <data name="ui.status.in_house_short" xml:space="preserve">
+    <value>In</value>
+  </data>
+  <data name="ui.status.checked_out_short" xml:space="preserve">
+    <value>Out</value>
+  </data>
   <data name="ui.room_state.vacant" xml:space="preserve">
     <value>Vacant</value>
   </data>

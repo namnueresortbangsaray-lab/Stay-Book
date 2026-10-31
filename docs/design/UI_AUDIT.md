@@ -1,4 +1,4 @@
-# UI audit — Stay Book (before redesign)
+# UI audit — Stay Book (before redesign) and redesign assumptions
 
 Screens captured at 1440, 768 and 390 px in `docs/design/before/light/{desktop,tablet,mobile}/` from a demo instance
 filled by `tests/ui/seed-demo.mjs` (fictional guests; no production data).
@@ -70,3 +70,31 @@ booking notes and guest notes, bulk actions.
 Login, app shell (sidebar, top bar, mobile navigation, command palette), Today, Room board, Bookings (table + calendar),
 Reports (+ print), Rooms management, Guests table, Guest profile drawer, Booking / Room / Action forms, Confirm dialog,
 Error page, Toasts, Dropdown menu, Loading/empty states, Dark mode and theme switcher, density toggle.
+
+## Assumptions
+
+Decisions taken during the redesign without asking (the brief said not to ask after plan approval):
+
+1. **Screens that do not exist stay out of scope.** The brief mentions settings, user management, an audit-log viewer,
+   notifications, cleaning/maintenance room states, floors, bulk actions and a separate notes entity. None exists in the
+   app or its API; building them would be new functionality, which the brief rules out.
+2. **Room states are derived, not stored.** The room board shows vacant, arriving today, in house and departing today,
+   computed from existing stays (`check_in_date`, `check_out_date`, `status`). No new field.
+3. **Room tile actions follow the data.** A vacant tile opens a new booking for that room (as before); an occupied,
+   arriving or departing tile opens that stay's details.
+4. **Guest "Notes" tab is a timeline of existing text** (guest note, preferences, booking notes); there is no notes table.
+5. **API, CSRF and form fields are unchanged.** The redesign only re-renders what the same endpoints return.
+6. **Interface copy changed on the dashboard** (section labels, dialog subtitles, empty states); page titles, element
+   IDs and the login/error texts that tests assert stay the same. Recorded as deviation D-22 in
+   `docs/DOTNET_MIGRATION_PLAN.md` and `tests/baseline/deviations.json` (`dashboard: body:text`).
+7. **Native date inputs are kept**, so entry works exactly as before (ISO values, the browser's own picker and format);
+   dates shown as text use the Buddhist era (`31 ต.ค. 2569`).
+8. **Upload progress is indeterminate.** The upload uses the existing `fetch` call, which reports no byte progress;
+   the bar shows activity, not a percentage.
+9. **The Thai worksheet `.docx` is not updated** (no Python on this machine, as in the migration; see `CLAUDE.md`).
+10. **Default theme is System**, the login page offers the same Light/Dark/System choice, and print is always light.
+11. **Density default is Comfortable**; touch screens keep 44px targets in Compact.
+12. **Fonts:** IBM Plex Sans Thai and Noto Serif Thai (OFL) via `@fontsource` npm packages, self-hosted; icons from
+    `lucide-static` (ISC). Both are build-time dev dependencies; nothing is loaded from a CDN.
+13. **Full-page mobile screenshots** show the fixed bottom tab bar where the first viewport ends; this is how stitched
+    full-page captures draw fixed elements, not a layout fault (in the browser it stays at the bottom of the screen).

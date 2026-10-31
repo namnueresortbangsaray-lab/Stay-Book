@@ -95,7 +95,7 @@ export function renderTable({ state, columns, rows, caption, empty, paginate = t
   }).join('');
 
   const body = pageRows.map((row, index) => `<tr data-row tabindex="${index === 0 ? 0 : -1}">${visible.map(c =>
-    `<td data-label="${c.hideLabel ? '' : h(c.label)}" class="${c.num ? 'num' : ''} ${c.className || ''}">${c.cell(row)}</td>`).join('')}</tr>`).join('');
+    `<td data-label="${c.hideLabel ? '' : h(c.label)}" class="${c.num ? 'num' : ''} ${c.mobileHide ? 'mobile-hide' : ''} ${c.className || ''}">${c.cell(row)}</td>`).join('')}</tr>`).join('');
 
   const footer = paginate && sorted.length > PAGE_SIZE ? `
     <div class="pagination">

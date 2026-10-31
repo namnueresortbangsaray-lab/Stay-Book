@@ -100,11 +100,11 @@
             <button type="button" class="segmented-item" aria-pressed="true" data-view="list"><icon name="bookings" /><span>@T["ui.bookings.list"]</span></button>
             <button type="button" class="segmented-item" aria-pressed="false" data-view="calendar"><icon name="calendarDays" /><span>@T["ui.bookings.calendar"]</span></button>
           </div>
-          <div class="search-field min-w-[14rem] flex-1">
+          <div class="search-field order-last w-full sm:order-none sm:w-auto sm:min-w-[14rem] sm:flex-1">
             <icon name="search" />
             <input id="stay-search" class="field" type="search" placeholder="@T["ui.bookings.search"]" aria-label="@T["ui.bookings.search"]" autocomplete="off">
           </div>
-          <button type="button" class="btn btn-secondary" data-columns="bookings" aria-haspopup="menu" aria-expanded="false"><icon name="columns" /><span>@T["ui.table.columns"]</span></button>
+          <button type="button" class="btn btn-secondary max-md:!hidden" data-columns="bookings" aria-haspopup="menu" aria-expanded="false"><icon name="columns" /><span>@T["ui.table.columns"]</span></button>
         </div>
         <div id="stay-status-chips" class="chip-row mb-3" role="group" aria-label="@T["ui.bookings.status_filter"]"></div>
         <select id="stay-status" hidden aria-hidden="true" tabindex="-1">

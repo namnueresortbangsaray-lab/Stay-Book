@@ -6,7 +6,7 @@ WORKDIR /web
 COPY src/ResortGuestbook.Web/package.json src/ResortGuestbook.Web/package-lock.json ./
 RUN npm ci --no-audit --no-fund
 COPY src/ResortGuestbook.Web/build.mjs src/ResortGuestbook.Web/tailwind.config.js ./
-COPY src/ResortGuestbook.Web/scripts ./scripts
+COPY src/ResortGuestbook.Web/build ./build
 COPY src/ResortGuestbook.Web/Styles ./Styles
 COPY src/ResortGuestbook.Web/Scripts ./Scripts
 COPY src/ResortGuestbook.Web/Views ./Views

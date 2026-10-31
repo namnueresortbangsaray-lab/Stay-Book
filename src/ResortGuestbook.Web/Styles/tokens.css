@@ -2,7 +2,7 @@
  * Design tokens — "a calm hospitality ledger".
  * Colours are RGB channels so Tailwind opacity utilities work: rgb(var(--c-ink) / 0.6).
  * Light values apply everywhere (including print); dark values only on screens with data-theme="dark".
- * scripts/check-contrast.mjs verifies every text and UI pair against WCAG AA in both themes.
+ * build/check-contrast.mjs verifies every text and UI pair against WCAG AA in both themes.
  */
 :root,
 [data-theme='light'] {
