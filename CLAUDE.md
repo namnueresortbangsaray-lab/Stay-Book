@@ -76,4 +76,6 @@ issues, screenshots in `docs/design/responsive/`.
 - Optional: `SupabaseFileStorage` (see docs/SUPABASE.md), concurrency tokens if staff report conflicting edits.
 
 ## Blockers
-None. (The Thai worksheet .docx was not regenerated: no Python on this machine; see assumption A8.)
+- No Python on this machine: the Thai worksheet .docx was not regenerated (assumption A8), and the ui-ux-pro-max
+  skill's `search.py` / `--design-system` generator cannot run. Its CSV data was read directly instead
+  (`docs/design/SKILL_DESIGN_SYSTEM.md`). Installing Python 3 enables both; nothing was installed.

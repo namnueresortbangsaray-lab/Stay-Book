@@ -79,6 +79,45 @@ for (const theme of themes) {
     }
     await page.goto(`${base}/does-not-exist`);
     await page.screenshot({ path: join(dir, '14-error-404.png'), fullPage: true });
+
+    // States: server validation errors (with the error toast), empty search, first load, load failure.
+    await page.goto(`${base}/`);
+    await ready(page);
+    await openDialog(page, '[data-action="new-booking"]:visible', '#booking-dialog');
+    await page.locator('#booking-dialog button[type="submit"]').click();
+    await page.locator('#booking-dialog [data-field-error]').first().waitFor();
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: join(dir, '15-form-errors.png') });
+    await closeDialogs(page);
+    await go(page, 'bookings');
+    await page.fill('#stay-search', 'ไม่มีรายการนี้');
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: join(dir, '16-empty-search.png'), fullPage: true });
+    await page.fill('#stay-search', '');
+    const snapshot = '**/api/v1/snapshot*';
+    await page.route(snapshot, route => setTimeout(() => route.continue().catch(() => {}), 3000));
+    await page.reload();
+    await page.waitForTimeout(800);
+    await page.screenshot({ path: join(dir, '17-loading.png') });
+    await page.unroute(snapshot);
+    await page.route(snapshot, route => route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ success: false, data: null, message: 'ระบบขัดข้อง กรุณาลองใหม่', errors: {} }) }));
+    await page.reload();
+    await page.locator('[data-action="retry-load"]').waitFor();
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: join(dir, '18-load-failed.png'), fullPage: true });
+    await page.unroute(snapshot);
+
+    // Print preview of the reports (always light), then the remaining error pages.
+    await page.reload();
+    await ready(page);
+    await go(page, 'dashboard');
+    await page.emulateMedia({ media: 'print' });
+    await page.screenshot({ path: join(dir, '19-print-reports.png'), fullPage: true });
+    await page.emulateMedia({ media: 'screen' });
+    for (const status of [403, 419, 429, 500]) {
+      await page.goto(`${base}/errors/${status}`);
+      await page.screenshot({ path: join(dir, `20-error-${status}.png`), fullPage: true });
+    }
     await context.close();
     console.log(`${theme}/${width} done`);
   }
