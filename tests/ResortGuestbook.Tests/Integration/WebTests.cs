@@ -103,6 +103,29 @@ public sealed class WebTests : IClassFixture<StayBookFactory>
     }
 
     [Fact]
+    public async Task RoomCategoriesAreReadableByStaffAndManagedOnlyWithRoomAbility()
+    {
+        await app.AddUserAsync("keeper-categories@staybook.local", Roles.Housekeeping, "Housekeeping123!");
+        using var keeper = app.CreateBrowser();
+        var keeperToken = await Browser.SignInAsync(keeper, "keeper-categories@staybook.local", "Housekeeping123!");
+
+        var list = await keeper.GetAsync("/api/v1/room-categories");
+        Assert.Equal(HttpStatusCode.OK, list.StatusCode);
+        var data = (await Browser.EnvelopeAsync(list)).GetProperty("data");
+        Assert.Equal("อาคารหลัก", data.GetProperty("zones")[0].GetProperty("name").GetString());
+        Assert.Equal(50_000, data.GetProperty("types")[0].GetProperty("price_satang").GetInt64());
+
+        var forbidden = await Browser.SendJsonAsync(keeper, HttpMethod.Post, "/api/v1/room-zones", new { name = "ริมสระ" }, keeperToken);
+        Assert.Equal(HttpStatusCode.Forbidden, forbidden.StatusCode);
+
+        using var admin = app.CreateBrowser();
+        var adminToken = await Browser.SignInAsync(admin, StayBookFactory.AdminEmail, StayBookFactory.AdminPassword);
+        var invalid = await Browser.SendJsonAsync(admin, HttpMethod.Post, "/api/v1/room-types", new { name = "", price = 0 }, adminToken);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, invalid.StatusCode);
+        Assert.Equal("กรุณากรอกชื่อประเภทห้อง", (await Browser.EnvelopeAsync(invalid)).GetProperty("errors").GetProperty("name").GetString());
+    }
+
+    [Fact]
     public async Task LegacyBcryptPasswordStillWorksAndIsUpgraded()
     {
         var legacyHash = BCrypt.Net.BCrypt.HashPassword("LegacyPassword123!", 10).Replace("$2a$", "$2y$", StringComparison.Ordinal);

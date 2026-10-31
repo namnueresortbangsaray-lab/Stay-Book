@@ -19,7 +19,8 @@ public sealed class TestServices : IAsyncDisposable
         var clock = new AppClock(TimeProvider.System, Microsoft.Extensions.Options.Options.Create(new AppOptions()));
         Queries = new ResortQueries(db);
         var audit = new AuditService(db);
-        Rooms = new RoomService(db, audit);
+        Categories = new RoomCategoryService(db, audit);
+        Rooms = new RoomService(db, audit, Categories);
         Guests = new GuestService(db, Queries, audit);
         Stays = new StayService(db, Queries, audit, clock);
         Snapshots = new SnapshotService(Queries, clock);
@@ -30,6 +31,7 @@ public sealed class TestServices : IAsyncDisposable
     public string ConnectionString { get; }
     public ResortQueries Queries { get; }
     public RoomService Rooms { get; }
+    public RoomCategoryService Categories { get; }
     public GuestService Guests { get; }
     public StayService Stays { get; }
     public SnapshotService Snapshots { get; }

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ResortGuestbook.Data.Entities;
 using ResortGuestbook.Data.Providers;
+using ResortGuestbook.Data.Seed;
 using ResortGuestbook.Web.Services.Errors;
 
 namespace ResortGuestbook.Tests.Data;
@@ -127,6 +128,80 @@ public abstract class ResortDataTests(IDatabaseFactory factory)
         var exception = await Assert.ThrowsAsync<DbUpdateException>(() => s.Rooms.SaveAsync(
             TestInputs.Input(("name", "1"), ("zone", "Z"), ("type", "T"), ("price", 100L), ("base_guests", 1L), ("max_guests", 1L)), null, s.Admin, default));
         Assert.True(DbErrors.IsDuplicate(exception));
+    }
+
+    [Fact]
+    public async Task SeedBuildsZoneAndTypeListsFromTheRooms()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        var lists = await s.Categories.ListAsync(default);
+        Assert.Equal(["อาคารหลัก", "โซน B"], lists.Zones.Select(z => z.Name));
+        Assert.Equal([3, 2], lists.Zones.Select(z => z.RoomCount));
+        Assert.Equal(["เตียงคู่", "เตียงเดี่ยว"], lists.Types.Select(t => t.Name));
+        var twin = lists.Types[0];
+        Assert.Equal((50_000L, 2, 3, 10_000L, false, 4), (twin.PriceSatang, twin.BaseGuests, twin.MaxGuests, twin.ExtraGuestFeeSatang, twin.IsPetFriendly, twin.RoomCount));
+        Assert.Equal(0, await RoomCategorySync.AddMissingAsync(s.Db));
+    }
+
+    [Fact]
+    public async Task RenamingAZoneRenamesItsRoomsAndAuditsThem()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        var zone = (await s.Categories.ListAsync(default)).Zones[0];
+        var saved = await s.Categories.SaveZoneAsync(TestInputs.Input(("name", "อาคาร A"), ("sort_order", 1L)), zone.Id.ToString(), s.Admin, default);
+        Assert.Equal(3, saved.RoomCount);
+        Assert.Equal(3, await s.Db.Rooms.CountAsync(r => r.Zone == "อาคาร A"));
+        Assert.Equal(0, await s.Db.Rooms.CountAsync(r => r.Zone == "อาคารหลัก"));
+        Assert.Equal(3, await s.Db.AuditLogs.CountAsync(a => a.EntityType == "room" && a.Action == "update"));
+        Assert.Equal(1, await s.Db.AuditLogs.CountAsync(a => a.EntityType == "room_zone"));
+    }
+
+    [Fact]
+    public async Task ACategoryInUseCannotBeDeleted()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        var lists = await s.Categories.ListAsync(default);
+        var zoneError = await Assert.ThrowsAsync<ValidationException>(() => s.Categories.DeleteZoneAsync(lists.Zones[0].Id.ToString(), s.Admin, default));
+        Assert.Equal("มีห้องพักใช้โซนนี้อยู่ 3 ห้อง", zoneError.Errors["name"]);
+        var typeError = await Assert.ThrowsAsync<ValidationException>(() => s.Categories.DeleteTypeAsync(lists.Types[1].Id.ToString(), s.Admin, default));
+        Assert.Equal("มีห้องพักใช้ประเภทนี้อยู่ 1 ห้อง", typeError.Errors["name"]);
+
+        var unused = await s.Categories.SaveZoneAsync(TestInputs.Input(("name", "ริมสระ")), null, s.Admin, default);
+        await s.Categories.DeleteZoneAsync(unused.Id.ToString(), s.Admin, default);
+        Assert.Equal(2, await s.Db.RoomZones.CountAsync());
+        await Assert.ThrowsAsync<NotFoundException>(() => s.Categories.DeleteZoneAsync(unused.Id.ToString(), s.Admin, default));
+    }
+
+    [Fact]
+    public async Task DuplicateTypeNameIsReportedAsDuplicate()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        var exception = await Assert.ThrowsAsync<DbUpdateException>(() => s.Categories.SaveTypeAsync(
+            TestInputs.Input(("name", "เตียงคู่"), ("price", 100L), ("base_guests", 1L), ("max_guests", 1L)), null, s.Admin, default));
+        Assert.True(DbErrors.IsDuplicate(exception));
+    }
+
+    [Fact]
+    public async Task SavingARoomWithNewNamesAddsThemToTheLists()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        await s.Rooms.SaveAsync(
+            TestInputs.Input(("name", "V9"), ("zone", "ริมสระ"), ("type", "พูลวิลล่า"), ("price", 2500L), ("base_guests", 2L), ("max_guests", 4L), ("is_pet_friendly", true)),
+            null, s.Admin, default);
+        var lists = await s.Categories.ListAsync(default);
+        Assert.Equal("ริมสระ", lists.Zones[^1].Name);
+        var villa = lists.Types.Single(t => t.Name == "พูลวิลล่า");
+        Assert.Equal((250_000L, 4, true, 1), (villa.PriceSatang, villa.MaxGuests, villa.IsPetFriendly, villa.RoomCount));
+    }
+
+    [Fact]
+    public async Task SyncRebuildsListsFromTheRooms()
+    {
+        await using var s = await TestServices.CreateAsync(factory);
+        await s.Db.RoomZones.ExecuteDeleteAsync();
+        await s.Db.RoomTypes.ExecuteDeleteAsync();
+        Assert.Equal(4, await RoomCategorySync.AddMissingAsync(s.Db));
+        Assert.Equal(["อาคารหลัก", "โซน B"], await s.Db.RoomZones.OrderBy(z => z.SortOrder).Select(z => z.Name).ToListAsync());
     }
 
     [Fact]

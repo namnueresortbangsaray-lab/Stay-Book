@@ -8,7 +8,7 @@ using ResortGuestbook.Web.Services.Validation;
 
 namespace ResortGuestbook.Web.Services;
 
-public sealed class RoomService(AppDbContext db, AuditService audit)
+public sealed class RoomService(AppDbContext db, AuditService audit, RoomCategoryService categories)
 {
     private const string NotFound = "ไม่พบห้องพัก";
 
@@ -38,6 +38,7 @@ public sealed class RoomService(AppDbContext db, AuditService audit)
         room.SortOrder = data.SortOrder;
         room.IsPetFriendly = data.IsPetFriendly;
         await db.SaveChangesAsync(cancellationToken);
+        await categories.AddMissingForRoomAsync(room, actor, cancellationToken);
 
         var after = ResortQueries.ToDto(room);
         await audit.RecordAsync(id is null ? "create" : "update", "room", room.Id, before, after, actor, cancellationToken);

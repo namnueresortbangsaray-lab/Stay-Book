@@ -121,6 +121,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ResortQueries>();
         services.AddScoped<AuditService>();
         services.AddScoped<RoomService>();
+        services.AddScoped<RoomCategoryService>();
         services.AddScoped<GuestService>();
         services.AddScoped<StayService>();
         services.AddScoped<SnapshotService>();

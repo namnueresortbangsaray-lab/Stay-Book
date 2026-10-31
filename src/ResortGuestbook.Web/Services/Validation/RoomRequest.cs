@@ -17,6 +17,27 @@ public static class RoomRequest
             }
         }
 
+        var (price, extraGuestFee, baseGuests, maxGuests) = Pricing(input, errors);
+        if (errors.Count > 0)
+        {
+            throw new ValidationException(errors);
+        }
+
+        return new RoomInput(
+            Coerce.TrimStr(input["name"]),
+            Coerce.TrimStr(input["zone"]),
+            Coerce.TrimStr(input["type"]),
+            price,
+            baseGuests,
+            maxGuests,
+            extraGuestFee,
+            (int)Math.Max(0, Coerce.ToInt(input.Get("sort_order", 0L))),
+            Coerce.ToBool(input.Get("is_pet_friendly", false)));
+    }
+
+    /// <summary>Price, extra-guest fee and guest counts with the v1 rules and messages (shared with room types).</summary>
+    public static (long Price, long ExtraGuestFee, int BaseGuests, int MaxGuests) Pricing(RequestInput input, Dictionary<string, string> errors)
+    {
         var price = Money(input["price"]);
         var extraGuestFee = Money(input.Get("extra_guest_fee", 0L));
         var baseGuests = (int)Coerce.ToInt(input.Get("base_guests", 0L));
@@ -46,21 +67,7 @@ public static class RoomRequest
             errors["max_guests"] = "จำนวนคนสูงสุดต้องไม่น้อยกว่าจำนวนคนพื้นฐาน";
         }
 
-        if (errors.Count > 0)
-        {
-            throw new ValidationException(errors);
-        }
-
-        return new RoomInput(
-            Coerce.TrimStr(input["name"]),
-            Coerce.TrimStr(input["zone"]),
-            Coerce.TrimStr(input["type"]),
-            price,
-            baseGuests,
-            maxGuests,
-            extraGuestFee,
-            (int)Math.Max(0, Coerce.ToInt(input.Get("sort_order", 0L))),
-            Coerce.ToBool(input.Get("is_pet_friendly", false)));
+        return (price, extraGuestFee, baseGuests, maxGuests);
     }
 
     /// <summary>Decimal baht to satang: <c>(int) round(max(0, (float) $value) * 100)</c>.</summary>
