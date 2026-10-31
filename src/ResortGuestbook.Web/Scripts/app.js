@@ -112,7 +112,6 @@ if ($('#app')) {
     const tip = label => ({ ...attributes, title: label });
     if (status === 0 && canBook) return button({ label: t('ui.action.check_in'), variant: 'primary', size, iconName: 'arrive', attributes: { ...tip(t('ui.action.check_in')), 'data-action': 'check-in' } });
     if (status === 1 && canCheckout) return button({ label: t('ui.action.checkout'), variant: 'primary', size, iconName: 'depart', attributes: { ...tip(t('ui.action.checkout')), 'data-action': 'checkout' } });
-    if (status === 2 && canBook) return button({ label: t('ui.action.feedback'), variant: 'secondary', size, iconName: 'star', attributes: { ...tip(t('ui.action.feedback')), 'data-action': 'feedback' } });
     return '';
   }
 
@@ -465,7 +464,6 @@ if ($('#app')) {
         ])}
         ${figureGroup(t('ui.reports.group.other'), [
           [t('ui.reports.pet_bookings'), number(a.pet_bookings)],
-          [t('ui.reports.feedback'), `${Number(a.average_feedback).toFixed(1)} / 5`],
         ])}
       </div>
       <div class="mt-6 grid gap-6 lg:grid-cols-2">
@@ -884,12 +882,6 @@ if ($('#app')) {
       extend: `
         <div><label class="label" for="extend-date">${h(t('ui.extend.date'))}<span class="req" aria-hidden="true">*</span></label><input id="extend-date" class="field" type="date" name="check_out_date" min="${s.check_out_date}" value="${s.check_out_date}" required aria-describedby="extend-hint"><p id="extend-hint" class="hint">${h(t('ui.extend.hint', { date: thaiDate(s.check_out_date) }))}</p></div>
         <div><label class="label" for="extend-discount">${h(t('ui.extend.discount'))}</label><input id="extend-discount" class="field num" type="number" name="discount_amount" min="0" value="${Number(s.discount_amount_satang) / 100}" inputmode="decimal"></div>`,
-      feedback: `
-        <div class="form-grid">${[['cleanliness_rating', 'ui.feedback.cleanliness'], ['service_rating', 'ui.feedback.service'], ['facility_rating', 'ui.feedback.facility'], ['overall_rating', 'ui.feedback.overall']].map(([name, key]) => `
-          <div><label class="label" for="fb-${name}">${h(t(key))}</label><select id="fb-${name}" class="field form-select" name="${name}">${[5, 4, 3, 2, 1].map(x => `<option value="${x}">${h(t(`ui.feedback.score${x}`))}</option>`).join('')}</select></div>`).join('')}
-        </div>
-        ${check('would_return', t('ui.feedback.would_return'))}
-        <div><label class="label" for="fb-comment">${h(t('ui.feedback.comment'))}</label><textarea id="fb-comment" class="field" name="comment" rows="3"></textarea></div>`,
       upload: `
         <div><label class="label" for="upload-file">${h(t('ui.upload.file'))}<span class="req" aria-hidden="true">*</span></label><input id="upload-file" class="field" type="file" name="file" accept="image/jpeg,image/png,image/webp,application/pdf" required aria-describedby="upload-hint"><p id="upload-hint" class="hint">${h(t('ui.upload.hint'))}</p></div>
         <p id="upload-selected" class="text-sm text-ink-muted" aria-live="polite"></p>
@@ -1149,7 +1141,7 @@ if ($('#app')) {
       $('#stay-search').value = state.data.stays.find(s => s.id === id)?.guest_name || '';
       renderBookings();
     }
-    if (['checkout', 'extend', 'feedback', 'upload'].includes(a)) openAction(a, id);
+    if (['checkout', 'extend', 'upload'].includes(a)) openAction(a, id);
 
     if (a === 'check-in') {
       const stay = state.data.stays.find(item => item.id === id);

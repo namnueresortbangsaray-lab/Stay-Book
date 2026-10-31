@@ -1,6 +1,6 @@
 # CLAUDE.md — Stay Book (ResortGuestbook)
 
-Staff web app for น้ำเหนือรีสอร์ท บางเสร่: room board, bookings (stays), check-in/out with inspection, guests, feedback,
+Staff web app for น้ำเหนือรีสอร์ท บางเสร่: room board, bookings (stays), check-in/out with inspection, guests,
 attachments, analytics, CSV. UI is Thai. ASP.NET Core MVC on .NET 10.
 
 Knowledge: @docs/ARCHITECTURE.md · @docs/API.md · @docs/DOTNET_MIGRATION_PLAN.md (deviations, assumptions) ·
@@ -36,7 +36,9 @@ Display TZ Asia/Bangkok, store UTC.
 - Parameterized queries only; never `Html.Raw` on user data; scripts only with the CSP nonce; uploads never under `wwwroot`.
 - API contract (paths, statuses, Thai messages, snake_case JSON and field order, envelope) must keep matching `tests/baseline/`;
   intended differences go into `tests/baseline/deviations.json` and the deviation table.
-- Audit every create/update/delete/check_in/check_out/feedback; no personal data in logs.
+- Audit every create/update/delete/check_in/check_out; no personal data in logs.
+- Guest satisfaction feedback is not recorded by staff (D-24): no feedback endpoint or UI. The `feedbacks` table and
+  existing rows stay (read as `feedback_rating` / `average_feedback`) for a future guest-facing form.
 - `TreatWarningsAsErrors`, code style enforced in build, `dotnet format` clean. One type per file, file-scoped namespaces.
 - Every model change needs migrations for **both** providers (a test fails otherwise); new PostgreSQL tables also get
   `ENABLE ROW LEVEL SECURITY` in their migration.

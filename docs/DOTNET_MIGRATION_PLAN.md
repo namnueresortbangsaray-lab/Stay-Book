@@ -76,7 +76,7 @@ Status: ☑ done and verified (unit, integration and contract tests; Docker smok
 | A3–A5 | rooms POST/PUT/DELETE | `Api/V1/RoomsController` | ☑ |
 | A6 | PUT /api/v1/guests/{id} | `Api/V1/GuestsController` | ☑ |
 | A7–A9 | stays POST/PUT/DELETE | `Api/V1/StaysController` | ☑ |
-| A10–A12 | check-in, checkout, feedback | `Api/V1/StaysController` | ☑ |
+| A10–A12 | check-in, checkout, feedback | `Api/V1/StaysController` (feedback removed later, D-24) | ☑ / ⚠ |
 | A13 | attachments upload | `Api/V1/StaysController.Upload` | ☑ |
 | A14 | bookings.csv | `Api/V1/ReportsController` | ☑ |
 | N1 | /health | HealthChecks | ☑ |
@@ -132,6 +132,7 @@ Status: ☑ done and verified (unit, integration and contract tests; Docker smok
 | D-21 | no Thai normalizer existed | search reproduces `LOWER() LIKE` / `ILIKE` without a normalized column | nothing to port; Thai has no letter case |
 | D-22 | dashboard shell copy (section labels, dialog subtitles) | redesigned interface copy from the resx files; titles, element ids and login/error text unchanged | UI redesign (docs/DESIGN_SYSTEM.md); recorded in tests/baseline/deviations.json |
 | D-23 | free-text room zone and type | managed `room_zones` / `room_types` lists (migration `AddRoomCategories`, both providers); rooms keep the names, new endpoints `/api/v1/room-categories`, `/room-zones`, `/room-types` | feature added after the migration; v1 endpoints and contract unchanged |
+| D-24 | staff record guest feedback (`POST /api/v1/stays/{id}/feedback`, rating form, average in reports) | endpoint and UI removed (404); `feedbacks` table and existing rows kept and still read | feedback is for guests to give, not staff; the table stays for a future guest-facing form. Recorded in `tests/baseline/deviations.json` |
 
 ## 6. Assumptions
 

@@ -8,7 +8,7 @@ using ResortGuestbook.Web.Services.Validation;
 
 namespace ResortGuestbook.Web.Services;
 
-/// <summary>Booking lifecycle: create/edit, check-in, checkout with inspection, feedback, delete.</summary>
+/// <summary>Booking lifecycle: create/edit, check-in, checkout with inspection, delete.</summary>
 public sealed class StayService(AppDbContext db, ResortQueries queries, AuditService audit, AppClock clock)
 {
     private const string BookingNotFound = "ไม่พบ Booking";
@@ -163,46 +163,6 @@ public sealed class StayService(AppDbContext db, ResortQueries queries, AuditSer
 
         var after = await SetStatusAsync(stay, StayStatus.CheckedOut, inspection, cancellationToken);
         await audit.RecordAsync("check_out", "stay", stay.Id, before, after, actor, cancellationToken);
-        return after;
-    }
-
-    public async Task<FeedbackDto> FeedbackAsync(string id, RequestInput input, Actor actor, CancellationToken cancellationToken)
-    {
-        var (stay, _) = await LoadAsync(id, cancellationToken);
-        if (stay.Status != StayStatus.CheckedOut)
-        {
-            throw new ValidationException("status", "บันทึก Feedback ได้หลังเช็กเอาต์เท่านั้น");
-        }
-
-        var ratings = new Dictionary<string, int>();
-        foreach (var key in new[] { "cleanliness_rating", "service_rating", "facility_rating", "overall_rating" })
-        {
-            var value = Coerce.ToInt(input.Get(key, 0L));
-            if (value is < 1 or > 5)
-            {
-                throw new ValidationException(key, "คะแนนต้องอยู่ระหว่าง 1–5");
-            }
-
-            ratings[key] = (int)value;
-        }
-
-        var feedback = await db.Feedbacks.FirstOrDefaultAsync(f => f.StayId == stay.Id, cancellationToken);
-        if (feedback is null)
-        {
-            feedback = new Feedback { Id = Guid.NewGuid(), StayId = stay.Id };
-            db.Feedbacks.Add(feedback);
-        }
-
-        feedback.CleanlinessRating = ratings["cleanliness_rating"];
-        feedback.ServiceRating = ratings["service_rating"];
-        feedback.FacilityRating = ratings["facility_rating"];
-        feedback.OverallRating = ratings["overall_rating"];
-        feedback.WouldReturn = Coerce.ToBool(input.Get("would_return", true));
-        feedback.Comment = Coerce.Clean(input["comment"]);
-        await db.SaveChangesAsync(cancellationToken);
-
-        var after = ResortQueries.ToDto(feedback);
-        await audit.RecordAsync("feedback", "stay", stay.Id, null, after, actor, cancellationToken);
         return after;
     }
 

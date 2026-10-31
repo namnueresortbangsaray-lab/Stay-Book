@@ -55,12 +55,6 @@ public sealed class StaysController(ResortQueries queries, StayService stays, Up
     public async Task<IActionResult> Checkout(string id, CancellationToken cancellationToken) =>
         ApiResults.Ok(await stays.CheckoutAsync(id, await InputAsync(), HttpContext.Actor(), cancellationToken), Saved);
 
-    [HttpPost("stays/{id}/feedback")]
-    [RequireAbility(Abilities.Booking)]
-    [EnableRateLimiting(RateLimitPolicies.Writes)]
-    public async Task<IActionResult> Feedback(string id, CancellationToken cancellationToken) =>
-        ApiResults.Ok(await stays.FeedbackAsync(id, await InputAsync(), HttpContext.Actor(), cancellationToken), Saved);
-
     /// <summary>Multipart field <c>file</c>: JPEG, PNG, WebP or PDF up to <c>UPLOAD_MAX_BYTES</c>.</summary>
     [HttpPost("stays/{id}/attachments")]
     [RequireAbility(Abilities.Upload)]

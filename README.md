@@ -1,7 +1,7 @@
 # Stay Book · น้ำเหนือรีสอร์ท บางเสร่
 
 Staff web app for the resort's guest logbook: room board, bookings, check-in/out with room inspection, guest history and
-lifetime stats, pricing, feedback, attachments, analytics, CSV export, roles and an audit trail. The UI is Thai.
+lifetime stats, pricing, attachments, analytics, CSV export, roles and an audit trail. The UI is Thai.
 
 Built with ASP.NET Core MVC (.NET 10), EF Core (SQLite by default, PostgreSQL/Supabase ready), ASP.NET Core Identity,
 Razor, Tailwind CSS and vanilla JavaScript, packaged for Docker.

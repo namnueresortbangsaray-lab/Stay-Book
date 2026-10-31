@@ -57,7 +57,7 @@ public abstract class ResortDataTests(IDatabaseFactory factory)
     }
 
     [Fact]
-    public async Task BookingCompletesCreateCheckInCheckoutFeedbackLifecycle()
+    public async Task BookingCompletesCreateCheckInCheckoutLifecycle()
     {
         await using var s = await TestServices.CreateAsync(factory);
         var room = (await s.Queries.RoomsAsync())[0];
@@ -73,8 +73,9 @@ public abstract class ResortDataTests(IDatabaseFactory factory)
         Assert.Equal(StayStatus.CheckedOut, checkedOut.Status);
         Assert.Equal(0, (await s.Queries.RoomAsync(room.Id))!.Status);
 
-        var feedback = await s.Stays.FeedbackAsync(created.Id.ToString(), TestInputs.Input(("cleanliness_rating", 5L), ("service_rating", "4"), ("facility_rating", 3L), ("overall_rating", 5L)), s.Admin, default);
-        Assert.True(feedback.WouldReturn);
+        // Staff no longer record feedback; rows already in the table (e.g. imported from v1) are still read.
+        s.Db.Feedbacks.Add(new Feedback { Id = Guid.NewGuid(), StayId = created.Id, CleanlinessRating = 5, ServiceRating = 4, FacilityRating = 3, OverallRating = 5 });
+        await s.Db.SaveChangesAsync();
         Assert.Equal(5, (await s.Queries.StayAsync(created.Id))!.FeedbackRating);
 
         var guest = (await s.Queries.GuestSummariesAsync()).Single();
@@ -82,7 +83,7 @@ public abstract class ResortDataTests(IDatabaseFactory factory)
         Assert.Equal(2, guest.TotalNights);
 
         var actions = await s.Db.AuditLogs.Select(a => a.Action).ToListAsync();
-        Assert.Equal(["check_in", "check_out", "create", "feedback"], actions.Order(StringComparer.Ordinal));
+        Assert.Equal(["check_in", "check_out", "create"], actions.Order(StringComparer.Ordinal));
     }
 
     [Fact]

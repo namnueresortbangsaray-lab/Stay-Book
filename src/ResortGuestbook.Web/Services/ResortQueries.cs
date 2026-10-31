@@ -124,9 +124,6 @@ public sealed class ResortQueries(AppDbContext db)
         DeletedAt = g.DeletedAt,
     };
 
-    public static FeedbackDto ToDto(Feedback f) => new(
-        f.Id, f.StayId, f.CleanlinessRating, f.ServiceRating, f.FacilityRating, f.OverallRating, f.WouldReturn, f.Comment, f.CreatedAt, f.UpdatedAt);
-
     private static IQueryable<StayDto> ProjectStays(IQueryable<Stay> stays) => stays
         .AsNoTracking()
         .OrderByDescending(s => s.CheckInDate).ThenByDescending(s => s.CreatedAt)

@@ -564,9 +564,6 @@
   <data name="ui.reports.pet_bookings" xml:space="preserve">
     <value>Bookings with pets</value>
   </data>
-  <data name="ui.reports.feedback" xml:space="preserve">
-    <value>Average feedback</value>
-  </data>
   <data name="ui.reports.revenue_title" xml:space="preserve">
     <value>Daily net revenue</value>
   </data>
@@ -945,9 +942,6 @@
   <data name="ui.action.inspect" xml:space="preserve">
     <value>Inspect room</value>
   </data>
-  <data name="ui.action.feedback" xml:space="preserve">
-    <value>Record feedback</value>
-  </data>
   <data name="ui.action.extend" xml:space="preserve">
     <value>Extend stay</value>
   </data>
@@ -965,12 +959,6 @@
   </data>
   <data name="ui.action.extend_submit" xml:space="preserve">
     <value>Save new check-out date</value>
-  </data>
-  <data name="ui.action.feedback_title" xml:space="preserve">
-    <value>Guest feedback</value>
-  </data>
-  <data name="ui.action.feedback_submit" xml:space="preserve">
-    <value>Save feedback</value>
   </data>
   <data name="ui.action.upload_title" xml:space="preserve">
     <value>Attach a document or photo</value>
@@ -1013,39 +1001,6 @@
   </data>
   <data name="ui.extend.discount" xml:space="preserve">
     <value>Total discount (THB)</value>
-  </data>
-  <data name="ui.feedback.cleanliness" xml:space="preserve">
-    <value>Room cleanliness</value>
-  </data>
-  <data name="ui.feedback.service" xml:space="preserve">
-    <value>Staff service</value>
-  </data>
-  <data name="ui.feedback.facility" xml:space="preserve">
-    <value>Facilities</value>
-  </data>
-  <data name="ui.feedback.overall" xml:space="preserve">
-    <value>Overall satisfaction</value>
-  </data>
-  <data name="ui.feedback.score5" xml:space="preserve">
-    <value>5 — Excellent</value>
-  </data>
-  <data name="ui.feedback.score4" xml:space="preserve">
-    <value>4 — Good</value>
-  </data>
-  <data name="ui.feedback.score3" xml:space="preserve">
-    <value>3 — Fair</value>
-  </data>
-  <data name="ui.feedback.score2" xml:space="preserve">
-    <value>2 — Needs improvement</value>
-  </data>
-  <data name="ui.feedback.score1" xml:space="preserve">
-    <value>1 — Poor</value>
-  </data>
-  <data name="ui.feedback.would_return" xml:space="preserve">
-    <value>Guest would stay again</value>
-  </data>
-  <data name="ui.feedback.comment" xml:space="preserve">
-    <value>Guest comments</value>
   </data>
   <data name="ui.upload.file" xml:space="preserve">
     <value>Choose a file</value>

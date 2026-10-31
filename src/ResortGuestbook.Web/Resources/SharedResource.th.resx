@@ -564,9 +564,6 @@
   <data name="ui.reports.pet_bookings" xml:space="preserve">
     <value>Booking ที่มีสัตว์เลี้ยง</value>
   </data>
-  <data name="ui.reports.feedback" xml:space="preserve">
-    <value>คะแนนความพึงพอใจเฉลี่ย</value>
-  </data>
   <data name="ui.reports.revenue_title" xml:space="preserve">
     <value>รายได้สุทธิรายวัน</value>
   </data>
@@ -945,9 +942,6 @@
   <data name="ui.action.inspect" xml:space="preserve">
     <value>ตรวจห้อง</value>
   </data>
-  <data name="ui.action.feedback" xml:space="preserve">
-    <value>บันทึกแบบประเมิน</value>
-  </data>
   <data name="ui.action.extend" xml:space="preserve">
     <value>ต่อระยะเวลาเข้าพัก</value>
   </data>
@@ -965,12 +959,6 @@
   </data>
   <data name="ui.action.extend_submit" xml:space="preserve">
     <value>บันทึกวันเช็กเอาต์ใหม่</value>
-  </data>
-  <data name="ui.action.feedback_title" xml:space="preserve">
-    <value>แบบประเมินความพึงพอใจ</value>
-  </data>
-  <data name="ui.action.feedback_submit" xml:space="preserve">
-    <value>บันทึกแบบประเมิน</value>
   </data>
   <data name="ui.action.upload_title" xml:space="preserve">
     <value>แนบเอกสารหรือรูปภาพ</value>
@@ -1013,39 +1001,6 @@
   </data>
   <data name="ui.extend.discount" xml:space="preserve">
     <value>ส่วนลดรวม (บาท)</value>
-  </data>
-  <data name="ui.feedback.cleanliness" xml:space="preserve">
-    <value>ความสะอาดของห้องพัก</value>
-  </data>
-  <data name="ui.feedback.service" xml:space="preserve">
-    <value>การบริการของพนักงาน</value>
-  </data>
-  <data name="ui.feedback.facility" xml:space="preserve">
-    <value>สิ่งอำนวยความสะดวก</value>
-  </data>
-  <data name="ui.feedback.overall" xml:space="preserve">
-    <value>ความพึงพอใจโดยรวม</value>
-  </data>
-  <data name="ui.feedback.score5" xml:space="preserve">
-    <value>5 — ดีมาก</value>
-  </data>
-  <data name="ui.feedback.score4" xml:space="preserve">
-    <value>4 — ดี</value>
-  </data>
-  <data name="ui.feedback.score3" xml:space="preserve">
-    <value>3 — พอใช้</value>
-  </data>
-  <data name="ui.feedback.score2" xml:space="preserve">
-    <value>2 — ควรปรับปรุง</value>
-  </data>
-  <data name="ui.feedback.score1" xml:space="preserve">
-    <value>1 — ต้องแก้ไข</value>
-  </data>
-  <data name="ui.feedback.would_return" xml:space="preserve">
-    <value>ผู้เข้าพักอยากกลับมาพักอีก</value>
-  </data>
-  <data name="ui.feedback.comment" xml:space="preserve">
-    <value>ข้อเสนอแนะจากผู้เข้าพัก</value>
   </data>
   <data name="ui.upload.file" xml:space="preserve">
     <value>เลือกไฟล์</value>

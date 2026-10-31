@@ -41,17 +41,16 @@ const stay = (room, guest, phone, from, to, extra = {}) => json('POST', '/api/v1
   extra_bed: false, status: 0, deposit_amount: 300, deposit_paid: true, id_verified: true, pet_count: 0, discount_amount: 0, note: '', ...extra,
 });
 
-// Completed stays (history, feedback, lifetime value)
-for (const [room, guest, phone, from, to, rating] of [
-  ['1', 'คุณสมศรี วงศ์ใหญ่', '081-555-0101', -40, -38, 5],
-  ['V1', 'คุณประเสริฐ ทองดี', '089-222-0303', -30, -27, 4],
-  ['1', 'คุณสมศรี วงศ์ใหญ่', '081-555-0101', -20, -18, 5],
-  ['2', 'Mr. Daniel Weber', '082-777-0404', -12, -10, 3],
-  ['1', 'คุณสมศรี วงศ์ใหญ่', '081-555-0101', -8, -6, 5],
+// Completed stays (history, lifetime value)
+for (const [room, guest, phone, from, to] of [
+  ['1', 'คุณสมศรี วงศ์ใหญ่', '081-555-0101', -40, -38],
+  ['V1', 'คุณประเสริฐ ทองดี', '089-222-0303', -30, -27],
+  ['1', 'คุณสมศรี วงศ์ใหญ่', '081-555-0101', -20, -18],
+  ['2', 'Mr. Daniel Weber', '082-777-0404', -12, -10],
+  ['1', 'คุณสมศรี วงศ์ใหญ่', '081-555-0101', -8, -6],
 ]) {
   const s = await stay(room, guest, phone, from, to, { status: 1 });
   await json('POST', `/api/v1/stays/${s.id}/checkout`, { key_returned: true, room_clean: true, equipment_complete: true, no_damage: true, minibar_checked: true });
-  await json('POST', `/api/v1/stays/${s.id}/feedback`, { cleanliness_rating: rating, service_rating: rating, facility_rating: 4, overall_rating: rating, would_return: true, comment: 'ห้องสะอาด พนักงานบริการดี' });
 }
 
 // In house now (one leaving today), arrivals today, upcoming, unpaid deposit

@@ -38,7 +38,6 @@ Checks run in this order: 401 → 419 → 403 → 422/404/409.
 | PUT / DELETE | `/api/v1/stays/{id}` | booking | Edit/extend or delete booking |
 | POST | `/api/v1/stays/{id}/check-in` | booking | Check in (requires `id_verified`, no overlap) |
 | POST | `/api/v1/stays/{id}/checkout` | checkout | Inspection + check out atomically |
-| POST | `/api/v1/stays/{id}/feedback` | booking | Create or update the feedback (after checkout) |
 | POST | `/api/v1/stays/{id}/attachments` | upload | Multipart `file`: JPEG, PNG, WebP or PDF ≤ 5 MB |
 | GET | `/api/v1/reports/bookings.csv?start=&end=` | any | UTF-8 CSV with BOM (all bookings; the range is validated) |
 | GET | `/api/v1/room-categories` | any | `{zones, types}` in sort order, each with `room_count`; types carry room defaults (`price_satang`, `base_guests`, `max_guests`, `extra_guest_fee_satang`, `is_pet_friendly`) |
@@ -56,7 +55,11 @@ Bodies are JSON objects (or form fields). Values are coerced like v1: numbers ma
 accept `true`, `1`, `"on"`, `"yes"`. Money inputs are decimal baht (`price`, `extra_guest_fee`, `deposit_amount`,
 `discount_amount`); responses expose integer `*_satang`. Dates are `YYYY-MM-DD`. Stay status: `0` booked, `1` checked
 in, `2` checked out. Checkout takes `key_returned`, `room_clean`, `equipment_complete`, `no_damage`, `minibar_checked`
-and requires `inspection_note` when `no_damage` is false. Feedback takes four ratings 1–5, `would_return`, `comment`.
+and requires `inspection_note` when `no_damage` is false.
+
+Staff do not record guest feedback (deviation D-24): `POST /api/v1/stays/{id}/feedback` was removed and answers 404.
+Feedback already stored (for example imported from v1) is still returned as `feedback_rating` on stays and
+`average_feedback` in the snapshot analytics.
 
 ## Output
 

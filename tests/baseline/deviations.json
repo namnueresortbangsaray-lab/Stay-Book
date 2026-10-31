@@ -13,5 +13,28 @@
   ],
   "dashboard": [
     "body:text"
+  ],
+  "feedback-before-checkout": [
+    "status",
+    "body:json"
+  ],
+  "housekeeping-feedback-403": [
+    "status",
+    "body:json"
+  ],
+  "feedback-invalid-rating": [
+    "status",
+    "body:json"
+  ],
+  "feedback": [
+    "status",
+    "body:json"
+  ],
+  "feedback-update": [
+    "status",
+    "body:json"
+  ],
+  "snapshot-after-lifecycle": [
+    "body:json"
   ]
 }

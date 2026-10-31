@@ -59,10 +59,9 @@ for path in "/uploads/$stored" "/storage/uploads/$stored" "/_protected_uploads/$
 done
 [ "$(status "$base/files/$attachment")" = "302" ]
 
-step "check-in, checkout, feedback"
+step "check-in, checkout"
 api POST "/api/v1/stays/$id/check-in" -H 'Content-Type: application/json' -d '{}' | jq -e '.data.status == 1' >/dev/null
 api POST "/api/v1/stays/$id/checkout" -H 'Content-Type: application/json' -d '{"key_returned":true,"room_clean":true,"equipment_complete":true,"no_damage":true,"minibar_checked":true}' | jq -e '.data.status == 2' >/dev/null
-api POST "/api/v1/stays/$id/feedback" -H 'Content-Type: application/json' -d '{"cleanliness_rating":5,"service_rating":5,"facility_rating":4,"overall_rating":5,"comment":"ดีมาก"}' | jq -e '.success' >/dev/null
 
 step "report export"
 api GET /api/v1/reports/bookings.csv | grep -q 'ทดสอบ Smoke'
