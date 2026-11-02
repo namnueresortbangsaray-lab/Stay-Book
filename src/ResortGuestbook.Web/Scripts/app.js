@@ -461,7 +461,7 @@ if ($('#app')) {
     const started = state.data.stays.filter(s => s.check_in_date >= a.start && s.check_in_date <= a.end);
     const codes = [...[...$('#booking-channel').options].map(o => o.value).filter(Boolean), ''];
     const rows = codes.map(code => {
-      const stays = started.filter(s => (s.booking_channel || '') === code);
+      const stays = started.filter(s => (codes.includes(s.booking_channel) ? s.booking_channel : '') === code);
       const billable = stays.filter(s => Number(s.status) !== 0);
       return {
         code,

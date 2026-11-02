@@ -6,11 +6,10 @@ public static class BookingChannels
     public const string WalkIn = "walk_in";
     public const string Phone = "phone";
     public const string Line = "line";
-    public const string Facebook = "facebook";
-    public const string Agoda = "agoda";
-    public const string BookingCom = "booking_com";
-    public const string Other = "other";
+
+    /// <summary>Chat on the resort's Facebook page.</summary>
+    public const string PageChat = "page_chat";
 
     /// <summary>In the order the booking form and reports list them.</summary>
-    public static readonly IReadOnlyList<string> All = [WalkIn, Phone, Line, Facebook, Agoda, BookingCom, Other];
+    public static readonly IReadOnlyList<string> All = [WalkIn, Phone, Line, PageChat];
 }

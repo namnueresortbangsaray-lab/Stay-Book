@@ -1362,17 +1362,8 @@
   <data name="ui.channel.line" xml:space="preserve">
     <value>LINE</value>
   </data>
-  <data name="ui.channel.facebook" xml:space="preserve">
-    <value>Facebook</value>
-  </data>
-  <data name="ui.channel.agoda" xml:space="preserve">
-    <value>Agoda</value>
-  </data>
-  <data name="ui.channel.booking_com" xml:space="preserve">
-    <value>Booking.com</value>
-  </data>
-  <data name="ui.channel.other" xml:space="preserve">
-    <value>Other</value>
+  <data name="ui.channel.page_chat" xml:space="preserve">
+    <value>Facebook page chat</value>
   </data>
   <data name="ui.col.channel" xml:space="preserve">
     <value>Channel</value>

@@ -176,8 +176,8 @@ public sealed class WebTests : IClassFixture<StayBookFactory>
         var stayId = (await Browser.EnvelopeAsync(created)).GetProperty("data").GetProperty("id").GetString();
         Assert.Equal("line", await ChannelOf(await Browser.SendJsonAsync(admin, HttpMethod.Put, $"/api/v1/stays/{stayId}", Body(null), token)));
         Assert.Null(await ChannelOf(await Browser.SendJsonAsync(admin, HttpMethod.Put, $"/api/v1/stays/{stayId}", Body(""), token)));
-        Assert.Equal("agoda", await ChannelOf(await Browser.SendJsonAsync(admin, HttpMethod.Put, $"/api/v1/stays/{stayId}", Body("agoda"), token)));
-        Assert.Equal("agoda", await app.QueryAsync(db => db.Stays.Where(x => x.Id == Guid.Parse(stayId!)).Select(x => x.BookingChannel).SingleAsync()));
+        Assert.Equal("page_chat", await ChannelOf(await Browser.SendJsonAsync(admin, HttpMethod.Put, $"/api/v1/stays/{stayId}", Body("page_chat"), token)));
+        Assert.Equal("page_chat", await app.QueryAsync(db => db.Stays.Where(x => x.Id == Guid.Parse(stayId!)).Select(x => x.BookingChannel).SingleAsync()));
     }
 
     [Fact]
