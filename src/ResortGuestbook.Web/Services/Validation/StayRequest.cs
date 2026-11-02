@@ -1,3 +1,4 @@
+using ResortGuestbook.Data.Entities;
 using ResortGuestbook.Web.Infrastructure.Http;
 using ResortGuestbook.Web.Services.Errors;
 
@@ -74,6 +75,13 @@ public static class StayRequest
             errors["id_verified"] = "ต้องตรวจสอบบัตรประชาชนก่อนเช็กอิน";
         }
 
+        // Added after v1 (D-27): optional; null when the field is not sent, so v1 clients keep the stored value.
+        var channel = input["booking_channel"] is null ? null : Coerce.TrimStr(input["booking_channel"]);
+        if (channel is { Length: > 0 } && !BookingChannels.All.Contains(channel))
+        {
+            errors["booking_channel"] = "กรุณาเลือกช่องทางการจองที่ถูกต้อง";
+        }
+
         if (errors.Count > 0)
         {
             throw new ValidationException(errors);
@@ -94,6 +102,7 @@ public static class StayRequest
             idVerified,
             petCount > 0 ? petType : null,
             petCount,
-            RoomRequest.Money(input.Get("discount_amount", 0L)));
+            RoomRequest.Money(input.Get("discount_amount", 0L)),
+            channel);
     }
 }

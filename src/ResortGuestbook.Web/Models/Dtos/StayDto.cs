@@ -36,4 +36,7 @@ public class StayDto
     public required string? CustomerType { get; init; }
     public required bool IsRegular { get; init; }
     public required int? FeedbackRating { get; init; }
+
+    /// <summary>Added after v1 (D-27), so it comes last; see <c>BookingChannels</c>.</summary>
+    public string? BookingChannel { get; init; }
 }

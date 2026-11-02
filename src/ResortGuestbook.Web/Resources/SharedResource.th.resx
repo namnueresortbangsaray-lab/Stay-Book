@@ -1344,4 +1344,52 @@
   <data name="ui.id_photo.retention" xml:space="preserve">
     <value>รูปจะถูกลบอัตโนมัติ {0} วันหลังเช็กเอาต์ พนักงานที่เข้าสู่ระบบเท่านั้นที่ดูได้</value>
   </data>
+  <data name="ui.booking.channel" xml:space="preserve">
+    <value>ช่องทางการจอง</value>
+  </data>
+  <data name="ui.booking.channel_hint" xml:space="preserve">
+    <value>ลูกค้าจองหรือติดต่อเข้ามาทางไหน ใช้ดูในหน้ารายงาน</value>
+  </data>
+  <data name="ui.channel.none" xml:space="preserve">
+    <value>ไม่ระบุ</value>
+  </data>
+  <data name="ui.channel.walk_in" xml:space="preserve">
+    <value>Walk-in (มาที่รีสอร์ท)</value>
+  </data>
+  <data name="ui.channel.phone" xml:space="preserve">
+    <value>โทรศัพท์</value>
+  </data>
+  <data name="ui.channel.line" xml:space="preserve">
+    <value>LINE</value>
+  </data>
+  <data name="ui.channel.facebook" xml:space="preserve">
+    <value>Facebook</value>
+  </data>
+  <data name="ui.channel.agoda" xml:space="preserve">
+    <value>Agoda</value>
+  </data>
+  <data name="ui.channel.booking_com" xml:space="preserve">
+    <value>Booking.com</value>
+  </data>
+  <data name="ui.channel.other" xml:space="preserve">
+    <value>อื่น ๆ</value>
+  </data>
+  <data name="ui.col.channel" xml:space="preserve">
+    <value>ช่องทาง</value>
+  </data>
+  <data name="ui.reports.channels_title" xml:space="preserve">
+    <value>ช่องทางการจอง</value>
+  </data>
+  <data name="ui.reports.channels_sub" xml:space="preserve">
+    <value>Booking ที่เช็กอินในช่วงที่เลือก แยกตามช่องทาง ยอดสุทธินับเฉพาะที่เช็กอินแล้ว</value>
+  </data>
+  <data name="ui.reports.channels_top" xml:space="preserve">
+    <value>มากที่สุด:</value>
+  </data>
+  <data name="ui.reports.channels_share" xml:space="preserve">
+    <value>สัดส่วน</value>
+  </data>
+  <data name="ui.reports.channels_empty" xml:space="preserve">
+    <value>ไม่มี Booking ที่เช็กอินในช่วงนี้</value>
+  </data>
 </root>

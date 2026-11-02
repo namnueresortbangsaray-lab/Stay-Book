@@ -21,6 +21,7 @@ public sealed class Stay : ICreatedAt, IUpdatedAt, ISoftDeletable
     public int PetCount { get; set; }
     public long PetFeeSatang { get; set; }
     public long DiscountAmountSatang { get; set; }
+    public string? BookingChannel { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
     public DateTimeOffset? DeletedAt { get; set; }

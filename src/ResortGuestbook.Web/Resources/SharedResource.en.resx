@@ -1344,4 +1344,52 @@
   <data name="ui.id_photo.retention" xml:space="preserve">
     <value>Deleted automatically {0} days after checkout; only signed-in staff can view it</value>
   </data>
+  <data name="ui.booking.channel" xml:space="preserve">
+    <value>Booking channel</value>
+  </data>
+  <data name="ui.booking.channel_hint" xml:space="preserve">
+    <value>How the guest booked; shown in the reports</value>
+  </data>
+  <data name="ui.channel.none" xml:space="preserve">
+    <value>Not recorded</value>
+  </data>
+  <data name="ui.channel.walk_in" xml:space="preserve">
+    <value>Walk-in</value>
+  </data>
+  <data name="ui.channel.phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="ui.channel.line" xml:space="preserve">
+    <value>LINE</value>
+  </data>
+  <data name="ui.channel.facebook" xml:space="preserve">
+    <value>Facebook</value>
+  </data>
+  <data name="ui.channel.agoda" xml:space="preserve">
+    <value>Agoda</value>
+  </data>
+  <data name="ui.channel.booking_com" xml:space="preserve">
+    <value>Booking.com</value>
+  </data>
+  <data name="ui.channel.other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="ui.col.channel" xml:space="preserve">
+    <value>Channel</value>
+  </data>
+  <data name="ui.reports.channels_title" xml:space="preserve">
+    <value>Booking channels</value>
+  </data>
+  <data name="ui.reports.channels_sub" xml:space="preserve">
+    <value>Bookings starting in the range by channel; revenue counts checked-in stays only</value>
+  </data>
+  <data name="ui.reports.channels_top" xml:space="preserve">
+    <value>Most bookings:</value>
+  </data>
+  <data name="ui.reports.channels_share" xml:space="preserve">
+    <value>Share</value>
+  </data>
+  <data name="ui.reports.channels_empty" xml:space="preserve">
+    <value>No bookings start in this range</value>
+  </data>
 </root>

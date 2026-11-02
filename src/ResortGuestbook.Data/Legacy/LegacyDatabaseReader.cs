@@ -28,7 +28,7 @@ public static class LegacyDatabaseReader
             .Options;
 
         await using var db = new AppDbContext(options);
-        var rest = await DataSet.ReadRestAsync(db, cancellationToken);
+        var rest = await DataSet.ReadRestAsync(db, cancellationToken, v1Schema: true);
         var users = await ReadUsersAsync(connectionString, cancellationToken);
         return new DataSet(users, rest);
     }

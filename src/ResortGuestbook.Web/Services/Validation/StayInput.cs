@@ -15,4 +15,5 @@ public sealed record StayInput(
     bool IdVerified,
     string? PetType,
     int PetCount,
-    long DiscountAmountSatang);
+    long DiscountAmountSatang,
+    string? BookingChannel = null);

@@ -570,6 +570,10 @@ namespace ResortGuestbook.Migrations.Postgres.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("BookingChannel")
+                        .HasColumnType("text")
+                        .HasColumnName("booking_channel");
+
                     b.Property<DateOnly>("CheckInDate")
                         .HasColumnType("date")
                         .HasColumnName("check_in_date");

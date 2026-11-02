@@ -84,6 +84,15 @@ unchanged. The lists only define the choices: saving a room with a name that is 
 renames it on its rooms in the same transaction (each room audited); an entry in use cannot be deleted; a duplicate name
 is 409. Audit entity types: `room_zone`, `room_type`.
 
+## Booking channel (added after v1)
+
+`POST` / `PUT /api/v1/stays` accept an optional `booking_channel`: `walk_in`, `phone`, `line`, `facebook`, `agoda`,
+`booking_com` or `other` (`BookingChannels`); `""` clears it, and leaving the field out keeps the stored value, so
+v1 clients do not erase it. Anything else is 422 `{booking_channel: กรุณาเลือกช่องทางการจองที่ถูกต้อง}`. Stay rows
+(snapshot, search, create/update responses) end with `booking_channel` (null when not recorded), after
+`feedback_rating`; the contract test ignores that one key (deviation D-27). The reports page groups bookings that
+start in the range by channel (count, share, guests, nights, net revenue of checked-in stays) on the client.
+
 ## Staff accounts (added after v1)
 
 Passwords need at least `Auth__PasswordMinLength` characters (default 10) and no composition rules. Admins cannot

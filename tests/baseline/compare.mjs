@@ -15,11 +15,14 @@ const STORED = /[0-9a-f]{48}\.(webp|png|jpg|pdf)/g;
 const VOLATILE_KEYS = new Set(['today']);
 const COMPARED_HEADERS = ['content-type', 'content-disposition', 'location', 'x-content-type-options', 'x-frame-options', 'referrer-policy', 'permissions-policy'];
 
+// Fields added after v1 at the end of a row (D-27 booking_channel); everything else in the row is still compared.
+const ADDED_KEYS = new Set(['booking_channel']);
+
 const mask = value => {
   if (typeof value === 'string') return value.replace(UUID, '<uuid>').replace(TIMESTAMP, '<ts>').replace(STORED, '<stored>');
   if (Array.isArray(value)) return value.map(mask);
   if (value && typeof value === 'object') {
-    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, VOLATILE_KEYS.has(k) ? '<volatile>' : mask(v)]));
+    return Object.fromEntries(Object.entries(value).filter(([k]) => !ADDED_KEYS.has(k)).map(([k, v]) => [k, VOLATILE_KEYS.has(k) ? '<volatile>' : mask(v)]));
   }
   return value;
 };

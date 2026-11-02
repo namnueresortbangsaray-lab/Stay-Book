@@ -347,6 +347,7 @@ if ($('#app')) {
         key: 'status', label: t('ui.col.status'), value: s => Number(s.status),
         cell: s => `<span class="inline-flex flex-wrap justify-end gap-1 sm:justify-start">${statusPill(s.status)}${!s.deposit_paid && Number(s.deposit_amount_satang) > 0 && Number(s.status) < 2 ? pill('warning', 'wallet', t('ui.flag.deposit_short')) : ''}</span>`,
       },
+      { key: 'channel', label: t('ui.col.channel'), optional: true, mobileHide: true, tabletHide: true, value: s => channelLabel(s.booking_channel), cell: s => `<span class="${s.booking_channel ? 'text-ink' : 'text-ink-subtle'}">${h(channelLabel(s.booking_channel))}</span>` },
       { key: 'total', label: t('ui.col.total'), num: true, firstDir: 'desc', value: s => Number(s.total_amount_satang), cell: s => money(s.total_amount_satang) },
       { key: 'balance', label: t('ui.col.balance'), num: true, optional: true, mobileHide: true, tabletHide: true, firstDir: 'desc', value: balanceOf, cell: s => `<span class="${balanceOf(s) ? 'text-ink' : 'text-ink-subtle'}">${money(balanceOf(s))}</span>` },
       { key: 'actions', label: t('ui.col.actions'), hideLabel: true, className: 'actions', cell: s => `<span class="inline-flex items-center gap-1">${primaryStayAction(s)}${menuTriggerButton({ context: 'stay', id: s.id, label: t('ui.booking.menu', { room: s.room_name }), size: 'sm' })}</span>` },
@@ -424,6 +425,8 @@ if ($('#app')) {
       </section>` : ''}`;
   }
 
+  const channelLabel = code => (code && [...$('#booking-channel').options].find(o => o.value === code)?.text) || t('ui.channel.none');
+
   // ================= REPORTS =================
   function breakdown(title, parts) {
     const total = Math.max(1, parts.reduce((sum, p) => sum + p.value, 0));
@@ -448,6 +451,55 @@ if ($('#app')) {
         ${barChart(points)}
         <button type="button" class="link no-print mt-3 text-sm" data-toggle-table="${id}-table" aria-expanded="false" aria-controls="${id}-table">${h(t('ui.reports.show_table'))}</button>
         ${chartTable({ id: `${id}-table`, ...table })}
+      </div>
+    </section>`;
+  }
+
+  // Bookings that start in the report range, grouped by channel; revenue counts checked-in and checked-out stays only,
+  // like the net revenue figure above.
+  function channelCard(a) {
+    const started = state.data.stays.filter(s => s.check_in_date >= a.start && s.check_in_date <= a.end);
+    const codes = [...[...$('#booking-channel').options].map(o => o.value).filter(Boolean), ''];
+    const rows = codes.map(code => {
+      const stays = started.filter(s => (s.booking_channel || '') === code);
+      const billable = stays.filter(s => Number(s.status) !== 0);
+      return {
+        code,
+        label: channelLabel(code),
+        count: stays.length,
+        guests: stays.reduce((sum, s) => sum + Number(s.guests), 0),
+        nights: stays.reduce((sum, s) => sum + nights(s.check_in_date, s.check_out_date), 0),
+        revenue: billable.reduce((sum, s) => sum + Number(s.total_amount_satang), 0),
+      };
+    }).filter(r => r.count).sort((x, y) => (x.code === '') - (y.code === '') || y.count - x.count);
+    const total = started.length;
+    const share = r => (total ? Math.round((r.count / total) * 100) : 0);
+    const top = rows.find(r => r.code && r.count);
+    return `<section class="card mt-6" aria-labelledby="channels-title">
+      <div class="card-header items-start">
+        <div><h2 id="channels-title" class="card-title">${h(t('ui.reports.channels_title'))}</h2><p class="text-sm text-ink-muted">${h(t('ui.reports.channels_sub'))}</p></div>
+        ${top ? `<p class="text-sm text-ink-muted">${h(t('ui.reports.channels_top'))} <span class="font-semibold text-ink">${h(top.label)}</span> <span class="tabular-nums">${share(top)}%</span></p>` : ''}
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <caption class="sr-only">${h(t('ui.reports.channels_title'))}</caption>
+          <thead><tr>
+            <th scope="col">${h(t('ui.col.channel'))}</th>
+            <th scope="col" class="num">${h(t('ui.reports.bookings'))}</th>
+            <th scope="col" class="hidden w-1/4 sm:table-cell">${h(t('ui.reports.channels_share'))}</th>
+            <th scope="col" class="num hidden xl:table-cell">${h(t('ui.reports.guests'))}</th>
+            <th scope="col" class="num hidden xl:table-cell">${h(t('ui.reports.room_nights'))}</th>
+            <th scope="col" class="num">${h(t('ui.reports.net_revenue'))}</th>
+          </tr></thead>
+          <tbody>${rows.map(r => `<tr>
+            <td class="font-medium ${r.code ? 'text-ink' : 'text-ink-subtle'}">${h(r.label)}</td>
+            <td class="num">${number(r.count)} <span class="text-ink-subtle">· ${share(r)}%</span></td>
+            <td class="hidden sm:table-cell"><div class="stack-bar" aria-hidden="true">${r.count ? `<span class="tone-primary" style="width:${share(r)}%"></span>` : ''}</div></td>
+            <td class="num hidden xl:table-cell">${number(r.guests)}</td>
+            <td class="num hidden xl:table-cell">${number(r.nights)}</td>
+            <td class="num">${money(r.revenue)}</td>
+          </tr>`).join('') || `<tr><td colspan="6" class="py-6 text-center text-ink-subtle">${h(t('ui.reports.channels_empty'))}</td></tr>`}</tbody>
+        </table>
       </div>
     </section>`;
   }
@@ -499,7 +551,8 @@ if ($('#app')) {
           { label: t('ui.reports.deposit_unpaid'), value: a.deposits.unpaid, tone: 'warning' },
           { label: t('ui.reports.deposit_none'), value: a.deposits.none, tone: 'neutral' },
         ])}
-      </div>`;
+      </div>
+      ${channelCard(a)}`;
   }
 
   // ================= ROOMS =================

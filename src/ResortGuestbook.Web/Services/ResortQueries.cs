@@ -162,6 +162,7 @@ public sealed class ResortQueries(AppDbContext db)
             CustomerType = s.Guest == null ? null : s.Guest.CustomerType,
             IsRegular = s.Guest != null && s.Guest.IsRegular,
             FeedbackRating = s.Feedback == null ? null : s.Feedback.OverallRating,
+            BookingChannel = s.BookingChannel,
         });
 
     private static GuestSummaryDto Summarize(Guest g, List<GuestStayRow> stays)

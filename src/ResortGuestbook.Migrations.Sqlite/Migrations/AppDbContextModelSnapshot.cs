@@ -585,6 +585,10 @@ namespace ResortGuestbook.Migrations.Sqlite.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("id");
 
+                    b.Property<string>("BookingChannel")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("booking_channel");
+
                     b.Property<DateOnly>("CheckInDate")
                         .HasColumnType("TEXT")
                         .HasColumnName("check_in_date");

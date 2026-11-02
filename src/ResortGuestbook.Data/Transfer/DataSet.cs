@@ -37,13 +37,44 @@ public sealed record DataSet(
     {
     }
 
-    public static async Task<DataSet> ReadRestAsync(AppDbContext db, CancellationToken cancellationToken) => new(
+    /// <summary>All tables but users. With <c>v1Schema</c>, stays are read without columns added after v1 (<c>booking_channel</c>).</summary>
+    public static async Task<DataSet> ReadRestAsync(AppDbContext db, CancellationToken cancellationToken, bool v1Schema = false) => new(
         [],
         await db.Rooms.IgnoreQueryFilters().AsNoTracking().ToListAsync(cancellationToken),
         await db.Guests.IgnoreQueryFilters().AsNoTracking().ToListAsync(cancellationToken),
-        await db.Stays.IgnoreQueryFilters().AsNoTracking().ToListAsync(cancellationToken),
+        v1Schema ? await ReadV1StaysAsync(db, cancellationToken) : await db.Stays.IgnoreQueryFilters().AsNoTracking().ToListAsync(cancellationToken),
         await db.CheckoutInspections.AsNoTracking().ToListAsync(cancellationToken),
         await db.Feedbacks.AsNoTracking().ToListAsync(cancellationToken),
         await db.Attachments.AsNoTracking().ToListAsync(cancellationToken),
         await db.AuditLogs.AsNoTracking().ToListAsync(cancellationToken));
+
+    private static Task<List<Stay>> ReadV1StaysAsync(AppDbContext db, CancellationToken cancellationToken) => db.Stays
+        .IgnoreQueryFilters()
+        .AsNoTracking()
+        .Select(s => new Stay
+        {
+            Id = s.Id,
+            GuestId = s.GuestId,
+            RoomId = s.RoomId,
+            GuestName = s.GuestName,
+            Phone = s.Phone,
+            CheckInDate = s.CheckInDate,
+            CheckOutDate = s.CheckOutDate,
+            Guests = s.Guests,
+            ExtraBed = s.ExtraBed,
+            TotalAmountSatang = s.TotalAmountSatang,
+            Status = s.Status,
+            Note = s.Note,
+            DepositAmountSatang = s.DepositAmountSatang,
+            DepositPaid = s.DepositPaid,
+            IdVerified = s.IdVerified,
+            PetType = s.PetType,
+            PetCount = s.PetCount,
+            PetFeeSatang = s.PetFeeSatang,
+            DiscountAmountSatang = s.DiscountAmountSatang,
+            CreatedAt = s.CreatedAt,
+            UpdatedAt = s.UpdatedAt,
+            DeletedAt = s.DeletedAt,
+        })
+        .ToListAsync(cancellationToken);
 }

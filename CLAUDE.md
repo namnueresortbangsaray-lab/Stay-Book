@@ -88,6 +88,9 @@ Zones and room types (branch `room-categories`, 2026-10-31): managed lists with 
 D-23 in the migration plan.
 ID card photos (branch `id-photos`, 2026-11-01): optional photo in the booking form, shrunk in the browser to
 WebP ≤ 1600 px (a 6 MB phone photo ≈ 30–300 KB), private storage, purged 90 days after check-out; D-26.
+Font Prompt (branch `font-prompt`, 2026-11-01). Booking channels (branch `booking-channels`, 2026-11-02): optional
+`booking_channel` on stays, fixed list in `BookingChannels`, reports breakdown; D-27. New stay columns must be appended
+to `StayDto`, added to `ADDED_KEYS` in `tests/baseline/compare.mjs` and left out of `DataSet.ReadV1StaysAsync`.
 
 ## Next steps
 - Optional: `SupabaseFileStorage` (see docs/SUPABASE.md), concurrency tokens if staff report conflicting edits.

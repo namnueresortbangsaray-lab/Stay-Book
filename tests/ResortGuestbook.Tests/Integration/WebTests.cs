@@ -153,6 +153,34 @@ public sealed class WebTests : IClassFixture<StayBookFactory>
     }
 
     [Fact]
+    public async Task BookingChannelIsOptionalValidatedAndKeptWhenNotSent()
+    {
+        using var admin = app.CreateBrowser();
+        var token = await Browser.SignInAsync(admin, StayBookFactory.AdminEmail, StayBookFactory.AdminPassword);
+        var roomId = await app.QueryAsync(db => db.Rooms.OrderBy(r => r.SortOrder).Select(r => r.Id).Skip(2).FirstAsync());
+        object Body(object? channel) => channel is null
+            ? new { guest_name = "ทดสอบ ช่องทาง", phone = "0833333333", room_id = roomId, check_in_date = "2031-06-01", check_out_date = "2031-06-03", guests = 1 }
+            : new { guest_name = "ทดสอบ ช่องทาง", phone = "0833333333", room_id = roomId, check_in_date = "2031-06-01", check_out_date = "2031-06-03", guests = 1, booking_channel = channel };
+        async Task<string?> ChannelOf(HttpResponseMessage response)
+        {
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var channel = (await Browser.EnvelopeAsync(response)).GetProperty("data").GetProperty("booking_channel");
+            return channel.ValueKind == System.Text.Json.JsonValueKind.Null ? null : channel.GetString();
+        }
+
+        var invalid = await Browser.SendJsonAsync(admin, HttpMethod.Post, "/api/v1/stays", Body("tiktok"), token);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, invalid.StatusCode);
+        Assert.Equal("กรุณาเลือกช่องทางการจองที่ถูกต้อง", (await Browser.EnvelopeAsync(invalid)).GetProperty("errors").GetProperty("booking_channel").GetString());
+
+        var created = await Browser.SendJsonAsync(admin, HttpMethod.Post, "/api/v1/stays", Body("line"), token);
+        var stayId = (await Browser.EnvelopeAsync(created)).GetProperty("data").GetProperty("id").GetString();
+        Assert.Equal("line", await ChannelOf(await Browser.SendJsonAsync(admin, HttpMethod.Put, $"/api/v1/stays/{stayId}", Body(null), token)));
+        Assert.Null(await ChannelOf(await Browser.SendJsonAsync(admin, HttpMethod.Put, $"/api/v1/stays/{stayId}", Body(""), token)));
+        Assert.Equal("agoda", await ChannelOf(await Browser.SendJsonAsync(admin, HttpMethod.Put, $"/api/v1/stays/{stayId}", Body("agoda"), token)));
+        Assert.Equal("agoda", await app.QueryAsync(db => db.Stays.Where(x => x.Id == Guid.Parse(stayId!)).Select(x => x.BookingChannel).SingleAsync()));
+    }
+
+    [Fact]
     public async Task IdPhotosAreUploadedByBookingStaffAndViewedBySignedInStaffOnly()
     {
         using var admin = app.CreateBrowser();

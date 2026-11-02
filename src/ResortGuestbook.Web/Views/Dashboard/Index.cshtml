@@ -263,6 +263,17 @@
             <label class="label" for="booking-name">@T["ui.booking.name"]<span class="req" aria-hidden="true">*</span></label>
             <input id="booking-name" class="field" name="guest_name" required minlength="2" autocomplete="name">
           </div>
+          <div>
+            <label class="label" for="booking-channel">@T["ui.booking.channel"]</label>
+            <select id="booking-channel" class="field form-select" name="booking_channel" aria-describedby="booking-channel-hint">
+              <option value="">@T["ui.channel.none"]</option>
+              @foreach (var channel in ResortGuestbook.Data.Entities.BookingChannels.All)
+              {
+                <option value="@channel">@T[$"ui.channel.{channel}"]</option>
+              }
+            </select>
+            <p id="booking-channel-hint" class="hint">@T["ui.booking.channel_hint"]</p>
+          </div>
         </div>
       </section>
       <section class="form-section">

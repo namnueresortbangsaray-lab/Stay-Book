@@ -99,6 +99,11 @@ public sealed class StayService(AppDbContext db, ResortQueries queries, AuditSer
         stay.PetCount = data.PetCount;
         stay.PetFeeSatang = price.PetTotalSatang;
         stay.DiscountAmountSatang = data.DiscountAmountSatang;
+        if (data.BookingChannel is not null)
+        {
+            stay.BookingChannel = data.BookingChannel.Length == 0 ? null : data.BookingChannel;
+        }
+
         if (status == StayStatus.CheckedIn)
         {
             room.Status = 1;
@@ -291,6 +296,7 @@ public sealed class StayService(AppDbContext db, ResortQueries queries, AuditSer
         CustomerType = s.CustomerType,
         IsRegular = s.IsRegular,
         FeedbackRating = s.FeedbackRating,
+        BookingChannel = s.BookingChannel,
         PriceBreakdown = price,
     };
 }
