@@ -387,42 +387,91 @@ if ($('#app')) {
 
   const clearSearchButton = list => button({ label: t('ui.search.clear'), iconName: 'close', attributes: { 'data-action': 'clear-search', 'data-list': list } });
 
+  // Room chart: one row per room, one column per night of the month, one bar per booking (guest name + status icon).
+  // Bars follow the list's search and status filters; a bar opens the booking menu, a day header lists that day below.
   function renderCalendar() {
     const month = state.calendar.getMonth();
     const year = state.calendar.getFullYear();
     const first = new Date(year, month, 1);
     const days = new Date(year, month + 1, 0).getDate();
-    const pad = (first.getDay() + 6) % 7;
-    const weekdays = ['ui.weekday.mon', 'ui.weekday.tue', 'ui.weekday.wed', 'ui.weekday.thu', 'ui.weekday.fri', 'ui.weekday.sat', 'ui.weekday.sun'];
-    let cells = weekdays.map(key => `<div class="cal-head" aria-hidden="true">${h(t(key))}</div>`).join('');
-    for (let i = 0; i < pad; i++) cells += '<div class="cal-pad" aria-hidden="true"></div>';
-    for (let day = 1; day <= days; day++) {
-      const date = iso(new Date(year, month, day));
-      const items = state.data.stays.filter(s => s.check_in_date <= date && s.check_out_date >= date);
-      const lines = STATUS.map((x, i) => [x, items.filter(s => Number(s.status) === i).length]).filter(([, n]) => n);
-      cells += `<button type="button" class="cal-day ${date === state.data.today ? 'is-today' : ''}" data-calendar-day="${date}" aria-pressed="${state.selectedDay === date}">
-        <span class="cal-date" aria-hidden="true">${day}</span><span class="sr-only">${h(thaiDate(date))}</span>
-        ${lines.map(([x, n]) => `<span class="tone-${x.tone} tone-text inline-flex items-center gap-1 text-xs">${icon(x.icon, 'h-3 w-3')}<span>${h(x.short)} ${n}</span></span>`).join('')}
-      </button>`;
-    }
-    const selected = state.selectedDay ? state.data.stays.filter(s => s.check_in_date <= state.selectedDay && s.check_out_date >= state.selectedDay) : [];
+    const start = iso(first);
+    const end = iso(new Date(year, month, days + 1));
+    const dayIndex = date => Math.round((new Date(`${date}T00:00:00`) - first) / 86400000);
+    const weekday = new Intl.DateTimeFormat('th-TH', { weekday: 'narrow' });
+    state.selectedDay ??= state.data.today;
 
+    const dates = Array.from({ length: days }, (_, i) => new Date(year, month, i + 1));
+    const header = dates.map((d, i) => {
+      const date = iso(d);
+      const weekend = d.getDay() === 0 || d.getDay() === 6;
+      return `<button type="button" class="tl-day ${weekend ? 'is-weekend' : ''} ${date === state.data.today ? 'is-today' : ''}" style="grid-column:${i + 2}" data-calendar-day="${date}" aria-pressed="${state.selectedDay === date}">
+        <span class="tl-weekday" aria-hidden="true">${h(weekday.format(d))}</span><span class="tl-date" aria-hidden="true">${i + 1}</span><span class="sr-only">${h(thaiDate(date))}</span>
+      </button>`;
+    }).join('');
+
+    const stays = filteredStays().filter(s => s.check_in_date < end && s.check_out_date > start);
+    const rows = state.data.rooms.map((room, r) => {
+      const row = r + 2;
+      const cells = dates.map((d, i) => `<div class="tl-cell ${d.getDay() === 0 || d.getDay() === 6 ? 'is-weekend' : ''} ${iso(d) === state.data.today ? 'is-today' : ''}" style="grid-row:${row};grid-column:${i + 2}" aria-hidden="true"></div>`).join('');
+      // Checked-out bars first, so a current booking is drawn on top if an old one overlaps it.
+      const bars = stays.filter(s => s.room_id === room.id).sort((a, b) => Number(b.status === 2) - Number(a.status === 2) || a.check_in_date.localeCompare(b.check_in_date)).map(s => {
+        const from = Math.max(0, dayIndex(s.check_in_date));
+        const to = Math.min(days, dayIndex(s.check_out_date));
+        const status = STATUS[Number(s.status)] ?? STATUS[0];
+        const n = nights(s.check_in_date, s.check_out_date);
+        const label = [s.guest_name, `${t('ui.col.room')} ${s.room_name}`, `${thaiDate(s.check_in_date)} – ${thaiDate(s.check_out_date)}`, t('ui.nights_count', { n }), t('ui.guests_count', { n: s.guests }), status.label].join(' · ');
+        const classes = ['tl-bar', `tone-${status.tone}`, dayIndex(s.check_in_date) < 0 ? 'is-cont-start' : '', dayIndex(s.check_out_date) > days ? 'is-cont-end' : ''].filter(Boolean).join(' ');
+        return `<button type="button" class="${classes}" style="grid-row:${row};grid-column:${from + 2} / ${to + 2}" data-menu-trigger="stay" data-id="${s.id}" title="${h(label)}">
+          ${icon(status.icon, 'h-3.5 w-3.5 flex-none')}<span class="truncate">${h(barName(s.guest_name))}</span>${to - from > 2 ? `<span class="tl-bar-meta">${h(t('ui.nights_count', { n }))}</span>` : ''}<span class="sr-only"> · ${h(label)}</span>
+        </button>`;
+      }).join('');
+      return `<div class="tl-room" style="grid-row:${row}"><span class="room-no">${h(room.name)}</span><span class="tl-room-meta">${h(room.type)}</span></div>${cells}${bars}`;
+    }).join('');
+
+    const selected = state.data.stays.filter(s => s.check_in_date <= state.selectedDay && s.check_out_date >= state.selectedDay);
+    const key = `${year}-${month}`;
+    const keep = state.calendarShown === key ? $('#booking-calendar .tl-scroll')?.scrollLeft : undefined;
     $('#booking-calendar').innerHTML = `
       <div class="card">
-        <div class="card-header">
+        <div class="card-header flex-wrap gap-3">
           <div class="flex items-center gap-1">
             ${button({ label: t('ui.calendar.previous'), iconName: 'chevronLeft', iconOnly: true, variant: 'ghost', size: 'sm', attributes: { 'data-calendar-nav': '-1' } })}
             <h2 class="min-w-[9rem] text-center text-base font-semibold" aria-live="polite">${h(monthTitle(first))}</h2>
             ${button({ label: t('ui.calendar.next'), iconName: 'chevronRight', iconOnly: true, variant: 'ghost', size: 'sm', attributes: { 'data-calendar-nav': '1' } })}
           </div>
-          ${button({ label: t('ui.calendar.today'), size: 'sm', iconName: 'calendar', attributes: { 'data-calendar-today': true } })}
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="tl-legend">${STATUS.map(x => pill(x.tone, x.icon, x.label)).join('')}</span>
+            ${button({ label: t('ui.calendar.today'), size: 'sm', iconName: 'calendar', attributes: { 'data-calendar-today': true } })}
+          </div>
         </div>
-        <div class="card-body"><div class="cal-scroll" tabindex="0" aria-label="${h(t('ui.calendar.scroll'))}"><div class="cal-grid">${cells}</div></div></div>
+        <p class="px-4 pt-3 text-sm text-ink-muted sm:px-5">${h(t('ui.calendar.hint'))}</p>
+        <div class="tl-scroll" tabindex="0" role="region" aria-label="${h(t('ui.calendar.scroll'))}">
+          <div class="tl-grid" style="--tl-days:${days}">
+            <div class="tl-corner">${h(t('ui.col.room'))}</div>
+            ${header}
+            ${rows}
+          </div>
+        </div>
       </div>
-      ${state.selectedDay ? `<section class="mt-6" aria-labelledby="calendar-day-title">
+      <section class="mt-6" aria-labelledby="calendar-day-title">
         <h3 id="calendar-day-title" class="mb-3 flex items-center gap-2 text-base font-semibold">${icon('calendar', 'text-ink-subtle')}<span>${h(t('ui.calendar.day_title', { date: thaiDate(state.selectedDay) }))}</span></h3>
         ${renderTable({ state: state.tables.day, columns: stayColumns(''), rows: selected, caption: thaiDate(state.selectedDay), paginate: false, empty: `<div class="card">${emptyState({ iconName: 'calendar', title: t('ui.calendar.empty') })}</div>` })}
-      </section>` : ''}`;
+      </section>`;
+    if (keep !== undefined) $('#booking-calendar .tl-scroll').scrollLeft = keep;
+    else scrollCalendar();
+    state.calendarShown = key;
+  }
+
+  // Bars are narrow, so they drop the honorific; the full name stays in the label and tooltip.
+  const barName = name => name.replace(/^คุณ\s*/, '') || name;
+
+  // Brings the selected day (or today) into view, a day after the sticky room column.
+  function scrollCalendar() {
+    const scroller = $('#booking-calendar .tl-scroll');
+    const day = scroller?.querySelector(`[data-calendar-day="${state.selectedDay}"]`) ?? scroller?.querySelector('.tl-day.is-today');
+    if (!scroller || !day || !scroller.offsetWidth) return;
+    const room = scroller.querySelector('.tl-corner').offsetWidth;
+    scroller.scrollLeft = Math.max(0, day.offsetLeft - room - day.offsetWidth);
   }
 
   const channelLabel = code => (code && [...$('#booking-channel').options].find(o => o.value === code)?.text) || t('ui.channel.none');
@@ -1211,7 +1260,7 @@ if ($('#app')) {
       const source = { stay: state.data.stays, room: state.data.rooms, zone: state.categories?.zones, type: state.categories?.types, user: state.users }[context] ?? [];
       const item = source.find(x => x.id === b.dataset.id);
       const items = { stay: stayMenuItems, room: roomMenuItems, zone: x => categoryMenuItems('zone', x), type: x => categoryMenuItems('type', x), user: userMenuItems }[context];
-      if (item && items) openDropdownMenu(b, items(item), b.getAttribute('aria-label'));
+      if (item && items) openDropdownMenu(b, items(item), b.getAttribute('aria-label') ?? b.title);
       return;
     }
     if (b.dataset.action === 'theme-menu') {
@@ -1421,15 +1470,17 @@ if ($('#app')) {
       $$('[data-view]').forEach(btn => btn.setAttribute('aria-pressed', String(btn.dataset.view === state.bookingView)));
       $('#booking-list').hidden = state.bookingView !== 'list';
       $('#booking-calendar').hidden = state.bookingView !== 'calendar';
+      if (state.bookingView === 'calendar') scrollCalendar();
       $('[data-columns="bookings"]').hidden = state.bookingView !== 'list';
     }
     if (b.dataset.calendarNav) {
-      state.calendar.setMonth(state.calendar.getMonth() + Number(b.dataset.calendarNav));
+      state.calendar = new Date(state.calendar.getFullYear(), state.calendar.getMonth() + Number(b.dataset.calendarNav), 1);
       renderCalendar();
     }
     if (b.hasAttribute('data-calendar-today')) {
       state.calendar = new Date();
       state.selectedDay = state.data.today;
+      state.calendarShown = null;
       renderCalendar();
     }
     if (b.dataset.calendarDay) {

@@ -466,7 +466,10 @@
     <value>วันนี้</value>
   </data>
   <data name="ui.calendar.scroll" xml:space="preserve">
-    <value>ปฏิทินรายเดือน เลื่อนด้านข้างได้บนจอเล็ก</value>
+    <value>ผังห้องพักรายเดือน เลื่อนด้านข้างเพื่อดูวันอื่น</value>
+  </data>
+  <data name="ui.calendar.hint" xml:space="preserve">
+    <value>แต่ละแถวคือห้องพัก แถบสีคือผู้เข้าพักในแต่ละคืน แตะแถบเพื่อจัดการ Booking หรือแตะวันที่เพื่อดูรายชื่อของวันนั้น</value>
   </data>
   <data name="ui.calendar.day_title" xml:space="preserve">
     <value>รายการเข้าพักวันที่ {date}</value>

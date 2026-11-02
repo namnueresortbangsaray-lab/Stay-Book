@@ -466,7 +466,10 @@
     <value>Today</value>
   </data>
   <data name="ui.calendar.scroll" xml:space="preserve">
-    <value>Monthly calendar, scrolls sideways on small screens</value>
+    <value>Monthly room chart; scroll sideways for other days</value>
+  </data>
+  <data name="ui.calendar.hint" xml:space="preserve">
+    <value>Each row is a room and each bar a guest’s nights. Tap a bar to manage the booking, or a date to list that day’s guests</value>
   </data>
   <data name="ui.calendar.day_title" xml:space="preserve">
     <value>Stays on {date}</value>

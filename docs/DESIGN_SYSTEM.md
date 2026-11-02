@@ -96,7 +96,7 @@ Tailwind classes (`sm` = 640, `md` = 768, `lg` = 1024, `xl` = 1280):
 | Range | Layout |
 |---|---|
 | Phone, < 640px | Top bar with a menu button (opens the navigation drawer `#mobile-more-dialog`), bottom tab bar with five destinations, tables stacked into cards, single-column forms, drawers full screen, modals and menus as bottom sheets, action bars at the bottom within thumb reach |
-| iPad, 640–1279px | Icon rail by default, expanded with the top-bar menu button (remembered), two-column dashboards and forms, tables with key columns only, calendar with seven columns; works in portrait, landscape and split view |
+| iPad, 640–1279px | Icon rail by default, expanded with the top-bar menu button (remembered), two-column dashboards and forms, tables with key columns only, the room chart scrolls sideways; works in portrait, landscape and split view |
 | Desktop, ≥ 1280px | Full sidebar (the top-bar menu button collapses it to the icon rail, remembered) and full tables |
 
 - **Tables:** `renderTable` columns take `mobileHide` (dropped from phone cards) and `tabletHide` (hidden on
@@ -149,6 +149,7 @@ and disabled styles.
 | Timeline | `.timeline` + `.timeline-item.tone-*` | Guest notes |
 | Loading / failure | `#splash` (3px top bar), `#loading` skeleton, `<main data-state="loading\|failed">` | The shell shows at once; while there is no data the page panels are hidden and the skeleton or the failure card (with retry) fills the content |
 | Progress / skeleton | `.progress` (indeterminate upload), `.skeleton` (first load) | |
+| Room chart | `renderCalendar()` → `.tl-scroll` > `.tl-grid` (`.tl-corner`, `.tl-day`, `.tl-room`, `.tl-cell`, `.tl-bar.tone-*`) | Bookings → ปฏิทิน: rooms down, nights across (5rem columns, 4.5rem on phones), one bar per booking with status icon and name ("คุณ" dropped; full details in `title` and screen-reader text). Follows the list search and status chips; a bar opens the booking menu, a day lists that day below; scrolls to the selected day and keeps its position on re-render. Sticky room column, weekend and today shading |
 | Charts | `barChart()` + `chartTable()` (`Scripts/core/charts.js`), `.stack-bar` | SVG in tokens; every chart has a table ("ดูเป็นตาราง") that prints |
 
 ## Dark mode
